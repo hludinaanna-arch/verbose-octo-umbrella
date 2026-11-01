@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Волонтерская программа</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #10b981; 
+            --primary-hover: #059669; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #ecfdf5;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: #5A5CE6; }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .program-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; color: var(--primary-hover); }
+        .program-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .main-card { background: #fff; padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .main-card h2 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary-hover); }
+        .main-card p { margin-bottom: 1.5rem; color: var(--text-gray); font-size: 1.05rem; }
+        .main-card ul { margin-left: 1.5rem; margin-bottom: 1.5rem; color: var(--text-gray); }
+        .main-card li { margin-bottom: 0.5rem; }
+
+        .sidebar-card { background: var(--card-bg); padding: 2rem; border-radius: 1.5rem; border-left: 5px solid var(--primary-color); height: fit-content; }
+        .sidebar-card h3 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary-hover); display: flex; align-items: center; gap: 0.5rem; }
+        .info-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid rgba(16, 185, 129, 0.1); font-size: 0.95rem; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: var(--text-gray); }
+        .info-value { font-weight: 600; color: var(--text-dark); text-align: right; }
+
+        .benefit-badge { 
+            display: inline-block; background: #fff; color: var(--primary-hover); 
+            border: 1px solid #d1fae5; padding: 0.4rem 1rem; border-radius: 20px; 
+            font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;
+        }
+
+        .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--primary-color); font-weight: 600; margin-bottom: 2rem; transition: gap 0.3s; }
+        .back-link:hover { gap: 0.8rem; }
+
+        @media (max-width: 992px) { .content-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .program-title h1 { font-size: 2.2rem; } 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content" style="max-width: 1200px;">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html">Главная</a>
+                <a href="universities.html">Вузы</a>
+                <a href="olympiads.html">Олимпиады</a>
+                <a href="volunteering.html" style="color: var(--primary-color);">Волонтерство</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <section class="page-header">
+            <div class="container program-title">
+                <a href="volunteering.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Все программы</a>
+                <h1 id="prog-name">Название программы</h1>
+                <div class="program-meta">
+                    <span><i class="fa-solid fa-clock"></i> <span id="prog-hours">Часы</span></span>
+                    <span><i class="fa-solid fa-graduation-cap"></i> <span id="prog-unis">Вузы</span></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="container content-grid">
+            <div class="main-card">
+                <h2>О программе</h2>
+                <p id="prog-desc-full">Полное описание...</p>
+                
+                <h2 style="margin-top: 2rem;">Чем занимается волонтёр?</h2>
+                <ul id="prog-tasks">
+                    <!-- Tasks injected here -->
+                </ul>
+
+                <h2 style="margin-top: 2rem;">Как это поможет при поступлении?</h2>
+                <p id="prog-benefit-text">Текст о пользе...</p>
+                <div id="prog-benefits-list" style="margin-top: 1rem;">
+                    <!-- Badges injected here -->
+                </div>
+
+                <h2 style="margin-top: 2rem;">Как начать?</h2>
+                <p id="prog-how-to">Инструкция...</p>
+            </div>
+
+            <div class="sidebar-card">
+                <h3><i class="fa-solid fa-circle-info"></i> Краткая информация</h3>
+                <div class="info-row">
+                    <span class="info-label">Мин. часов</span>
+                    <span class="info-value" id="side-hours">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Сложность</span>
+                    <span class="info-value" id="side-diff">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Возраст</span>
+                    <span class="info-value" id="side-age">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Формат</span>
+                    <span class="info-value" id="side-format">-</span>
+                </div>
+
+                <h3 style="margin-top: 2rem;"><i class="fa-solid fa-link"></i> Контакты</h3>
+                <div class="info-row" style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                    <span class="info-label">Официальный сайт</span>
+                    <a href="#" id="side-site" target="_blank" style="color: var(--primary-color); font-weight: 600; word-break: break-all;">-</a>
+                </div>
+                <div class="info-row" style="flex-direction: column; align-items: flex-start; gap: 0.5rem; margin-top: 1rem;">
+                    <span class="info-label">Платформа учета</span>
+                    <span class="info-value" id="side-platform" style="text-align: left;">-</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const programsData = {
+    "dobro": {
+        name: "Добро.рф (Федеральная платформа)",
+        hours: "от 20 часов",
+        unis: "Все вузы России",
+        descFull: "Добро.рф — это единая информационная система в сфере развития добровольчества в России. Это не отдельная организация, а главная платформа, через которую фиксируются часы для всех вузов. Если вы волонтерите в любой другой организации, убедитесь, что ваши часы вносятся именно сюда через Личную книжку волонтера (ЛКВ).",
+        tasks: ["Регистрация на платформе и получение ЛКВ", "Поиск мероприятий по всему городу/региону", "Автоматический учет часов после подтверждения организатором", "Участие в федеральных и локальных акциях", "Получение официальных сертификатов"],
+        benefitText: "Это самый надежный способ подтвердить волонтерство. Вузы (МГУ, ВШЭ, МФТИ и др.) требуют выписку именно из этой системы. Минимум 20 часов дают право на 1-2 дополнительных балла.",
+        benefits: ["Гарантированный учет во всех вузах", "Официальная Личная книжка волонтера", "+1-2 балла за 20-100 часов", "Доступ к тысячам мероприятий"],
+        howTo: "Зарегистрируйтесь на dobro.ru или скачайте приложение «Добро». Заполните профиль, получите электронную ЛКВ. Запишитесь на любое мероприятие, после участия организатор отметит вас, и часы появятся в кабинете автоматически.",
+        difficulty: "Низкая", age: "14+ лет", format: "Онлайн + Очно", site: "https://добро.рф", platform: "dobro.ru"
+    },
+    "mosvolonter": {
+        name: "Мосволонтёр",
+        hours: "50+ часов",
+        unis: "Все московские вузы",
+        descFull: "Ресурсный центр «Мосволонтёр» координирует добровольческую деятельность в Москве. Это самый надежный способ получить официально подтвержденные часы, которые примут любые столичные вузы (МГУ, ВШЭ, МГТУ, РУДН и др.). Платформа синхронизирована с Добро.рф.",
+        tasks: ["Помощь на городских фестивалях и форумах", "Социальное волонтерство (помощь пожилым, детям)", "Экологические акции в парках Москвы", "Культурное волонтерство (музеи, театры)", "Событийное волонтерство (спорт, концерты)"],
+        benefitText: "Часы с платформы «Мосволонтёр» имеют официальный статус и автоматически синхронизируются с Добро.рф. Московские вузы гарантированно учитывают их при начислении баллов за индивидуальные достижения.",
+        benefits: ["Гарантированный учет в вузах Москвы", "Официальная электронная книжка", "Разнообразие мероприятий", "Бонусы и мерч от Мосволонтёра"],
+        howTo: "Зарегистрируйтесь на volunteer.mos.ru. Заполните профиль, выберите интересующее направление и запишитесь на ближайшее событие. После мероприятия часы автоматически появятся в личном кабинете.",
+        difficulty: "Низкая", age: "14+ лет", format: "Очно (Москва)", site: "https://volunteer.mos.ru", platform: "volunteer.mos.ru / Добро.рф"
+    },
+    "volontery-pobedy": {
+        name: "Волонтёры Победы",
+        hours: "50-100 часов",
+        unis: "Гуманитарные и технические вузы",
+        descFull: "Всероссийское общественное движение «Волонтёры Победы» занимается сохранением исторической памяти о Великой Отечественной войне, помощью ветеранам и труженикам тыла, благоустройством мемориалов и организацией крупных памятных дат.",
+        tasks: ["Помощь ветеранам по хозяйству и в быту", "Благоустройство памятников и воинских захоронений", "Организация парадов и акций «Бессмертный полк»", "Проведение уроков памяти в школах", "Сопровождение музейных выставок"],
+        benefitText: "Вузы высоко ценят патриотическую активность. Многие университеты (особенно с гуманитарным и историческим профилем) начисляют дополнительные баллы за участие в федеральных проектах движения.",
+        benefits: ["+2-3 балла в профильных вузах", "Грамоты федерального образца", "Опыт организации массовых мероприятий", "Сильная строка в резюме"],
+        howTo: "Заполните анкету на волонтерыпобеды.рф. Пройдите короткое онлайн-обучение по истории. Свяжитесь с региональным координатором и получите первое задание.",
+        difficulty: "Средняя", age: "14+ лет", format: "Очно", site: "https://волонтерыпобеды.рф", platform: "Добро.рф"
+    },
+    "volontery-mediki": {
+        name: "Волонтёры-медики",
+        hours: "от 60 часов",
+        unis: "Первый МГМУ, РНИМУ, Сеченовский",
+        descFull: "Всероссийское общественное движение «Волонтёры-медики» объединяет тех, кто хочет связать жизнь с медициной. Участники помогают в больницах, проводят профилактические акции и обучают население первой помощи.",
+        tasks: ["Помощь младшему медперсоналу в поликлиниках", "Проведение акций по измерению давления и сахара", "Обучение школьников и пожилых людей первой помощи", "Сопровождение марафонов и спортивных соревнований", "Профориентационные лекции"],
+        benefitText: "Для поступления в медицинские вузы это практически обязательный пункт портфолио. Приемные комиссии видят вашу мотивацию и базовую подготовку. Некоторые вузы дают до 5 дополнительных баллов.",
+        benefits: ["+3-5 баллов в медвузах", "Базовые медицинские навыки", "Подтверждение мотивации к профессии", "Знакомство с врачами и кафедрой"],
+        howTo: "Зарегистрируйтесь на volmedic.ru. Пройдите обязательное обучение. Получите допуск к работе в медучреждении или на акциях.",
+        difficulty: "Высокая", age: "14+ (с 16 в медучреждениях)", format: "Очно + Обучение", site: "https://волонтеромедик.рф", platform: "Добро.рф"
+    },
+    "starost-v-radost": {
+        name: "Старость в радость",
+        hours: "30-40 часов",
+        unis: "Социальные, психологические, педагогические",
+        descFull: "Благотворительный фонд помощи пожилым людям и инвалидам. Волонтеры навещают бабушек и дедушек в домах престарелых, пишут им письма, организуют концерты и помогают с бытовыми нуждами.",
+        tasks: ["Регулярные посещения пансионатов и домов престарелых", "Написание писем и открыток одиноким пожилым людям", "Организация праздников и концертов для подопечных", "Сбор и передача подарков, одежды, средств гигиены", "Помощь в прогулках и общении"],
+        benefitText: "Демонстрирует высокую эмпатию, ответственность и готовность к социально значимой работе. Особенно ценится на психологических, социальных и педагогических направлениях.",
+        benefits: ["+1-2 балла на соц/псих факультетах", "Развитие эмпатии и коммуникации", "Опыт работы с уязвимыми группами", "Глубокое личностное развитие"],
+        howTo: "Заполните анкету на starikam.ru. Выберите формат (очно в пансионате или удаленно — письма). Пройдите вводный инструктаж. Для очного формата нужно согласие родителей, если вам нет 18.",
+        difficulty: "Средняя", age: "16+ лет", format: "Очно / Онлайн", site: "https://starikam.ru", platform: "Добро.рф"
+    },
+    "podari-zhizn": {
+        name: "Подари жизнь (Донорство)",
+        hours: "40+ часов",
+        unis: "Медицинские вузы",
+        descFull: "Благотворительный фонд помощи детям с онкогематологическими заболеваниями. Волонтеры помогают в организации дней донора, агитируют за сдачу крови и поддерживают семьи в больницах.",
+        tasks: ["Агитация за донорство крови в вузах и офисах", "Помощь в организации дней донора (регистрация, чай)", "Информирование о потребностях фонда в соцсетях", "Поддержка семей с тяжелобольными детьми", "Сбор пожертвований на официальных мероприятиях"],
+        benefitText: "Показывает вашу гражданскую зрелость и готовность помогать в критических ситуациях. Медицинские вузы особенно ценят опыт, связанный с донорством и поддержкой пациентов.",
+        benefits: ["+1-2 балла в медвузах", "Опыт в сфере здравоохранения", "Понимание важности донорства", "Участие в федеральных акциях"],
+        howTo: "Следите за акциями на ya-donor.ru или podari-zhizn.ru. Станьте волонтером на дне донора в вашем городе. Важно: саму кровь можно сдавать только с 18 лет, но помогать как волонтер можно раньше.",
+        difficulty: "Низкая/Средняя", age: "14+ (донорство с 18)", format: "Очно", site: "https://ya-donor.ru", platform: "Добро.рф"
+    },
+    "lizaalert": {
+        name: "ЛизаАлерт",
+        hours: "от 30 часов",
+        unis: "МЧС, спортивные, психологические",
+        descFull: "«ЛизаАлерт» — это добровольческий поисково-спасательный отряд, который занимается поиском пропавших людей по всей России. Это одна из самых уважаемых и сложных волонтерских организаций.",
+        tasks: ["Распространение ориентировок в соцсетях и на улицах", "Работа в штабе (прием звонков, координация)", "Участие в поисках на местности (лес, город)", "Проведение лекций по безопасности для детей", "Техническая поддержка (картография, дроны)"],
+        benefitText: "Участие в ЛизаАлерт говорит о вашей высокой ответственности, стрессоустойчивости и готовности работать в команде. Вузы МЧС и силовые структуры особенно ценят такой опыт.",
+        benefits: ["+2-3 балла в вузах МЧС/спорт", "Навыки работы в кризисных ситуациях", "Официальное удостоверение спасателя", "Сильнейший пункт в характеристике"],
+        howTo: "Заполните заявку на lizaalert.org. Придите на вводную лекцию. Выберите направление (поиск, штаб, инфорг). Первые задачи можно выполнять онлайн.",
+        difficulty: "Высокая", age: "18+ (с 16 с согласия родителей)", format: "Очно / Онлайн", site: "https://lizaalert.org", platform: "Добро.рф"
+    },
+    "rso": {
+        name: "Студенческие отряды (РСО)",
+        hours: "100+ часов",
+        unis: "Практически все вузы РФ",
+        descFull: "Российские студенческие отряды — это крупнейшая молодежная трудовая организация страны. Школьники 10-11 классов могут участвовать в трудовых проектах летом.",
+        tasks: ["Работа вожатым в детском лагере", "Помощь на строительных объектах", "Работа в сфере гостеприимства и туризма", "Проводники в поездах", "Экологические и сельскохозяйственные работы"],
+        benefitText: "РСО — это не просто волонтерство, а реальная трудовая деятельность. Многие вузы дают максимальные баллы (до 10) за участие в отрядах.",
+        benefits: ["До +10 баллов в ряде вузов", "Заработок + опыт работы", "Официальная трудовая книжка", "Льготы при поступлении"],
+        howTo: "Найдите региональное отделение РСО в соцсетях. Зимой-весной пройдите школу вожатых или подготовку. Летом отправьтесь на трудовой проект.",
+        difficulty: "Средняя/Высокая", age: "16+ лет", format: "Очно (сезонно)", site: "https://rso.su", platform: "Трудовая книжка / Добро.рф"
+    },
+    "eka": {
+        name: "ЭКА (Экологическое движение)",
+        hours: "от 40 часов",
+        unis: "Биофак, Геофак, Экология",
+        descFull: "«ЭКА» — всероссийское экологическое движение, которое реализует проекты по посадке деревьев, раздельному сбору отходов и экологическому просвещению.",
+        tasks: ["Посадка деревьев в рамках проекта «ПосадиЛес»", "Организация сбора макулатуры и пластика в школе", "Проведение экоуроков для младших классов", "Участие в очистке берегов рек и парков", "Эко-просвещение в социальных сетях"],
+        benefitText: "Для абитуриентов биофаков и геофаков это профильное волонтерство. Вузы видят вашу реальную заинтересованность в экологии.",
+        benefits: ["+1-2 балла на био/гео факультетах", "Профильный опыт для портфолио", "Участие в федеральных экопроектах", "Сертификат эковолонтёра"],
+        howTo: "Зарегистрируйтесь на eka.eco. Запустите свой школьный проект или присоединитесь к существующей акции.",
+        difficulty: "Низкая", age: "Любой возраст", format: "Очно / Онлайн", site: "https://eca.eco", platform: "Добро.рф"
+    },
+    "nochlezhka": {
+        name: "Ночлежка",
+        hours: "от 40 часов",
+        unis: "Социальные факультеты, психология",
+        descFull: "«Ночлежка» — благотворительная организация, помогающая бездомным людям вернуться к нормальной жизни. Волонтеры помогают в пунктах обогрева, раздают еду и работают с документами.",
+        tasks: ["Сортировка и выдача одежды в пунктах помощи", "Участие в раздаче еды на автобусе «Ночлежки»", "Помощь в оформлении документов для подопечных", "Информирование горожан о проблеме бездомности", "Административная помощь в офисе"],
+        benefitText: "Участие в таких проектах говорит о вашей высокой эмпатии, зрелости и гражданской позиции. Социальные и психологические факультеты обращают внимание на кандидатов с таким опытом.",
+        benefits: ["+1-2 балла на соцфаках", "Развитие эмпатии и толерантности", "Опыт работы с уязвимыми группами", "Глубокое понимание социальных проблем"],
+        howTo: "Заполните анкету на nochlezhka.ru/volunteers. Выберите направление. Пройдите вводный инструктаж. Требуется согласие родителей для несовершеннолетних.",
+        difficulty: "Средняя", age: "16+ лет", format: "Очно (СПб, Мск)", site: "https://nochlezhka.ru", platform: "Добро.рф"
+    }
+};
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderProgram() {
+            const progId = getQueryParam('id');
+            const prog = programsData[progId];
+
+            if (!prog) {
+                document.querySelector('main').innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>Программа не найдена</h2><a href="volunteering.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">Вернуться к списку</a></div>`;
+                return;
+            }
+
+            document.getElementById('prog-name').textContent = prog.name;
+            document.getElementById('prog-hours').textContent = prog.hours;
+            document.getElementById('prog-unis').textContent = prog.unis;
+            document.getElementById('prog-desc-full').textContent = prog.descFull;
+            
+            document.getElementById('prog-tasks').innerHTML = prog.tasks.map(t => `<li>${t}</li>`).join('');
+            document.getElementById('prog-benefit-text').textContent = prog.benefitText;
+            document.getElementById('prog-benefits-list').innerHTML = prog.benefits.map(b => `<span class="benefit-badge"><i class="fa-solid fa-check"></i> ${b}</span>`).join(' ');
+            document.getElementById('prog-how-to').textContent = prog.howTo;
+
+            document.getElementById('side-hours').textContent = prog.hours;
+            document.getElementById('side-diff').textContent = prog.difficulty;
+            document.getElementById('side-age').textContent = prog.age;
+            document.getElementById('side-format').textContent = prog.format;
+            document.getElementById('side-site').href = prog.site;
+            document.getElementById('side-site').textContent = prog.site.replace('https://', '');
+            document.getElementById('side-platform').textContent = prog.platform;
+
+            document.title = `TrackMyUni - ${prog.name}`;
+        }
+
+        renderProgram();
+    </script>
+</body>
+</html>

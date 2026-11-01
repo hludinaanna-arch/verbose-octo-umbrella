@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Universities</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-color: #5a5ce6; --primary-hover: #4a4cd6; --text-dark: #111; --text-gray: #6b7280; --bg-light: #f9fafb; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header Styles */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: #5A5CE6; }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Specific Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); 
+            padding: 5rem 0; 
+            text-align: center; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 4rem; 
+        }
+        .page-header h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em; }
+        .page-header p { font-size: 1.2rem; color: var(--text-gray); max-width: 600px; margin: 0 auto; }
+        
+        .uni-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; padding-bottom: 6rem; }
+        .uni-card { 
+            background: #fff; 
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            transition: transform 0.3s, box-shadow 0.3s; 
+            border-top: 5px solid var(--primary-color); 
+            display: flex;
+            flex-direction: column;
+        }
+        .uni-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(90, 92, 230, 0.1); }
+        .uni-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--primary-color); font-weight: 700; }
+        .uni-card .loc { color: var(--text-gray); font-size: 0.95rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .uni-card p { font-size: 1rem; margin-bottom: 2rem; flex-grow: 1; line-height: 1.6; }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: auto; }
+        .tag { background: #eef2ff; color: var(--primary-color); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .page-header h1 { font-size: 2.5rem; } 
+            .page-header { padding: 3rem 0; margin-bottom: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <a href="olympiads.html" data-key="nav_olymp">Olympiads</a>
+                <a href="volunteering.html" data-key="nav_vol">Volonteering</a>
+                <a href="calendar.html" data-key="nav_cal">Calendar</a>
+                <a href="reviews.html" data-key="nav_rew">Online Schools</a>
+                <!-- Добавляем ссылку на рекомендации -->
+                <a href="recommendations.html" style="color: var(--primary-color); font-weight: 700;">Recommendations</a> 
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 data-key="uni_page_title">Top Universities</h1>
+                <p data-key="uni_page_subtitle">Find the best colleges and universities for your future career</p>
+            </div>
+        </section>
+        
+        <section class="container">
+            <div class="uni-list">
+                <!-- 1. MSU -->
+                <a href="msu.html" class="uni-card">
+                    <h3 data-key="uni_1_title">Lomonosov Moscow State University</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_moscow">Moscow, Russia</span></div>
+                    <p data-key="uni_1_desc">Russia's oldest and most prestigious university, leading in natural sciences and humanities research.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_science">Science</span>
+                        <span class="tag" data-key="tag_research">Research</span>
+                        <span class="tag" data-key="tag_classics">Classics</span>
+                    </div>
+                </a>
+                
+                <!-- 2. BMSTU -->
+                <a href="bmstu.html" class="uni-card">
+                    <h3 data-key="uni_2_title">Bauman Moscow State Technical University</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_moscow">Moscow, Russia</span></div>
+                    <p data-key="uni_2_desc">Top engineering school focused on robotics, aerospace, and advanced manufacturing technologies.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_engineering">Engineering</span>
+                        <span class="tag" data-key="tag_tech">Tech</span>
+                        <span class="tag" data-key="tag_innovation">Innovation</span>
+                    </div>
+                </a>
+
+                <!-- 3. MIPT -->
+                <a href="mipt.html" class="uni-card">
+                    <h3 data-key="uni_3_title">Moscow Institute of Physics and Technology</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_dolgoprudny">Dolgoprudny, Russia</span></div>
+                    <p data-key="uni_3_desc">Elite institute renowned for physics, mathematics, and cutting-edge scientific research.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_physics">Physics</span>
+                        <span class="tag" data-key="tag_math">Math</span>
+                        <span class="tag" data-key="tag_elite">Elite Research</span>
+                    </div>
+                </a>
+
+                <!-- 4. SPbU -->
+                <a href="spbu.html" class="uni-card">
+                    <h3 data-key="uni_4_title">Saint Petersburg State University</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_spb">St. Petersburg, Russia</span></div>
+                    <p data-key="uni_4_desc">Historic university excelling in law, humanities, and fundamental sciences.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_humanities">Humanities</span>
+                        <span class="tag" data-key="tag_law">Law</span>
+                        <span class="tag" data-key="tag_sciences">Sciences</span>
+                    </div>
+                </a>
+
+                <!-- 5. MEPhI -->
+                <a href="mephi.html" class="uni-card">
+                    <h3 data-key="uni_5_title">National Research Nuclear University MEPhI</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_moscow">Moscow, Russia</span></div>
+                    <p data-key="uni_5_desc">Leading nuclear research university with strong programs in IT and information security.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_nuclear">Nuclear</span>
+                        <span class="tag" data-key="tag_it">IT</span>
+                        <span class="tag" data-key="tag_security">Security</span>
+                    </div>
+                </a>
+
+                <!-- 6. HSE -->
+                <a href="hse.html " class="uni-card">
+                    <h3 data-key="uni_6_title">HSE University</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_moscow">Moscow, Russia</span></div>
+                    <p data-key="uni_6_desc">Modern research university top-ranked in economics, social sciences, and computer science.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_economics">Economics</span>
+                        <span class="tag" data-key="tag_social">Social Sciences</span>
+                        <span class="tag" data-key="tag_cs">Computer Science</span>
+                    </div>
+                </a>
+
+                <!-- 7. MGIMO -->
+                <a href="mgimo.html" class="uni-card">
+                    <h3 data-key="uni_7_title">MGIMO University</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_moscow">Moscow, Russia</span></div>
+                    <p data-key="uni_7_desc">Premier institution for international relations, diplomacy, and world languages.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_ir">International Relations</span>
+                        <span class="tag" data-key="tag_diplomacy">Diplomacy</span>
+                        <span class="tag" data-key="tag_languages">Languages</span>
+                    </div>
+                </a>
+
+                <!-- 8. RANEPA -->
+                <a href="ranepa.html" class="uni-card">
+                    <h3 data-key="uni_8_title">RANEPA</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_moscow">Moscow, Russia</span></div>
+                    <p data-key="uni_8_desc">Leading academy for public administration, management, and national policy development.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_pubadmin">Public Admin</span>
+                        <span class="tag" data-key="tag_management">Management</span>
+                        <span class="tag" data-key="tag_policy">Policy</span>
+                    </div>
+                </a>
+
+                <!-- 9. SPbPU -->
+                <a href="spbstu.html" class="uni-card">
+                    <h3 data-key="uni_9_title">Peter the Great St. Petersburg Polytechnic University</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_spb">St. Petersburg, Russia</span></div>
+                    <p data-key="uni_9_desc">Major polytechnic university specializing in energy, digital technologies, and engineering.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_engineering">Engineering</span>
+                        <span class="tag" data-key="tag_energy">Energy</span>
+                        <span class="tag" data-key="tag_digital">Digital</span>
+                    </div>
+                </a>
+
+                <!-- 10. FinUniv -->
+                <a href="finuniv.html" class="uni-card">
+                    <h3 data-key="uni_10_title">Financial University under the Government of RF</h3>
+                    <div class="loc"><i class="fa-solid fa-location-dot"></i> <span data-key="uni_loc_moscow">Moscow, Russia</span></div>
+                    <p data-key="uni_10_desc">Top financial institution focused on economics, accounting, and business analytics.</p>
+                    <div class="tags">
+                        <span class="tag" data-key="tag_finance">Finance</span>
+                        <span class="tag" data-key="tag_accounting">Accounting</span>
+                        <span class="tag" data-key="tag_analytics">Analytics</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const translations = {
+            en: {
+                nav_home: "Home", nav_uni: "Universities", nav_olymp: "Olympiads",
+                btn_login: "Log In", btn_signup: "Sign Up",
+                uni_page_title: "Top Universities",
+                uni_page_subtitle: "Find the best colleges and universities for your future career",
+                
+                // Universities Titles & Descriptions
+                uni_1_title: "Lomonosov Moscow State University",
+                uni_1_desc: "Russia's oldest and most prestigious university, leading in natural sciences and humanities research.",
+                uni_2_title: "Bauman Moscow State Technical University",
+                uni_2_desc: "Top engineering school focused on robotics, aerospace, and advanced manufacturing technologies.",
+                uni_3_title: "Moscow Institute of Physics and Technology",
+                uni_3_desc: "Elite institute renowned for physics, mathematics, and cutting-edge scientific research.",
+                uni_4_title: "Saint Petersburg State University",
+                uni_4_desc: "Historic university excelling in law, humanities, and fundamental sciences.",
+                uni_5_title: "National Research Nuclear University MEPhI",
+                uni_5_desc: "Leading nuclear research university with strong programs in IT and information security.",
+                uni_6_title: "HSE University",
+                uni_6_desc: "Modern research university top-ranked in economics, social sciences, and computer science.",
+                uni_7_title: "MGIMO University",
+                uni_7_desc: "Premier institution for international relations, diplomacy, and world languages.",
+                uni_8_title: "RANEPA",
+                uni_8_desc: "Leading academy for public administration, management, and national policy development.",
+                uni_9_title: "Peter the Great St. Petersburg Polytechnic University",
+                uni_9_desc: "Major polytechnic university specializing in energy, digital technologies, and engineering.",
+                uni_10_title: "Financial University under the Government of RF",
+                uni_10_desc: "Top financial institution focused on economics, accounting, and business analytics.",
+
+                // Locations
+                uni_loc_moscow: "Moscow, Russia",
+                uni_loc_dolgoprudny: "Dolgoprudny, Russia",
+                uni_loc_spb: "St. Petersburg, Russia",
+
+                // Tags
+                tag_science: "Science", tag_research: "Research", tag_classics: "Classics",
+                tag_engineering: "Engineering", tag_tech: "Tech", tag_innovation: "Innovation",
+                tag_physics: "Physics", tag_math: "Math", tag_elite: "Elite Research",
+                tag_humanities: "Humanities", tag_law: "Law", tag_sciences: "Sciences",
+                tag_nuclear: "Nuclear", tag_it: "IT", tag_security: "Security",
+                tag_economics: "Economics", tag_social: "Social Sciences", tag_cs: "Computer Science",
+                tag_ir: "International Relations", tag_diplomacy: "Diplomacy", tag_languages: "Languages",
+                tag_pubadmin: "Public Admin", tag_management: "Management", tag_policy: "Policy",
+                tag_energy: "Energy", tag_digital: "Digital",
+                tag_finance: "Finance", tag_accounting: "Accounting", tag_analytics: "Analytics"
+            },
+            ru: {
+                nav_home: "Главная", nav_uni: "Вузы", nav_olymp: "Олимпиады",
+                btn_login: "Войти", btn_signup: "Регистрация",
+                uni_page_title: "Лучшие университеты",
+                uni_page_subtitle: "Найди идеальный колледж или вуз для своей будущей карьеры",
+
+                // Universities Titles & Descriptions
+                uni_1_title: "МГУ им. М.В. Ломоносова",
+                uni_1_desc: "Старейший и наиболее престижный университет России, лидер в области естественных наук и гуманитарных исследований.",
+                uni_2_title: "МГТУ им. Н.Э. Баумана",
+                uni_2_desc: "Ведущий технический вуз, специализирующийся на робототехнике, аэрокосмической отрасли и передовых производственных технологиях.",
+                uni_3_title: "Московский физико-технический институт",
+                uni_3_desc: "Элитный институт, известный своими программами по физике, математике и фундаментальным научным исследованиям.",
+                uni_4_title: "Санкт-Петербургский государственный университет",
+                uni_4_desc: "Исторический университет, лидирующий в области права, гуманитарных наук и фундаментальной науки.",
+                uni_5_title: "НИЯУ МИФИ",
+                uni_5_desc: "Ведущий ядерный исследовательский университет с сильными программами в IT и информационной безопасности.",
+                uni_6_title: "НИУ ВШЭ",
+                uni_6_desc: "Современный исследовательский университет, занимающий топ-позиции в экономике, социальных науках и компьютерных науках.",
+                uni_7_title: "МГИМО МИД России",
+                uni_7_desc: "Главный вуз страны для подготовки специалистов в сфере международных отношений, дипломатии и мировых языков.",
+                uni_8_title: "РАНХиГС",
+                uni_8_desc: "Ведущая академия государственного управления, менеджмента и разработки национальной политики.",
+                uni_9_title: "СПбПУ Петра Великого",
+                uni_9_desc: "Крупный политехнический университет, специализирующийся на энергетике, цифровых технологиях и инженерии.",
+                uni_10_title: "Финансовый университет при Правительстве РФ",
+                uni_10_desc: "Ведущий финансовый вуз, фокусирующийся на экономике, бухгалтерском учете и бизнес-аналитике.",
+
+                // Locations
+                uni_loc_moscow: "Москва, Россия",
+                uni_loc_dolgoprudny: "Долгопрудный, Россия",
+                uni_loc_spb: "Санкт-Петербург, Россия",
+
+                // Tags
+                tag_science: "Наука", tag_research: "Исследования", tag_classics: "Классика",
+                tag_engineering: "Инженерия", tag_tech: "Технологии", tag_innovation: "Инновации",
+                tag_physics: "Физика", tag_math: "Математика", tag_elite: "Элитные исследования",
+                tag_humanities: "Гуманитарные науки", tag_law: "Право", tag_sciences: "Естественные науки",
+                tag_nuclear: "Ядерная физика", tag_it: "IT", tag_security: "Безопасность",
+                tag_economics: "Экономика", tag_social: "Социальные науки", tag_cs: "Компьютерные науки",
+                tag_ir: "Международные отношения", tag_diplomacy: "Дипломатия", tag_languages: "Языки",
+                tag_pubadmin: "Госуправление", tag_management: "Менеджмент", tag_policy: "Политика",
+                tag_energy: "Энергетика", tag_digital: "Цифровые технологии",
+                tag_finance: "Финансы", tag_accounting: "Бухучет", tag_analytics: "Аналитика"
+            }
+        };
+
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            localStorage.setItem('site_lang', lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

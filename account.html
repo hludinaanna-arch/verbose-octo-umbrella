@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Мой Аккаунт</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #5a5ce6; 
+            --primary-hover: #4a4cd6; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        
+        .auth-buttons { display: flex; gap: 1rem; align-items: center; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; font-family: inherit; font-size: 1rem; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; border: none; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* User Avatar in Header */
+        .user-avatar {
+            width: 45px; height: 45px; border-radius: 50%;
+            background-color: var(--primary-color); color: #fff;
+            display: none; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.2rem; cursor: pointer;
+            transition: transform 0.2s; border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(90, 92, 230, 0.3);
+        }
+        .user-avatar:hover { transform: scale(1.05); }
+
+        /* Account Page Styles */
+        .account-header {
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+            padding: 4rem 0;
+            border-bottom-left-radius: 3rem;
+            border-bottom-right-radius: 3rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        .account-avatar-large {
+            width: 120px; height: 120px; border-radius: 50%;
+            background-color: var(--primary-color); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 3.5rem; margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 25px rgba(90, 92, 230, 0.3);
+            border: 4px solid #fff;
+        }
+        .account-name { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .account-username { font-size: 1.2rem; color: var(--primary-color); font-weight: 600; margin-bottom: 2rem; }
+
+        .profile-card {
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+        .profile-card h3 {
+            font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--text-dark);
+            display: flex; align-items: center; gap: 0.8rem;
+        }
+        .profile-card h3 i { color: var(--primary-color); }
+        
+        .info-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 0; border-bottom: 1px solid #f3f4f6;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: var(--text-gray); font-weight: 500; display: flex; align-items: center; gap: 0.5rem; }
+        .info-value { font-weight: 600; color: var(--text-dark); text-align: right; }
+
+        .logout-section { text-align: center; margin-bottom: 5rem; }
+        .btn-logout {
+            background-color: #fee2e2; color: #ef4444; border: none;
+            padding: 1rem 3rem; font-size: 1.1rem; border-radius: 50px;
+            cursor: pointer; transition: all 0.3s; font-weight: 600;
+        }
+        .btn-logout:hover { background-color: #ef4444; color: #fff; transform: translateY(-2px); }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 1.5rem; }
+            nav { flex-wrap: wrap; justify-content: center; }
+            .account-name { font-size: 2rem; }
+            .info-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .info-value { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <a href="olympiads.html" data-key="nav_olymp">Olympiads</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons" id="auth-container">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="account-header">
+            <div class="container">
+                <div class="account-avatar-large" id="page-avatar">U</div>
+                <h1 class="account-name" id="page-name">User Name</h1>
+                <p class="account-username" id="page-username">@username</p>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="profile-card">
+                <h3><i class="fa-solid fa-user-shield"></i> <span data-key="acc_info_title">Account Information</span></h3>
+                
+                <div class="info-row">
+                    <span class="info-label"><i class="fa-solid fa-envelope"></i> <span data-key="acc_email">Email</span></span>
+                    <span class="info-value" id="page-email">example@mail.ru</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label"><i class="fa-solid fa-phone"></i> <span data-key="acc_phone">Phone</span></span>
+                    <span class="info-value" id="page-phone">+7 (999) 000-00-00</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label"><i class="fa-solid fa-calendar-check"></i> <span data-key="acc_joined">Joined</span></span>
+                    <span class="info-value" id="page-date">Oct 2026</span>
+                </div>
+            </div>
+
+            <div class="logout-section">
+                <button class="btn-logout" id="logout-btn" data-key="acc_logout">Log Out</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- TRANSLATIONS ---
+        const translations = {
+            en: {
+                nav_home: "Home", nav_uni: "Universities", nav_olymp: "Olympiads",
+                btn_login: "Log In", btn_signup: "Sign Up",
+                acc_info_title: "Account Information", acc_email: "Email", acc_phone: "Phone",
+                acc_joined: "Member since", acc_logout: "Log Out",
+                logout_confirm: "Are you sure you want to log out?"
+            },
+            ru: {
+                nav_home: "Главная", nav_uni: "Вузы", nav_olymp: "Олимпиады",
+                btn_login: "Войти", btn_signup: "Регистрация",
+                acc_info_title: "Информация об аккаунте", acc_email: "Электронная почта", acc_phone: "Телефон",
+                acc_joined: "Дата регистрации", acc_logout: "Выйти из аккаунта",
+                logout_confirm: "Вы уверены, что хотите выйти?"
+            }
+        };
+
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        // --- AUTH CHECK & RENDER ---
+        function checkAuthAndRender() {
+            const userStr = localStorage.getItem('tmu_user');
+            
+            if (!userStr) {
+                // Not logged in -> redirect to home
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+
+            // Update Header Avatar
+            const authContainer = document.getElementById('auth-container');
+            authContainer.innerHTML = `<a href="account.html" class="user-avatar" style="display: flex;" title="${user.name}">${initial}</a>`;
+
+            // Update Page Content
+            document.getElementById('page-avatar').textContent = initial;
+            document.getElementById('page-name').textContent = user.name || 'User';
+            document.getElementById('page-username').textContent = user.username || '@user';
+            document.getElementById('page-email').textContent = user.email || 'Not provided';
+            document.getElementById('page-phone').textContent = user.phone || 'Not provided';
+            
+            // Set join date (using current month/year for demo)
+            const date = new Date();
+            const month = date.toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'en-US', { month: 'short' });
+            document.getElementById('page-date').textContent = `${month} ${date.getFullYear()}`;
+        }
+
+        // --- LOGOUT LOGIC ---
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            if (confirm(translations[currentLang].logout_confirm)) {
+                localStorage.removeItem('tmu_user');
+                window.location.href = 'index.html';
+            }
+        });
+
+        // --- LANGUAGE SWITCHER ---
+        const langToggle = document.getElementById('lang-toggle');
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            currentLang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            
+            // Re-render date format if language changes
+            if(localStorage.getItem('tmu_user')) {
+                const date = new Date();
+                const month = date.toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US', { month: 'short' });
+                document.getElementById('page-date').textContent = `${month} ${date.getFullYear()}`;
+            }
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initialize
+        checkAuthAndRender();
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

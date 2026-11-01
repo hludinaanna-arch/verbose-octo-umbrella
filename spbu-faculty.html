@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - SPbU Faculty</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #003366; /* SPbU Blue */
+            --primary-hover: #002244; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #eef2ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .faculty-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .faculty-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        .programs-section { margin-bottom: 4rem; }
+        .program-card { 
+            background: var(--card-bg);
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0, 51, 102, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .program-card:hover { transform: translateY(-2px); }
+        
+        .program-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .program-code { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .program-name { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); width: 100%; }
+        
+        .scores-box { 
+            background: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .score-item { display: flex; flex-direction: column; }
+        .score-label { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
+        .score-value { font-size: 1.2rem; font-weight: 800; color: var(--primary-color); }
+        .score-value.paid { color: var(--text-gray); }
+
+        .exam-list { list-style: none; margin-bottom: 1.5rem; }
+        .exam-item { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 1rem; 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid rgba(0, 51, 102, 0.1); 
+            font-size: 1.05rem;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-priority { 
+            min-width: 28px; 
+            height: 28px; 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .exam-details { flex-grow: 1; }
+        .exam-type { font-weight: 600; color: var(--text-dark); }
+        .exam-format { color: var(--text-gray); font-size: 0.9rem; margin-left: 0.5rem; }
+        
+        .min-score-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #dbeafe;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .faculty-title h1 { font-size: 2.2rem; } 
+            .faculty-meta { flex-direction: column; gap: 0.5rem; }
+            .exam-item { flex-direction: column; gap: 0.3rem; }
+            .program-header { flex-direction: column; }
+            .scores-box { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="85" cy="65" r="8" fill="#003366"/>
+                    <path d="M75 55L85 65" stroke="#003366" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="faculty-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- DATA BASED ON pravila_priema_2026.pdf & kcp_bak.pdf & 20260529_7529_1__compressed.pdf ---
+        const facultiesData = [
+            {
+                id: "math-mech",
+                en: { 
+                    name: "Faculty of Mathematics and Mechanics", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Fundamental mathematics, mechanics, and computer science",
+                    contacts: "+7 (812) 428-40-00 | math@spbu.ru"
+                },
+                ru: { 
+                    name: "Математико-механический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Фундаментальная математика, механика и компьютерные науки",
+                    contacts: "+7 (812) 428-40-00 | math@spbu.ru"
+                },
+                budget_spots: 390, paid_spots: 80, tuition: "350,000–380,000 ₽",
+                programs: [
+                    { 
+                        code: "01.05.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Fundamental Mathematics and Mechanics (Mathematics)", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальные математика и механика (Математика)", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 39", "Отдельная квота: 39"] 
+                    },
+                    { 
+                        code: "01.05.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Fundamental Mathematics and Mechanics (Mechanics)", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальные математика и механика (Механика)", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "01.05.01", 
+                        est_budget_score: "295-315", est_paid_score: "245-265",
+                        en: { name: "Fundamental Mathematics and Mechanics (Fund. Math & Math. Physics)", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальные математика и механика (Фунд. мат. и мат. физика)", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    }
+                ]
+            },
+            {
+                id: "vmk",
+                en: { 
+                    name: "Faculty of Applied Mathematics and Control Processes", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Applied math, IT, and control systems",
+                    contacts: "+7 (812) 428-40-00 | vmk@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет прикладной математики и процессов управления", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Прикладная математика, IT и системы управления",
+                    contacts: "+7 (812) 428-40-00 | vmk@spbu.ru"
+                },
+                budget_spots: 331, paid_spots: 123, tuition: "360,000–400,000 ₽",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "295-315", est_paid_score: "245-265",
+                        en: { name: "Applied Mathematics and Informatics", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Physics (EGE)(III)", "Informatics (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, inf: 75, rus: 75 } }, 
+                        ru: { name: "Прикладная математика и информатика", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Информатика (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, inf: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 32", "Отдельная квота: 32"] 
+                    },
+                    { 
+                        code: "02.03.02", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Fundamental Informatics and Information Technologies", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Physics (EGE)(III)", "Informatics (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, inf: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальная информатика и информационные технологии", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Информатика (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { math_dvi: 75, math_ege: 75, phys: 75, inf: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "physics",
+                en: { 
+                    name: "Faculty of Physics", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Theoretical and experimental physics, astronomy",
+                    contacts: "+7 (812) 428-40-00 | phys@spbu.ru"
+                },
+                ru: { 
+                    name: "Физический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Теоретическая и экспериментальная физика, астрономия",
+                    contacts: "+7 (812) 428-40-00 | phys@spbu.ru"
+                },
+                budget_spots: 396, paid_spots: 95, tuition: "350,000–390,000 ₽",
+                programs: [
+                    { 
+                        code: "03.05.02", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Fundamental and Applied Physics", exams: ["Physics (DVI)(I)", "Physics (EGE)(II)", "Math OR Informatics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { phys_dvi: 75, phys_ege: 75, math_inf: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальная и прикладная физика", exams: ["Физика (ДВИ)(I)", "Физика (ЕГЭ)(II)", "Математика ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { phys_dvi: 75, phys_ege: 75, math_inf: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 35", "Отдельная квота: 35"] 
+                    },
+                    { 
+                        code: "03.05.01", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Astronomy", exams: ["Physics (DVI)(I)", "Physics (EGE)(II)", "Math (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { phys_dvi: 75, phys_ege: 75, math: 75, rus: 75 } }, 
+                        ru: { name: "Астрономия", exams: ["Физика (ДВИ)(I)", "Физика (ЕГЭ)(II)", "Математика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { phys_dvi: 75, phys_ege: 75, math: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "chemistry",
+                en: { 
+                    name: "Faculty of Chemistry", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Organic, inorganic, and physical chemistry",
+                    contacts: "+7 (812) 428-40-00 | chem@spbu.ru"
+                },
+                ru: { 
+                    name: "Химический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Органическая, неорганическая и физическая химия",
+                    contacts: "+7 (812) 428-40-00 | chem@spbu.ru"
+                },
+                budget_spots: 215, paid_spots: 60, tuition: "350,000–380,000 ₽",
+                programs: [
+                    { 
+                        code: "04.05.01", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Fundamental and Applied Chemistry", exams: ["Chemistry (DVI)(I)", "Chemistry (EGE)(II)", "Math (EGE)(III)", "Physics OR Biology (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { chem_dvi: 75, chem_ege: 75, math: 75, phys_bio: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальная и прикладная химия", exams: ["Химия (ДВИ)(I)", "Химия (ЕГЭ)(II)", "Математика (ЕГЭ)(III)", "Физика ИЛИ Биология (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { chem_dvi: 75, chem_ege: 75, math: 75, phys_bio: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    }
+                ]
+            },
+            {
+                id: "biology",
+                en: { 
+                    name: "Faculty of Biology", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "General biology, genetics, and ecology",
+                    contacts: "+7 (812) 428-40-00 | bio@spbu.ru"
+                },
+                ru: { 
+                    name: "Биологический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Общая биология, генетика и экология",
+                    contacts: "+7 (812) 428-40-00 | bio@spbu.ru"
+                },
+                budget_spots: 191, paid_spots: 70, tuition: "340,000–370,000 ₽",
+                programs: [
+                    { 
+                        code: "06.05.02", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Fundamental and Applied Biology (Physico-chemical Biology)", exams: ["Biology (DVI)(I)", "Biology (EGE)(II)", "Math (EGE)(III)", "Chemistry (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { bio_dvi: 75, bio_ege: 75, math: 75, chem: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальная и прикладная биология (Физико-химическая биология)", exams: ["Биология (ДВИ)(I)", "Биология (ЕГЭ)(II)", "Математика (ЕГЭ)(III)", "Химия (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { bio_dvi: 75, bio_ege: 75, math: 75, chem: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 16", "Отдельная квота: 16"] 
+                    },
+                    { 
+                        code: "06.05.02", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Fundamental and Applied Biology (Bioengineering & Biophysics)", exams: ["Math (DVI)(I)", "Biology (EGE)(II)", "Math (EGE)(III)", "Chemistry (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { math_dvi: 75, bio_ege: 75, math_ege: 75, chem: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальная и прикладная биология (Биоинженерия и биофизика)", exams: ["Математика (ДВИ)(I)", "Биология (ЕГЭ)(II)", "Математика (ЕГЭ)(III)", "Химия (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { math_dvi: 75, bio_ege: 75, math_ege: 75, chem: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "05.03.06", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Ecology and Nature Management", exams: ["Biology (DVI)(I)", "Biology (EGE)(II)", "Math (EGE)(III)", "Chemistry (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { bio_dvi: 75, bio_ege: 75, math: 75, chem: 75, rus: 75 } }, 
+                        ru: { name: "Экология и природопользование", exams: ["Биология (ДВИ)(I)", "Биология (ЕГЭ)(II)", "Математика (ЕГЭ)(III)", "Химия (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { bio_dvi: 75, bio_ege: 75, math: 75, chem: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "soil",
+                en: { 
+                    name: "Faculty of Soil Science", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Soil science, ecology, and environmental protection",
+                    contacts: "+7 (812) 428-40-00 | soil@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет почвоведения", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Почвоведение, экология и охрана окружающей среды",
+                    contacts: "+7 (812) 428-40-00 | soil@spbu.ru"
+                },
+                budget_spots: 80, paid_spots: 13, tuition: "330,000–350,000 ₽",
+                programs: [
+                    { 
+                        code: "06.03.02", 
+                        est_budget_score: "265-285", est_paid_score: "215-235",
+                        en: { name: "Soil Science", exams: ["Biology (DVI)(I)", "Biology (EGE)(II)", "Math OR Chem OR Geo OR Phys OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { bio_dvi: 75, bio_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Почвоведение", exams: ["Биология (ДВИ)(I)", "Биология (ЕГЭ)(II)", "Математика ИЛИ Химия ИЛИ География ИЛИ Физика ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { bio_dvi: 75, bio_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6"] 
+                    },
+                    { 
+                        code: "05.03.06", 
+                        est_budget_score: "260-280", est_paid_score: "210-230",
+                        en: { name: "Ecology and Nature Management", exams: ["Geography (DVI)(I)", "Geography (EGE)(II)", "Math OR Chem OR Bio OR Inf OR Phys (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { geo_dvi: 75, geo_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Экология и природопользование", exams: ["География (ДВИ)(I)", "География (ЕГЭ)(II)", "Математика ИЛИ Химия ИЛИ Биология ИЛИ Информатика ИЛИ Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { geo_dvi: 75, geo_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "geology",
+                en: { 
+                    name: "Faculty of Geology", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Geology, hydrogeology, and paleontology",
+                    contacts: "+7 (812) 428-40-00 | geo@spbu.ru"
+                },
+                ru: { 
+                    name: "Геологический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Геология, гидрогеология и палеонтология",
+                    contacts: "+7 (812) 428-40-00 | geo@spbu.ru"
+                },
+                budget_spots: 200, paid_spots: 40, tuition: "340,000–360,000 ₽",
+                programs: [
+                    { 
+                        code: "05.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Geology", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Physics OR Geo OR Chem OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Геология", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Физика ИЛИ География ИЛИ Химия ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 20", "Отдельная квота: 20"] 
+                    }
+                ]
+            },
+            {
+                id: "geography",
+                en: { 
+                    name: "Faculty of Geography and Geoecology", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Physical geography, cartography, and tourism",
+                    contacts: "+7 (812) 428-40-00 | geog@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет географии и геоэкологии", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Физическая география, картография и туризм",
+                    contacts: "+7 (812) 428-40-00 | geog@spbu.ru"
+                },
+                budget_spots: 157, paid_spots: 25, tuition: "330,000–350,000 ₽",
+                programs: [
+                    { 
+                        code: "05.03.00", 
+                        est_budget_score: "265-285", est_paid_score: "215-235",
+                        en: { name: "Earth Sciences (Multidisciplinary Contest)", exams: ["Geography (DVI)(I)", "Geography (EGE)(II)", "Math OR Inf OR Bio OR Phys (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { geo_dvi: 75, geo_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Науки о Земле (многопрофильный конкурс)", exams: ["География (ДВИ)(I)", "География (ЕГЭ)(II)", "Математика ИЛИ Информатика ИЛИ Биология ИЛИ Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { geo_dvi: 75, geo_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "43.03.02", 
+                        est_budget_score: "260-280", est_paid_score: "210-230",
+                        en: { name: "Tourism", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "History OR Geo OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Туризм", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "История ИЛИ География ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "materials",
+                en: { 
+                    name: "Faculty of Materials Science", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Nanotechnology, materials physics and chemistry",
+                    contacts: "+7 (812) 428-40-00 | matsci@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет наук о материалах", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Нанотехнологии, физика и химия материалов",
+                    contacts: "+7 (812) 428-40-00 | matsci@spbu.ru"
+                },
+                budget_spots: 28, paid_spots: 5, tuition: "350,000–370,000 ₽",
+                programs: [
+                    { 
+                        code: "04.03.02", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Chemistry, Physics and Mechanics of Materials", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Chemistry (EGE)(III)", "Physics OR Informatics (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { math_dvi: 75, math_ege: 75, chem: 75, phys_inf: 75, rus: 75 } }, 
+                        ru: { name: "Химия, физика и механика материалов", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Химия (ЕГЭ)(III)", "Физика ИЛИ Информатика (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { math_dvi: 75, math_ege: 75, chem: 75, phys_inf: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "medicine",
+                en: { 
+                    name: "Faculty of Fundamental Medicine", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "General medicine, pharmacy, and clinical psychology",
+                    contacts: "+7 (812) 428-40-00 | med@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет фундаментальной медицины", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Лечебное дело, фармация и клиническая психология",
+                    contacts: "+7 (812) 428-40-00 | med@spbu.ru"
+                },
+                budget_spots: 76, paid_spots: 82, tuition: "380,000–420,000 ₽",
+                programs: [
+                    { 
+                        code: "31.05.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "General Medicine", exams: ["Chemistry (DVI)(I)", "Chemistry (EGE)(II)", "Biology (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { chem_dvi: 75, chem_ege: 75, bio: 75, rus: 75 } }, 
+                        ru: { name: "Лечебное дело", exams: ["Химия (ДВИ)(I)", "Химия (ЕГЭ)(II)", "Биология (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { chem_dvi: 75, chem_ege: 75, bio: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6"] 
+                    },
+                    { 
+                        code: "33.05.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Pharmacy", exams: ["Chemistry (DVI)(I)", "Chemistry (EGE)(II)", "Biology (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { chem_dvi: 75, chem_ege: 75, bio: 75, rus: 75 } }, 
+                        ru: { name: "Фармация", exams: ["Химия (ДВИ)(I)", "Химия (ЕГЭ)(II)", "Биология (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { chem_dvi: 75, chem_ege: 75, bio: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "history",
+                en: { 
+                    name: "Faculty of History", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Russian and world history, art history",
+                    contacts: "+7 (812) 428-40-00 | hist@spbu.ru"
+                },
+                ru: { 
+                    name: "Исторический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Отечественная и всемирная история, история искусств",
+                    contacts: "+7 (812) 428-40-00 | hist@spbu.ru"
+                },
+                budget_spots: 145, paid_spots: 80, tuition: "320,000–340,000 ₽",
+                programs: [
+                    { 
+                        code: "46.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "History (History Group)", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Social Studies (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "История (группа образовательных программ «История»)", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 11", "Отдельная квота: 11"] 
+                    },
+                    { 
+                        code: "46.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "History (International Relations History)", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Social Studies (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "История (История международных отношений)", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "50.03.03", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Art History", exams: ["Creative Exam (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Literature (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { creative_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "История искусств", exams: ["Творческое испытание (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Литература (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { creative_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "philology",
+                en: { 
+                    name: "Faculty of Philology", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Russian, foreign philology, and linguistics",
+                    contacts: "+7 (812) 428-40-00 | phil@spbu.ru"
+                },
+                ru: { 
+                    name: "Филологический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Русская, зарубежная филология и лингвистика",
+                    contacts: "+7 (812) 428-40-00 | phil@spbu.ru"
+                },
+                budget_spots: 206, paid_spots: 74, tuition: "330,000–350,000 ₽",
+                programs: [
+                    { 
+                        code: "45.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Philology (Russian Language and Literature)", exams: ["Literature (DVI)(I)", "Literature (EGE)(II)", "History OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { lit_dvi: 75, lit_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Филология (Русский язык и литература)", exams: ["Литература (ДВИ)(I)", "Литература (ЕГЭ)(II)", "История ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { lit_dvi: 75, lit_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 8", "Отдельная квота: 8"] 
+                    },
+                    { 
+                        code: "45.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Philology (Foreign Philology)", exams: ["Literature (DVI)(I)", "Literature (EGE)(II)", "Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { lit_dvi: 75, lit_ege: 75, for: 75, rus: 75 } }, 
+                        ru: { name: "Филология (Зарубежная филология)", exams: ["Литература (ДВИ)(I)", "Литература (ЕГЭ)(II)", "Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { lit_dvi: 75, lit_ege: 75, for: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 8", "Отдельная квота: 8"] 
+                    },
+                    { 
+                        code: "45.03.01", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Philology (Slavic, Greek and Classical Philology)", exams: ["Literature (DVI)(I)", "Literature (EGE)(II)", "Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { lit_dvi: 75, lit_ege: 75, for: 75, rus: 75 } }, 
+                        ru: { name: "Филология (Славянская, греческая и классическая филология)", exams: ["Литература (ДВИ)(I)", "Литература (ЕГЭ)(II)", "Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { lit_dvi: 75, lit_ege: 75, for: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    },
+                    { 
+                        code: "45.03.03", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Fundamental and Applied Linguistics", exams: ["Foreign Lang (DVI)(I)", "Foreign Lang (EGE)(II)", "Math (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, math: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальная и прикладная лингвистика", exams: ["Иностранный язык (ДВИ)(I)", "Иностранный язык (ЕГЭ)(II)", "Математика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, math: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "philosophy",
+                en: { 
+                    name: "Faculty of Philosophy", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Philosophy, religious studies, and cultural studies",
+                    contacts: "+7 (812) 428-40-00 | philo@spbu.ru"
+                },
+                ru: { 
+                    name: "Философский факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Философия, религиоведение и культурология",
+                    contacts: "+7 (812) 428-40-00 | philo@spbu.ru"
+                },
+                budget_spots: 118, paid_spots: 165, tuition: "310,000–330,000 ₽",
+                programs: [
+                    { 
+                        code: "47.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Philosophy", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "History OR Foreign Lang OR Literature (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Философия", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "История ИЛИ Иностранный язык ИЛИ Литература (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 7", "Отдельная квота: 7"] 
+                    },
+                    { 
+                        code: "47.03.03", 
+                        est_budget_score: "265-285", est_paid_score: "215-235",
+                        en: { name: "Religious Studies", exams: ["History (DVI)(I)", "History (EGE)(II)", "Social Studies OR Geo OR Lit OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Религиоведение", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Обществознание ИЛИ География ИЛИ Литература ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "42.03.01", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Advertising and Public Relations", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "History OR Inf OR Foreign Lang OR Lit (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Реклама и связи с общественностью", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "История ИЛИ Информатика ИЛИ Иностранный язык ИЛИ Литература (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "51.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Culturology", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "History OR Foreign Lang OR Lit (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Культурология", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "История ИЛИ Иностранный язык ИЛИ Литература (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "economics",
+                en: { 
+                    name: "Faculty of Economics", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Economics, management, and business informatics",
+                    contacts: "+7 (812) 428-40-00 | econ@spbu.ru"
+                },
+                ru: { 
+                    name: "Экономический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Экономика, менеджмент и бизнес-информатика",
+                    contacts: "+7 (812) 428-40-00 | econ@spbu.ru"
+                },
+                budget_spots: 196, paid_spots: 415, tuition: "400,000–450,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "295-315", est_paid_score: "245-265",
+                        en: { name: "Economics", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Foreign Lang OR Inf OR Geo OR Hist OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Экономика", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика ИЛИ География ИЛИ История ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 17", "Отдельная квота: 17"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Management", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Foreign Lang OR Inf OR Hist OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Менеджмент", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика ИЛИ История ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "law",
+                en: { 
+                    name: "Faculty of Law", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Jurisprudence, international law",
+                    contacts: "+7 (812) 428-40-00 | law@spbu.ru"
+                },
+                ru: { 
+                    name: "Юридический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Юриспруденция, международное право",
+                    contacts: "+7 (812) 428-40-00 | law@spbu.ru"
+                },
+                budget_spots: 305, paid_spots: 405, tuition: "440,000–460,000 ₽",
+                programs: [
+                    { 
+                        code: "40.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Jurisprudence (State, Civil, Criminal Law)", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "History OR Inf OR Math (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Юриспруденция (Государственно-правовой, гражданско-правовой, уголовно-правовой профили)", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "История ИЛИ Информатика ИЛИ Математика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 31", "Отдельная квота: 31"] 
+                    },
+                    { 
+                        code: "40.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Jurisprudence (International Law)", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "Foreign Lang (EGE)(III)"], min_scores: { soc_dvi: 75, soc_ege: 75, for: 75 } }, 
+                        ru: { name: "Юриспруденция (Международно-правовой профиль)", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "Иностранный язык (ЕГЭ)(III)"], min_scores: { soc_dvi: 75, soc_ege: 75, for: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "journalism",
+                en: { 
+                    name: "Faculty of Journalism", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Journalism, media communications, and advertising",
+                    contacts: "+7 (812) 428-40-00 | journ@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет журналистики", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Журналистика, медиакоммуникации и реклама",
+                    contacts: "+7 (812) 428-40-00 | journ@spbu.ru"
+                },
+                budget_spots: 197, paid_spots: 265, tuition: "370,000–390,000 ₽",
+                programs: [
+                    { 
+                        code: "42.03.02", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Journalism (Journalism)", exams: ["Creative Exam (DVI)(I)", "Literature (EGE)(II)", "Foreign Lang OR Hist OR Geo (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Журналистика (Журналистика)", exams: ["Творческое испытание (ДВИ)(I)", "Литература (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 11", "Отдельная квота: 11"] 
+                    },
+                    { 
+                        code: "42.03.02", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Journalism (International Journalism)", exams: ["Creative Exam (DVI)(I)", "Literature (EGE)(II)", "Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { creative_dvi: 75, lit: 75, for: 75, rus: 75 } }, 
+                        ru: { name: "Журналистика (Международная журналистика)", exams: ["Творческое испытание (ДВИ)(I)", "Литература (ЕГЭ)(II)", "Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { creative_dvi: 75, lit: 75, for: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    },
+                    { 
+                        code: "42.03.05", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Media Communications", exams: ["Creative Exam (DVI)(I)", "Literature (EGE)(II)", "Social Studies OR Hist OR Geo (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Медиакоммуникации", exams: ["Творческое испытание (ДВИ)(I)", "Литература (ЕГЭ)(II)", "Обществознание ИЛИ История ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 7", "Отдельная квота: 7"] 
+                    }
+                ]
+            },
+            {
+                id: "psychology",
+                en: { 
+                    name: "Faculty of Psychology", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Clinical psychology, service psychology",
+                    contacts: "+7 (812) 428-40-00 | psych@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет психологии", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Клиническая психология, психология служебной деятельности",
+                    contacts: "+7 (812) 428-40-00 | psych@spbu.ru"
+                },
+                budget_spots: 122, paid_spots: 175, tuition: "360,000–380,000 ₽",
+                programs: [
+                    { 
+                        code: "37.05.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Clinical Psychology", exams: ["Biology (DVI)(I)", "Biology (EGE)(II)", "Math OR Soc OR Chem (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { bio_dvi: 75, bio_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Клиническая психология", exams: ["Биология (ДВИ)(I)", "Биология (ЕГЭ)(II)", "Математика ИЛИ Обществознание ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { bio_dvi: 75, bio_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6"] 
+                    },
+                    { 
+                        code: "37.05.02", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Service Psychology", exams: ["Biology (DVI)(I)", "Biology (EGE)(II)", "Math OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { bio_dvi: 75, bio_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Психология служебной деятельности", exams: ["Биология (ДВИ)(I)", "Биология (ЕГЭ)(II)", "Математика ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { bio_dvi: 75, bio_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 5", "Отдельная квота: 5"] 
+                    },
+                    { 
+                        code: "44.05.01", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Pedagogy and Psychology of Deviant Behavior", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "Math OR Bio OR Hist (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Педагогика и психология девиантного поведения", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "Математика ИЛИ Биология ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "asia-africa",
+                en: { 
+                    name: "Institute of Asian and African Studies", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Oriental studies, africanistics, and international relations",
+                    contacts: "+7 (812) 428-40-00 | asia@spbu.ru"
+                },
+                ru: { 
+                    name: "Институт стран Азии и Африки", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Востоковедение, африканистика и международные отношения",
+                    contacts: "+7 (812) 428-40-00 | asia@spbu.ru"
+                },
+                budget_spots: 100, paid_spots: 100, tuition: "340,000–360,000 ₽",
+                programs: [
+                    { 
+                        code: "58.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Oriental Studies and African Studies", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, for: 75, rus: 75 } }, 
+                        ru: { name: "Востоковедение и африканистика", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, for: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    }
+                ]
+            },
+            {
+                id: "sociology",
+                en: { 
+                    name: "Faculty of Sociology", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Sociology, public policy, and social work",
+                    contacts: "+7 (812) 428-40-00 | soc@spbu.ru"
+                },
+                ru: { 
+                    name: "Социологический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Социология, публичная политика и социальная работа",
+                    contacts: "+7 (812) 428-40-00 | soc@spbu.ru"
+                },
+                budget_spots: 125, paid_spots: 60, tuition: "320,000–340,000 ₽",
+                programs: [
+                    { 
+                        code: "39.03.01", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Sociology", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "Math OR Hist (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Социология", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "Математика ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "41.03.06", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Public Policy and Social Sciences", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "Foreign Lang OR Hist OR Geo (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Публичная политика и социальные науки", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "foreign-langs",
+                en: { 
+                    name: "Faculty of Foreign Languages and Regional Studies", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Translation, linguistics, and area studies",
+                    contacts: "+7 (812) 428-40-00 | flrs@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет иностранных языков и регионоведения", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Перевод, лингвистика и регионоведение",
+                    contacts: "+7 (812) 428-40-00 | flrs@spbu.ru"
+                },
+                budget_spots: 71, paid_spots: 117, tuition: "350,000–370,000 ₽",
+                programs: [
+                    { 
+                        code: "45.05.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Translation and Translation Studies", exams: ["Foreign Lang (DVI)(I)", "Foreign Lang (EGE)(II)", "Hist OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Перевод и переводоведение", exams: ["Иностранный язык (ДВИ)(I)", "Иностранный язык (ЕГЭ)(II)", "История ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "45.03.02", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Linguistics (Intercultural Communication, Teaching Methods)", exams: ["Foreign Lang (DVI)(I)", "Foreign Lang (EGE)(II)", "Hist OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Лингвистика (Межкультурная коммуникация, Теория и методика преподавания)", exams: ["Иностранный язык (ДВИ)(I)", "Иностранный язык (ЕГЭ)(II)", "История ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    },
+                    { 
+                        code: "41.03.01", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Area Studies (European, American Studies)", exams: ["Foreign Lang (DVI)(I)", "Foreign Lang OR Soc OR Geo (EGE)(II)", "History (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, choice: 75, hist: 75, rus: 75 } }, 
+                        ru: { name: "Зарубежное регионоведение (Европейские, Американские исследования)", exams: ["Иностранный язык (ДВИ)(I)", "Иностранный язык ИЛИ Обществознание ИЛИ География (ЕГЭ)(II)", "История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, choice: 75, hist: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "41.03.02", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Area Studies of Russia", exams: ["Social Studies (DVI)(I)", "History (EGE)(II)", "Social Studies OR Geo (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, hist: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Регионоведение России", exams: ["Обществознание (ДВИ)(I)", "История (ЕГЭ)(II)", "Обществознание ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, hist: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "51.03.01", 
+                        est_budget_score: "265-285", est_paid_score: "215-235",
+                        en: { name: "Culturology", exams: ["Foreign Lang (DVI)(I)", "Foreign Lang OR Hist OR Lit (EGE)(II)", "Social Studies (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, choice: 75, soc: 75, rus: 75 } }, 
+                        ru: { name: "Культурология", exams: ["Иностранный язык (ДВИ)(I)", "Иностранный язык ИЛИ История ИЛИ Литература (ЕГЭ)(II)", "Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, choice: 75, soc: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "bioeng",
+                en: { 
+                    name: "Faculty of Bioengineering and Bioinformatics", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Bioengineering, bioinformatics, and biotechnology",
+                    contacts: "+7 (812) 428-40-00 | bioeng@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет биоинженерии и биоинформатики", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Биоинженерия, биоинформатика и биотехнологии",
+                    contacts: "+7 (812) 428-40-00 | bioeng@spbu.ru"
+                },
+                budget_spots: 35, paid_spots: 40, tuition: "340,000–360,000 ₽",
+                programs: [
+                    { 
+                        code: "06.05.01", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Bioengineering and Bioinformatics", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Chemistry (EGE)(III)", "Biology (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { math_dvi: 75, math_ege: 75, chem: 75, bio: 75, rus: 75 } }, 
+                        ru: { name: "Биоинженерия и биоинформатика", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Химия (ЕГЭ)(III)", "Биология (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { math_dvi: 75, math_ege: 75, chem: 75, bio: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    }
+                ]
+            },
+            {
+                id: "physics-chem-eng",
+                en: { 
+                    name: "Faculty of Fundamental Physical and Chemical Engineering", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Applied physics, fundamental chemical engineering",
+                    contacts: "+7 (812) 428-40-00 | physchem@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет фундаментальной физико-химической инженерии", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Прикладная физика, фундаментальная химическая инженерия",
+                    contacts: "+7 (812) 428-40-00 | physchem@spbu.ru"
+                },
+                budget_spots: 41, paid_spots: 12, tuition: "350,000–370,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Applied Mathematics and Physics", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Physics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Прикладные математика и физика", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Физика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "04.05.01", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Fundamental and Applied Chemistry (Fund. Physico-Chemical Eng.)", exams: ["Chemistry (DVI)(I)", "Chemistry (EGE)(II)", "Math (EGE)(III)", "Physics (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { chem_dvi: 75, chem_ege: 75, math: 75, phys: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальная и прикладная химия (Фунд. физико-химическая инженерия)", exams: ["Химия (ДВИ)(I)", "Химия (ЕГЭ)(II)", "Математика (ЕГЭ)(III)", "Физика (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { chem_dvi: 75, chem_ege: 75, math: 75, phys: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "public-admin",
+                en: { 
+                    name: "Graduate School of Public Administration", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Public administration, personnel management, politics",
+                    contacts: "+7 (812) 428-40-00 | gspa@spbu.ru"
+                },
+                ru: { 
+                    name: "Высшая школа государственного управления", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Государственное управление, управление персоналом, политология",
+                    contacts: "+7 (812) 428-40-00 | gspa@spbu.ru"
+                },
+                budget_spots: 0, paid_spots: 50, tuition: "390,000–410,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.05", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Business Informatics (Digital Transformation)", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Social Studies OR Inf OR Hist (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Бизнес-информатика (Цифровая трансформация бизнес-информатики)", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Обществознание ИЛИ Информатика ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "audit",
+                en: { 
+                    name: "Graduate School of State Audit", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "State and municipal audit, economic security",
+                    contacts: "+7 (812) 428-40-00 | audit@spbu.ru"
+                },
+                ru: { 
+                    name: "Высшая школа государственного аудита", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Государственный и муниципальный аудит, экономическая безопасность",
+                    contacts: "+7 (812) 428-40-00 | audit@spbu.ru"
+                },
+                budget_spots: 30, paid_spots: 125, tuition: "380,000–400,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Economics (State and Municipal Audit)", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Social Studies OR Hist OR Inf OR Geo OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Экономика (Государственный и муниципальный аудит)", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Обществознание ИЛИ История ИЛИ Информатика ИЛИ География ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "40.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Jurisprudence (Financial-Legal Profile, Investigation of Economic Crimes)", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "History OR Inf OR Foreign Lang OR Math (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Юриспруденция (Финансово-правовой профиль, Расследование экономических преступлений)", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "История ИЛИ Информатика ИЛИ Иностранный язык ИЛИ Математика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "tv",
+                en: { 
+                    name: "Graduate School of Television", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Television production and media technologies",
+                    contacts: "+7 (812) 428-40-00 | tv@spbu.ru"
+                },
+                ru: { 
+                    name: "Высшая школа телевидения", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Телевизионное производство и медиатехнологии",
+                    contacts: "+7 (812) 428-40-00 | tv@spbu.ru"
+                },
+                budget_spots: 15, paid_spots: 40, tuition: "380,000–400,000 ₽",
+                programs: [
+                    { 
+                        code: "42.03.04", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Television", exams: ["Creative Exam (DVI)(I)", "Literature (EGE)(II)", "History OR Social Studies (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Телевидение", exams: ["Творческое испытание (ДВИ)(I)", "Литература (ЕГЭ)(II)", "История ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "social-sciences",
+                en: { 
+                    name: "Graduate School of Modern Social Sciences", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Sociology, management, and HR management",
+                    contacts: "+7 (812) 428-40-00 | social@spbu.ru"
+                },
+                ru: { 
+                    name: "Высшая школа современных социальных наук", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Социология, менеджмент и управление персоналом",
+                    contacts: "+7 (812) 428-40-00 | social@spbu.ru"
+                },
+                budget_spots: 26, paid_spots: 74, tuition: "330,000–350,000 ₽",
+                programs: [
+                    { 
+                        code: "39.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Sociology", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "Math OR Foreign Lang OR Hist (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Социология", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "Математика ИЛИ Иностранный язык ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Management", exams: ["Social Studies (DVI)(I)", "Math (EGE)(II)", "Social Studies OR Foreign Lang OR Hist OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Менеджмент", exams: ["Обществознание (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Обществознание ИЛИ Иностранный язык ИЛИ История ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    },
+                    { 
+                        code: "38.03.03", 
+                        est_budget_score: "265-285", est_paid_score: "215-235",
+                        en: { name: "Human Resource Management", exams: ["Social Studies (DVI)(I)", "Math (EGE)(II)", "Social Studies OR Foreign Lang OR Hist OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Управление персоналом", exams: ["Обществознание (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Обществознание ИЛИ Иностранный язык ИЛИ История ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "politics",
+                en: { 
+                    name: "Faculty of Political Science", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Political science, conflictology, and public policy",
+                    contacts: "+7 (812) 428-40-00 | pol@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет политических наук", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Политология, конфликтология и публичная политика",
+                    contacts: "+7 (812) 428-40-00 | pol@spbu.ru"
+                },
+                budget_spots: 57, paid_spots: 50, tuition: "320,000–340,000 ₽",
+                programs: [
+                    { 
+                        code: "41.03.04", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Political Science (General Political Science)", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Geo OR Soc OR Math OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Политология (Общая политология)", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ География ИЛИ Обществознание ИЛИ Математика ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    },
+                    { 
+                        code: "41.03.04", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Political Science (Political Management and PR)", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Geo OR Soc OR Math OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Политология (Политический менеджмент и связи с общественностью)", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ География ИЛИ Обществознание ИЛИ Математика ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "37.03.02", 
+                        est_budget_score: "265-285", est_paid_score: "215-235",
+                        en: { name: "Conflictology", exams: ["Social Studies (DVI)(I)", "Social Studies (EGE)(II)", "Biology OR Math OR Hist (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Конфликтология", exams: ["Обществознание (ДВИ)(I)", "Обществознание (ЕГЭ)(II)", "Биология ИЛИ Математика ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, soc_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "culture-policy",
+                en: { 
+                    name: "Graduate School of Cultural Policy and Arts Management", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Producering, arts management, and cultural studies",
+                    contacts: "+7 (812) 428-40-00 | culture@spbu.ru"
+                },
+                ru: { 
+                    name: "Высшая школа культурной политики и управления в гуманитарной сфере", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Продюсерство, арт-менеджмент и культурология",
+                    contacts: "+7 (812) 428-40-00 | culture@spbu.ru"
+                },
+                budget_spots: 12, paid_spots: 98, tuition: "340,000–360,000 ₽",
+                programs: [
+                    { 
+                        code: "55.05.04", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Producing", exams: ["Creative Exam (DVI)(I)", "Literature (EGE)(II)", "Foreign Lang OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Продюсерство", exams: ["Творческое испытание (ДВИ)(I)", "Литература (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Management (Culture Management)", exams: ["Foreign Lang (DVI)(I)", "Math (EGE)(II)", "Foreign Lang OR Hist OR Inf OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Менеджмент (Менеджмент в культуре)", exams: ["Иностранный язык (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ Информатика ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Management (Sports Management)", exams: ["Social Studies (DVI)(I)", "Math (EGE)(II)", "Foreign Lang OR Hist OR Inf OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Менеджмент (Менеджмент в спорте)", exams: ["Обществознание (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ Информатика ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Management (Culture and Tourism Marketing)", exams: ["Social Studies (DVI)(I)", "Math (EGE)(II)", "Foreign Lang OR Hist OR Inf OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Менеджмент (Менеджмент и маркетинг в сфере культуры и культурный туризм)", exams: ["Обществознание (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ Информатика ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Management (Museum and Gallery Management)", exams: ["Foreign Lang (DVI)(I)", "Math (EGE)(II)", "Foreign Lang OR Hist OR Inf OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Менеджмент (Музейный и галерейный менеджмент)", exams: ["Иностранный язык (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ Информатика ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, math: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "arts",
+                en: { 
+                    name: "Faculty of Arts", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Fine arts, design, and restoration",
+                    contacts: "+7 (812) 428-40-00 | arts@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет искусств", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Изобразительное искусство, дизайн и реставрация",
+                    contacts: "+7 (812) 428-40-00 | arts@spbu.ru"
+                },
+                budget_spots: 0, paid_spots: 25, tuition: "350,000–370,000 ₽",
+                programs: [
+                    { 
+                        code: "50.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Fine Arts", exams: ["Creative Exam (DVI)(I)", "Literature (EGE)(II)", "History OR Soc OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Изящные искусства", exams: ["Творческое испытание (ДВИ)(I)", "Литература (ЕГЭ)(II)", "История ИЛИ Обществознание ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { creative_dvi: 75, lit: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "state-gov",
+                en: { 
+                    name: "Faculty of State Administration", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Personnel management, public administration, politics",
+                    contacts: "+7 (812) 428-40-00 | gov@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет государственного управления", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Управление персоналом, государственное управление, политология",
+                    contacts: "+7 (812) 428-40-00 | gov@spbu.ru"
+                },
+                budget_spots: 43, paid_spots: 198, tuition: "380,000–400,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.03", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Human Resource Management", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Foreign Lang OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Управление персоналом", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "38.03.04", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Public Administration", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Social Studies (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, soc: 75, rus: 75 } }, 
+                        ru: { name: "Государственное и муниципальное управление", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, soc: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    },
+                    { 
+                        code: "41.03.04", 
+                        est_budget_score: "270-290", est_paid_score: "220-240",
+                        en: { name: "Political Science", exams: ["History (DVI)(I)", "History (EGE)(II)", "Social Studies OR Geo OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Политология", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Обществознание ИЛИ География ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Management", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Foreign Lang OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Менеджмент", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "business",
+                en: { 
+                    name: "Graduate School of Business", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Management, entrepreneurship, and international business",
+                    contacts: "+7 (812) 428-40-00 | business@spbu.ru"
+                },
+                ru: { 
+                    name: "Высшая школа бизнеса", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Менеджмент, предпринимательство и международный бизнес",
+                    contacts: "+7 (812) 428-40-00 | business@spbu.ru"
+                },
+                budget_spots: 0, paid_spots: 85, tuition: "420,000–440,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "240-260",
+                        en: { name: "Management (Business Management and Entrepreneurship)", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Foreign Lang OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Менеджмент (Управление бизнесом и предпринимательство)", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "world-politics",
+                en: { 
+                    name: "Faculty of World Politics", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "International relations, global processes, and diplomacy",
+                    contacts: "+7 (812) 428-40-00 | wp@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет мировой политики", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Международные отношения, глобальные процессы и дипломатия",
+                    contacts: "+7 (812) 428-40-00 | wp@spbu.ru"
+                },
+                budget_spots: 30, paid_spots: 235, tuition: "370,000–390,000 ₽",
+                programs: [
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "International Relations", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Geo OR Soc (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Международные отношения", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ География ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "International Relations (Global Political Processes and Diplomacy)", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Soc OR Geo (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Международные отношения (Глобальные политические процессы и дипломатия)", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "International Relations (Global Economy and Management, Global Energy and Int. Business)", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Soc OR Math OR Geo OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Международные отношения (Глобальная экономика и управление, Глобальная энергетика и международный бизнес)", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание ИЛИ Математика ИЛИ География ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "International Relations (International Humanitarian Cooperation)", exams: ["Foreign Lang (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Soc OR Geo (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, hist: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Международные отношения (Международное гуманитарное сотрудничество)", exams: ["Иностранный язык (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, hist: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "moscow-school-econ",
+                en: { 
+                    name: "Moscow School of Economics", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Economics, finance, and applied informatics",
+                    contacts: "+7 (812) 428-40-00 | mse@spbu.ru"
+                },
+                ru: { 
+                    name: "Московская школа экономики", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Экономика, финансы и прикладная информатика",
+                    contacts: "+7 (812) 428-40-00 | mse@spbu.ru"
+                },
+                budget_spots: 0, paid_spots: 100, tuition: "400,000–420,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "N/A", est_paid_score: "240-260",
+                        en: { name: "Economics", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Social Studies OR Foreign Lang OR Geo OR Inf OR Hist (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Экономика", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Обществознание ИЛИ Иностранный язык ИЛИ География ИЛИ Информатика ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "global-processes",
+                en: { 
+                    name: "Faculty of Global Processes", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "International relations, global economics, and energy",
+                    contacts: "+7 (812) 428-40-00 | gp@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет глобальных процессов", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Международные отношения, глобальная экономика и энергетика",
+                    contacts: "+7 (812) 428-40-00 | gp@spbu.ru"
+                },
+                budget_spots: 25, paid_spots: 95, tuition: "360,000–380,000 ₽",
+                programs: [
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "International Relations (Global Political Processes and Diplomacy)", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Soc OR Geo (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Международные отношения (Глобальные политические процессы и дипломатия)", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "International Relations (Global Economy and Management, Global Energy and Int. Business)", exams: ["History (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Soc OR Math OR Geo OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Международные отношения (Глобальная экономика и управление, Глобальная энергетика и международный бизнес)", exams: ["История (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание ИЛИ Математика ИЛИ География ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist_dvi: 75, hist_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "International Relations (International Humanitarian Cooperation)", exams: ["Foreign Lang (DVI)(I)", "History (EGE)(II)", "Foreign Lang OR Soc OR Geo (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, hist: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Международные отношения (Международное гуманитарное сотрудничество)", exams: ["Иностранный язык (ДВИ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, hist: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "translation",
+                en: { 
+                    name: "Graduate School of Translation", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Translation studies, linguistics, and intercultural communication",
+                    contacts: "+7 (812) 428-40-00 | trans@spbu.ru"
+                },
+                ru: { 
+                    name: "Высшая школа перевода", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Переводоведение, лингвистика и межкультурная коммуникация",
+                    contacts: "+7 (812) 428-40-00 | trans@spbu.ru"
+                },
+                budget_spots: 10, paid_spots: 50, tuition: "350,000–370,000 ₽",
+                programs: [
+                    { 
+                        code: "45.05.01", 
+                        est_budget_score: "280-300", est_paid_score: "230-250",
+                        en: { name: "Translation and Translation Studies", exams: ["Foreign Lang (DVI)(I)", "Foreign Lang (EGE)(II)", "Social Studies OR Hist (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Перевод и переводоведение", exams: ["Иностранный язык (ДВИ)(I)", "Иностранный язык (ЕГЭ)(II)", "Обществознание ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "45.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Linguistics", exams: ["Foreign Lang (DVI)(I)", "Foreign Lang (EGE)(II)", "Social Studies OR Hist (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Лингвистика", exams: ["Иностранный язык (ДВИ)(I)", "Иностранный язык (ЕГЭ)(II)", "Обществознание ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for_dvi: 75, for_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "management-innovation",
+                en: { 
+                    name: "Graduate School of Management and Innovation", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Innovation management, technology transfer",
+                    contacts: "+7 (812) 428-40-00 | innov@spbu.ru"
+                },
+                ru: { 
+                    name: "Высшая школа управления и инноваций", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Управление инновациями, трансфер технологий",
+                    contacts: "+7 (812) 428-40-00 | innov@spbu.ru"
+                },
+                budget_spots: 0, paid_spots: 35, tuition: "340,000–360,000 ₽",
+                programs: [
+                    { 
+                        code: "27.03.05", 
+                        est_budget_score: "N/A", est_paid_score: "230-250",
+                        en: { name: "Innovation", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Physics OR Chem OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Инноватика", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Физика ИЛИ Химия ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "biotech",
+                en: { 
+                    name: "Faculty of Biotechnology", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Biotechnology, genetic engineering, and bioinformatics",
+                    contacts: "+7 (812) 428-40-00 | biotech@spbu.ru"
+                },
+                ru: { 
+                    name: "Биотехнологический факультет", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Биотехнологии, генная инженерия и биоинформатика",
+                    contacts: "+7 (812) 428-40-00 | biotech@spbu.ru"
+                },
+                budget_spots: 25, paid_spots: 15, tuition: "340,000–360,000 ₽",
+                programs: [
+                    { 
+                        code: "19.03.01", 
+                        est_budget_score: "275-295", est_paid_score: "225-245",
+                        en: { name: "Biotechnology", exams: ["Biology (DVI)(I)", "Math (EGE)(II)", "Biology (EGE)(III)", "Chemistry (EGE)(IV)", "Russian (EGE)(V)"], min_scores: { bio_dvi: 75, math: 75, bio_ege: 75, chem: 75, rus: 75 } }, 
+                        ru: { name: "Биотехнология", exams: ["Биология (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Биология (ЕГЭ)(III)", "Химия (ЕГЭ)(IV)", "Русский язык (ЕГЭ)(V)"], min_scores: { bio_dvi: 75, math: 75, bio_ege: 75, chem: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "space-research",
+                en: { 
+                    name: "Faculty of Space Research", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Space research, cosmonautics, and fundamental mechanics",
+                    contacts: "+7 (812) 428-40-00 | space@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет космических исследований", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Космические исследования, космонавтика и фундаментальная механика",
+                    contacts: "+7 (812) 428-40-00 | space@spbu.ru"
+                },
+                budget_spots: 55, paid_spots: 20, tuition: "350,000–370,000 ₽",
+                programs: [
+                    { 
+                        code: "01.05.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Fundamental Mathematics and Mechanics (Space Research and Cosmonautics)", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Physics OR Inf (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Фундаментальные математика и механика (Космические исследования и космонавтика)", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Физика ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6"] 
+                    }
+                ]
+            },
+            {
+                id: "ai",
+                en: { 
+                    name: "Faculty of Artificial Intelligence", 
+                    location: "Universitetskaya Emb., 7/9", 
+                    profile: "Artificial intelligence, machine learning, and data science",
+                    contacts: "+7 (812) 428-40-00 | ai@spbu.ru"
+                },
+                ru: { 
+                    name: "Факультет искусственного интеллекта", 
+                    location: "Университетская наб., 7/9", 
+                    profile: "Искусственный интеллект, машинное обучение и анализ данных",
+                    contacts: "+7 (812) 428-40-00 | ai@spbu.ru"
+                },
+                budget_spots: 20, paid_spots: 16, tuition: "380,000–400,000 ₽",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Applied Mathematics and Informatics", exams: ["Math (DVI)(I)", "Math (EGE)(II)", "Informatics OR Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        ru: { name: "Прикладная математика и информатика", exams: ["Математика (ДВИ)(I)", "Математика (ЕГЭ)(II)", "Информатика ИЛИ Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math_dvi: 75, math_ege: 75, choice: 75, rus: 75 } }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderFaculty(lang) {
+            const facId = getQueryParam('id');
+            const fac = facultiesData.find(f => f.id === facId);
+            const container = document.getElementById('faculty-content');
+            
+            if (!fac) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'Faculty not found' : 'Факультет не найден'}</h2><a href="spbu.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to SPbU' : 'Вернуться в СПбГУ'}</a></div>`;
+                return;
+            }
+
+            const title = fac[lang].name;
+            const info = fac[lang];
+            
+            const programsHtml = fac.programs.map(prog => `
+                <div class="program-card">
+                    <div class="program-header">
+                        <div>
+                            <div class="program-code">${prog.code}</div>
+                            <div class="program-name">${prog[lang].name}</div>
+                        </div>
+                        <div class="scores-box">
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Budget Score' : 'Бюджет'}</span>
+                                <span class="score-value">${prog.est_budget_score}</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Paid Score' : 'Платное'}</span>
+                                <span class="score-value paid">${prog.est_paid_score}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="exam-list">
+                        ${prog[lang].exams.map((exam, idx) => `
+                            <li class="exam-item">
+                                <span class="exam-priority">${idx + 1}</span>
+                                <div class="exam-details">
+                                    <span class="exam-type">${exam.split('(')[0].trim()}</span>
+                                    <span class="exam-format">(${exam.match(/\(([^)]+)\)/)?.[1] || ''})</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 1rem; color: var(--primary-color);">${lang === 'en' ? 'Minimum Scores (EGE/DVI)' : 'Минимальные баллы (ЕГЭ/ДВИ)'}</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        ${Object.entries(prog[lang].min_scores).map(([key, val]) => `
+                            <span class="min-score-badge">${key.toUpperCase()}: ${val}</span>
+                        `).join('')}
+                    </div>
+
+                    ${prog.quotas.length > 0 ? `
+                        <div style="margin-top: 1rem;">
+                            ${prog.quotas.map(q => `<span class="min-score-badge" style="background: #fff; border-color: #dbeafe;">${q}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            const infoBlock = `
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-circle-info"></i> ${lang === 'en' ? 'Faculty Information' : 'Информация о факультете'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-location-dot"></i> <span>${info.location}</span></li>
+                            <li><i class="fa-solid fa-graduation-cap"></i> <span><strong>${lang === 'en' ? 'Profile:' : 'Профиль:'}</strong> ${info.profile}</span></li>
+                            <li><i class="fa-solid fa-phone"></i> <span>${info.contacts}</span></li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-chart-pie"></i> ${lang === 'en' ? 'Admission Stats' : 'Статистика приема'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-users"></i> <span><strong>${lang === 'en' ? 'Budget spots:' : 'Бюджет:'}</strong> ${fac.budget_spots}</span></li>
+                            <li><i class="fa-solid fa-wallet"></i> <span><strong>${lang === 'en' ? 'Paid spots:' : 'Платное:'}</strong> ${fac.paid_spots}</span></li>
+                            <li><i class="fa-solid fa-ruble-sign"></i> <span><strong>${lang === 'en' ? 'Tuition:' : 'Стоимость:'}</strong> ${fac.tuition} / year</span></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            const navLinksHtml = facultiesData
+                .filter(f => f.id !== facId)
+                .map(f => `<a href="?id=${f.id}" class="nav-link">${f[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header">
+                    <div class="container faculty-title">
+                        <h1>${title}</h1>
+                        <div class="faculty-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${fac.programs.length} ${lang === 'en' ? 'programs' : 'направлений'}</span>
+                            <span><i class="fa-solid fa-calendar-check"></i> ${lang === 'en' ? 'Admission Rules 2026' : 'Правила приема 2026'}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container">
+                    ${infoBlock}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">${lang === 'en' ? 'Programs & Requirements' : 'Направления и требования'}</h2>
+                    ${programsHtml}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Faculties' : 'Другие факультеты'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_uni: "Universities", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_uni: "Вузы", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderFaculty(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

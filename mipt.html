@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - MIPT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #00a651; /* MIPT Green */
+            --primary-hover: #008c44; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header Styles */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Specific Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #e6f7ed 0%, #ccf0d8 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .uni-info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
+        .uni-title h1 { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+        .uni-location { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .campuses-box { background: #fff; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .campuses-box h3 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary-color); }
+        .campuses-list { list-style: none; }
+        .campuses-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 0.95rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+        .campuses-list li:last-child { border-bottom: none; }
+        .campuses-list i { color: var(--primary-color); margin-top: 0.3rem; }
+
+        /* Stats Grid */
+        .stats-section { margin-bottom: 4rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .stat-card { background: #fff; padding: 2rem; border-radius: 1.5rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 4px solid var(--primary-color); }
+        .stat-value { font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.5rem; }
+        .stat-label { font-size: 1rem; color: var(--text-gray); font-weight: 500; }
+
+        /* Search & Schools */
+        .search-section { margin-bottom: 4rem; }
+        .search-bar { position: relative; max-width: 600px; margin: 0 auto 3rem; }
+        .search-bar input { width: 100%; padding: 1.2rem 1.5rem 1.2rem 3.5rem; border-radius: 50px; border: 2px solid #e5e7eb; font-size: 1.1rem; font-family: inherit; outline: none; transition: border-color 0.3s; }
+        .search-bar input:focus { border-color: var(--primary-color); }
+        .search-bar i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 1.2rem; }
+        
+        .schools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
+        .school-card { 
+            background: #fff; 
+            padding: 2rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            transition: transform 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+        .school-card:hover { transform: translateY(-3px); border-color: var(--primary-color); }
+        .school-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-dark); }
+        .school-desc { font-size: 0.95rem; color: var(--text-gray); margin-bottom: 1.5rem; line-height: 1.5; flex-grow: 1; }
+        .subjects-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .subject-tag { background: #e6f7ed; color: var(--primary-color); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .tuition-info { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: var(--text-gray); border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: auto;}
+        .tuition-info strong { color: var(--text-dark); }
+        .no-results { text-align: center; padding: 3rem; color: var(--text-gray); font-size: 1.2rem; display: none; }
+
+        @media (max-width: 992px) { .uni-info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .uni-title h1 { font-size: 2.2rem; } 
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <!-- MIPT Logo Placeholder -->
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="85" cy="65" r="8" fill="#00a651"/>
+                    <path d="M75 55L85 65" stroke="#00a651" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Header Info -->
+        <section class="page-header">
+            <div class="container uni-info-grid">
+                <div class="uni-title">
+                    <h1 data-key="mipt_title">Moscow Institute of Physics and Technology</h1>
+                    <div class="uni-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span data-key="mipt_location">Institutsky Lane, 9, Dolgoprudny, Moscow Region</span>
+                    </div>
+                    <p data-key="mipt_desc" style="font-size: 1.1rem; color: var(--text-gray); max-width: 700px;">Russia's leading research university in physics, mathematics, and computer science. Known for its unique "Phystech System" of education.</p>
+                </div>
+                <div class="campuses-box">
+                    <h3 data-key="mipt_campuses_title">Main Campus</h3>
+                    <ul class="campuses-list">
+                        <li><i class="fa-solid fa-building"></i> <span data-key="mipt_main_bldg">Main Building (Dolgoprudny)</span></li>
+                        <li><i class="fa-solid fa-flask"></i> <span data-key="mipt_labs">Research Laboratories & Institutes</span></li>
+                        <li><i class="fa-solid fa-book"></i> <span data-key="mipt_library">Scientific Library</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admission Stats -->
+        <section class="container stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" data-key="mipt_budget_spots">1,600+</div>
+                    <div class="stat-label" data-key="mipt_budget_label">Budget Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="mipt_paid_spots">400+</div>
+                    <div class="stat-label" data-key="mipt_paid_label">Paid Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="mipt_budget_score">290</div>
+                    <div class="stat-label" data-key="mipt_budget_score_label">Avg. Budget Score (EGE)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="mipt_paid_score">240</div>
+                    <div class="stat-label" data-key="mipt_paid_score_label">Avg. Paid Score (EGE)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- School Search -->
+        <section class="container search-section">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="school-search" data-placeholder-key="mipt_search_placeholder" placeholder="Search by school or subject...">
+            </div>
+            
+            <div class="schools-grid" id="schools-container">
+                <!-- Cards will be injected here by JS -->
+            </div>
+            <div class="no-results" id="no-results" data-key="mipt_no_results">No schools found.</div>
+        </section>
+    </main>
+
+    <script>
+        // --- TRANSLATIONS ---
+        const translations = {
+            en: {
+                nav_home: "Home", nav_uni: "Universities",
+                btn_login: "Log In", btn_signup: "Sign Up",
+                
+                mipt_title: "Moscow Institute of Physics and Technology",
+                mipt_location: "Institutsky Lane, 9, Dolgoprudny, Moscow Region",
+                mipt_desc: "Russia's leading research university in physics, mathematics, and computer science. Known for its unique \"Phystech System\" of education.",
+                mipt_campuses_title: "Main Campus",
+                mipt_main_bldg: "Main Building (Dolgoprudny)",
+                mipt_labs: "Research Laboratories & Institutes",
+                mipt_library: "Scientific Library",
+                
+                mipt_budget_spots: "1,600+", mipt_budget_label: "Budget Spots (2026)",
+                mipt_paid_spots: "400+", mipt_paid_label: "Paid Spots (2026)",
+                mipt_budget_score: "290", mipt_budget_score_label: "Avg. Budget Score (EGE)",
+                mipt_paid_score: "240", mipt_paid_score_label: "Avg. Paid Score (EGE)",
+                
+                mipt_search_placeholder: "Search by school or subject...",
+                mipt_no_results: "No schools found.",
+                mipt_tuition_label: "Tuition fee"
+            },
+            ru: {
+                nav_home: "Главная", nav_uni: "Вузы",
+                btn_login: "Войти", btn_signup: "Регистрация",
+                
+                mipt_title: "Московский физико-технический институт",
+                mipt_location: "Институтский пер., 9, г. Долгопрудный, Московская обл.",
+                mipt_desc: "Ведущий исследовательский университет России в области физики, математики и компьютерных наук. Известен уникальной «Системой Физтеха».",
+                mipt_campuses_title: "Основной кампус",
+                mipt_main_bldg: "Главное здание (Долгопрудный)",
+                mipt_labs: "Научные лаборатории и институты",
+                mipt_library: "Научная библиотека",
+                
+                mipt_budget_spots: "1 600+", mipt_budget_label: "Бюджетных мест (2026)",
+                mipt_paid_spots: "400+", mipt_paid_label: "Платных мест (2026)",
+                mipt_budget_score: "290", mipt_budget_score_label: "Ср. балл на бюджет (ЕГЭ)",
+                mipt_paid_score: "240", mipt_paid_score_label: "Ср. балл на платное (ЕГЭ)",
+                
+                mipt_search_placeholder: "Поиск по школе или предмету...",
+                mipt_no_results: "Школы не найдены.",
+                mipt_tuition_label: "Стоимость обучения"
+            }
+        };
+
+        // --- SCHOOLS DATA FOR MIPT ---
+        const schoolsData = [
+            { 
+                id: "frkt",
+                en: { name: "School of Radio Engineering and Computer Technologies (FRKT)", subjects: ["Math", "Physics", "Informatics"], tuition: "1,014,000 ₽", desc: "Radio engineering, computer technologies, cybersecurity." }, 
+                ru: { name: "Физтех-школа радиотехники и компьютерных технологий (ФРКТ)", subjects: ["Математика", "Физика", "Информатика"], tuition: "1 014 000 ₽", desc: "Радиотехника, компьютерные технологии, кибербезопасность." } 
+            },
+            { 
+                id: "lfi",
+                en: { name: "Landau School of Physics and Research (LFI)", subjects: ["Math", "Physics"], tuition: "1,014,000 ₽", desc: "Fundamental physics, quantum technologies, astrophysics." }, 
+                ru: { name: "Физтех-школа физики и исследований им. Ландау (ЛФИ)", subjects: ["Математика", "Физика"], tuition: "1 014 000 ₽", desc: "Фундаментальная физика, квантовые технологии, астрофизика." } 
+            },
+            { 
+                id: "fakt",
+                en: { name: "School of Aerospace Technologies (FAKT)", subjects: ["Math", "Physics", "Informatics"], tuition: "1,014,000 ₽", desc: "Aerospace engineering, geospace sciences, technical physics." }, 
+                ru: { name: "Физтех-школа аэрокосмических технологий (ФАКТ)", subjects: ["Математика", "Физика", "Информатика"], tuition: "1 014 000 ₽", desc: "Аэрокосмическая техника, геокосмические науки, техническая физика." } 
+            },
+            { 
+                id: "fefm",
+                en: { name: "School of Electronics, Photonics and Molecular Physics (FEFM)", subjects: ["Math", "Physics", "Chemistry"], tuition: "1,014,000 ₽", desc: "Electronics, nanoelectronics, photonics, molecular physics." }, 
+                ru: { name: "Физтех-школа электроники, фотоники и молекулярной физики (ФЭФМ)", subjects: ["Математика", "Физика", "Химия"], tuition: "1 014 000 ₽", desc: "Электроника, наноэлектроника, фотоника, молекулярная физика." } 
+            },
+            { 
+                id: "fpmi",
+                en: { name: "School of Applied Mathematics and Informatics (FPMI)", subjects: ["Math", "Informatics"], tuition: "1,014,000 ₽", desc: "Applied math, data science, AI, software engineering." }, 
+                ru: { name: "Физтех-школа прикладной математики и информатики (ФПМИ)", subjects: ["Математика", "Информатика"], tuition: "1 014 000 ₽", desc: "Прикладная математика, анализ данных, ИИ, программная инженерия." } 
+            },
+            { 
+                id: "fbmf",
+                en: { name: "School of Biological and Medical Physics (FBMF)", subjects: ["Math", "Physics", "Biology"], tuition: "1,014,000 ₽", desc: "Biophysics, bioinformatics, medical physics, biotechnology." }, 
+                ru: { name: "Физтех-школа биологической и медицинской физики (ФБМФ)", subjects: ["Математика", "Физика", "Биология"], tuition: "1 014 000 ₽", desc: "Биофизика, биоинформатика, медицинская физика, биотехнологии." } 
+            },
+            { 
+                id: "fbvt",
+                en: { name: "School of High-Tech Business (FBVT)", subjects: ["Math", "Physics", "Social Studies"], tuition: "2,000,000 ₽", desc: "Innovation management, tech entrepreneurship, economics." }, 
+                ru: { name: "Физтех-школа бизнеса высоких технологий (ФБВТ)", subjects: ["Математика", "Физика", "Обществознание"], tuition: "2 000 000 ₽", desc: "Управление инновациями, технологическое предпринимательство, экономика." } 
+            },
+            { 
+                id: "knt",
+                en: { name: "Kurchatov School of Biomimetic, Plasma and Nuclear Technologies (KNT)", subjects: ["Math", "Physics", "Chemistry"], tuition: "1,014,000–1,181,000 ₽", desc: "Nuclear physics, plasma technologies, biomimetics." }, 
+                ru: { name: "Физтех-школа природоподобных, плазменных и ядерных технологий им. И.В. Курчатова (КНТ)", subjects: ["Математика", "Физика", "Химия"], tuition: "1 014 000–1 181 000 ₽", desc: "Ядерная физика, плазменные технологии, биомиметика." } 
+            },
+            { 
+                id: "vshmath",
+                en: { name: "Higher School of Modern Mathematics (VSHM)", subjects: ["Math", "Physics"], tuition: "1,014,000 ₽", desc: "Pure mathematics, theoretical mechanics." }, 
+                ru: { name: "Высшая школа современной математики (ВШМ)", subjects: ["Математика", "Физика"], tuition: "1 014 000 ₽", desc: "Чистая математика, теоретическая механика." } 
+            },
+            { 
+                id: "vshpi",
+                en: { name: "Higher School of Software Engineering (VSHPi)", subjects: ["Math", "Informatics", "Physics"], tuition: "1,187,000 ₽", desc: "Software engineering, distributed systems, AI." }, 
+                ru: { name: "Высшая школа программной инженерии (ВШПИ)", subjects: ["Математика", "Информатика", "Физика"], tuition: "1 187 000 ₽", desc: "Программная инженерия, распределенные системы, ИИ." } 
+            },
+            { 
+                id: "bit",
+                en: { name: "Higher School of Biological Engineering (BIT)", subjects: ["Math", "Biology", "Chemistry"], tuition: "1,014,000 ₽", desc: "Bioengineering, biotechnology, synthetic biology." }, 
+                ru: { name: "Высшая школа биологической инженерии (БИТ)", subjects: ["Математика", "Биология", "Химия"], tuition: "1 014 000 ₽", desc: "Биоинженерия, биотехнологии, синтетическая биология." } 
+            },
+            { 
+                id: "falt",
+                en: { name: "Pish School of Aviation and Digital Technologies (FALT)", subjects: ["Math", "Physics", "Informatics"], tuition: "1,014,000–1,181,000 ₽", desc: "Aviation tech, unmanned systems, digital engineering." }, 
+                ru: { name: "Физтех-школа авиационных и цифровых технологий (ПИШ ФАЛТ)", subjects: ["Математика", "Физика", "Информатика"], tuition: "1 014 000–1 181 000 ₽", desc: "Авиационные технологии, беспилотные системы, цифровая инженерия." } 
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            
+            // Update static texts
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-placeholder-key]').forEach(el => {
+                const key = el.getAttribute('data-placeholder-key');
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+
+            // Re-render school cards in new language
+            renderSchools(document.getElementById('school-search').value, lang);
+            localStorage.setItem('site_lang', lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // --- SEARCH & RENDER LOGIC ---
+        function renderSchools(query, lang) {
+            const container = document.getElementById('schools-container');
+            const noResults = document.getElementById('no-results');
+            container.innerHTML = '';
+            
+            const lowerQuery = query.toLowerCase().trim();
+            const filtered = schoolsData.filter(f => {
+                if (!lowerQuery) return true;
+                const nameMatch = f[lang].name.toLowerCase().includes(lowerQuery);
+                const subjectMatch = f[lang].subjects.some(s => s.toLowerCase().includes(lowerQuery));
+                return nameMatch || subjectMatch;
+            });
+
+            if (filtered.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                filtered.forEach(f => {
+                    // Link to the specific MIPT school page
+                    const card = document.createElement('a');
+                    card.href = `mipt-school.html?id=${f.id}`;
+                    card.className = 'school-card';
+                    
+                    card.innerHTML = `
+                        <h3>${f[lang].name}</h3>
+                        <p class="school-desc">${f[lang].desc}</p>
+                        <div class="subjects-tags">
+                            ${f[lang].subjects.map(s => `<span class="subject-tag">${s}</span>`).join('')}
+                        </div>
+                        <div class="tuition-info">
+                            <i class="fa-solid fa-ruble-sign"></i> 
+                            <span>${translations[lang].mipt_tuition_label}:</span> 
+                            <strong>${f[lang].tuition} / year</strong>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        document.getElementById('school-search').addEventListener('input', (e) => {
+            renderSchools(e.target.value, currentLang);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

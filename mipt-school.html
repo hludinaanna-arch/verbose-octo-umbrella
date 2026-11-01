@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - MIPT School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #00a651; /* MIPT Green */
+            --primary-hover: #008c44; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #e6f7ed;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #e6f7ed 0%, #ccf0d8 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .school-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .school-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        .programs-section { margin-bottom: 4rem; }
+        .program-card { 
+            background: var(--card-bg);
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0, 166, 81, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .program-card:hover { transform: translateY(-2px); }
+        
+        .program-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .program-code { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .program-name { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); width: 100%; }
+        
+        .scores-box { 
+            background: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .score-item { display: flex; flex-direction: column; }
+        .score-label { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
+        .score-value { font-size: 1.2rem; font-weight: 800; color: var(--primary-color); }
+        .score-value.paid { color: var(--text-gray); }
+
+        .exam-list { list-style: none; margin-bottom: 1.5rem; }
+        .exam-item { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 1rem; 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid rgba(0, 166, 81, 0.1); 
+            font-size: 1.05rem;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-priority { 
+            min-width: 28px; 
+            height: 28px; 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .exam-details { flex-grow: 1; }
+        .exam-type { font-weight: 600; color: var(--text-dark); }
+        .exam-format { color: var(--text-gray); font-size: 0.9rem; margin-left: 0.5rem; }
+        
+        .quota-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #ccf0d8;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .school-title h1 { font-size: 2.2rem; } 
+            .school-meta { flex-direction: column; gap: 0.5rem; }
+            .exam-item { flex-direction: column; gap: 0.3rem; }
+            .program-header { flex-direction: column; }
+            .scores-box { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="85" cy="65" r="8" fill="#00a651"/>
+                    <path d="M75 55L85 65" stroke="#00a651" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="school-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- DATA BASED ON Pravila_priema_(bak_i_mag).pdf & Tuition List ---
+        const schoolsData = [
+            {
+                id: "frkt",
+                en: { 
+                    name: "School of Radio Engineering and Computer Technologies (FRKT)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Radio engineering, computer tech, info security",
+                    contacts: "+7 (495) 408-58-88 | frkt@mipt.ru"
+                },
+                ru: { 
+                    name: "Физтех-школа радиотехники и компьютерных технологий (ФРКТ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Радиотехника, компьютерные технологии, инфобезопасность",
+                    contacts: "+7 (495) 408-58-88 | frkt@mipt.ru"
+                },
+                budget_spots: 180, paid_spots: 20, tuition: "1,014,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Applied Math and Physics (Radio Eng.)", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Прикладные математика и физика (Радиотехника)", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "09.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Informatics and Computer Engineering", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Информатика и вычислительная техника", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    }
+                ]
+            },
+            {
+                id: "lfi",
+                en: { 
+                    name: "Landau School of Physics and Research (LFI)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Fundamental physics, quantum tech, astrophysics",
+                    contacts: "+7 (495) 408-58-88 | lfi@mipt.ru"
+                },
+                ru: { 
+                    name: "Физтех-школа физики и исследований им. Ландау (ЛФИ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Фундаментальная физика, квантовые технологии, астрофизика",
+                    contacts: "+7 (495) 408-58-88 | lfi@mipt.ru"
+                },
+                budget_spots: 220, paid_spots: 15, tuition: "1,014,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "300-320", est_paid_score: "250-270",
+                        en: { name: "Applied Math and Physics (General Phys.)", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Прикладные математика и физика (Общая физика)", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "12.03.03", 
+                        est_budget_score: "295-315", est_paid_score: "245-265",
+                        en: { name: "Photonics and Optoinformatics", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Фотоника и оптоинформатика", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    }
+                ]
+            },
+            {
+                id: "fakt",
+                en: { 
+                    name: "School of Aerospace Technologies (FAKT)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Aerospace eng, geospace sciences, tech physics",
+                    contacts: "+7 (495) 408-58-88 | fakt@mipt.ru"
+                },
+                ru: { 
+                    name: "Физтех-школа аэрокосмических технологий (ФАКТ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Аэрокосмическая техника, геокосмические науки, тех. физика",
+                    contacts: "+7 (495) 408-58-88 | fakt@mipt.ru"
+                },
+                budget_spots: 160, paid_spots: 25, tuition: "1,014,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Applied Math and Physics (Geospace)", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Прикладные математика и физика (Геокосмические науки)", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 16", "Отдельная квота: 16"] 
+                    },
+                    { 
+                        code: "16.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Technical Physics", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Техническая физика", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 16", "Отдельная квота: 16"] 
+                    }
+                ]
+            },
+            {
+                id: "fefm",
+                en: { 
+                    name: "School of Electronics, Photonics and Molecular Physics (FEFM)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Electronics, nanotech, molecular physics",
+                    contacts: "+7 (495) 408-58-88 | fefm@mipt.ru"
+                },
+                ru: { 
+                    name: "Физтех-школа электроники, фотоники и молекулярной физики (ФЭФМ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Электроника, нанотехнологии, молекулярная физика",
+                    contacts: "+7 (495) 408-58-88 | fefm@mipt.ru"
+                },
+                budget_spots: 140, paid_spots: 30, tuition: "1,014,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Applied Math and Physics (Future Tech)", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Chemistry (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Прикладные математика и физика (Физика перспективных технологий)", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Химия (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 14", "Отдельная квота: 14"] 
+                    },
+                    { 
+                        code: "11.03.04", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Electronics and Nanoelectronics", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Chemistry (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Электроника и наноэлектроника", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Химия (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 14", "Отдельная квота: 14"] 
+                    }
+                ]
+            },
+            {
+                id: "fpmi",
+                en: { 
+                    name: "School of Applied Mathematics and Informatics (FPMI)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Applied math, data science, AI, soft eng",
+                    contacts: "+7 (495) 408-58-88 | fpmi@mipt.ru"
+                },
+                ru: { 
+                    name: "Физтех-школа прикладной математики и информатики (ФПМИ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Прикладная математика, анализ данных, ИИ, программная инженерия",
+                    contacts: "+7 (495) 408-58-88 | fpmi@mipt.ru"
+                },
+                budget_spots: 250, paid_spots: 40, tuition: "1,014,000 ₽",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "300-320", est_paid_score: "250-270",
+                        en: { name: "Applied Math and Informatics", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Прикладная математика и информатика", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 25", "Отдельная квота: 25"] 
+                    },
+                    { 
+                        code: "09.03.01", 
+                        est_budget_score: "295-315", est_paid_score: "245-265",
+                        en: { name: "Informatics and Computer Engineering", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Информатика и вычислительная техника", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 25", "Отдельная квота: 25"] 
+                    }
+                ]
+            },
+            {
+                id: "fbmf",
+                en: { 
+                    name: "School of Biological and Medical Physics (FBMF)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Biophysics, bioinformatics, med physics",
+                    contacts: "+7 (495) 408-58-88 | fbmf@mipt.ru"
+                },
+                ru: { 
+                    name: "Физтех-школа биологической и медицинской физики (ФБМФ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Биофизика, биоинформатика, медицинская физика",
+                    contacts: "+7 (495) 408-58-88 | fbmf@mipt.ru"
+                },
+                budget_spots: 100, paid_spots: 20, tuition: "1,014,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Applied Math and Physics (Biophysics)", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Biology (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Прикладные математика и физика (Биофизика)", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Биология (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "19.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Biotechnology", exams: ["Biology (EGE)(I)", "Math (EGE)(II)", "Chemistry (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Биотехнология", exams: ["Биология (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Химия (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    }
+                ]
+            },
+            {
+                id: "fbvt",
+                en: { 
+                    name: "School of High-Tech Business (FBVT)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Tech entrepreneurship, innovation mgmt",
+                    contacts: "+7 (495) 408-58-88 | fbvt@mipt.ru"
+                },
+                ru: { 
+                    name: "Физтех-школа бизнеса высоких технологий (ФБВТ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Технологическое предпринимательство, управление инновациями",
+                    contacts: "+7 (495) 408-58-88 | fbvt@mipt.ru"
+                },
+                budget_spots: 0, paid_spots: 100, tuition: "2,000,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "N/A", est_paid_score: "250-270",
+                        en: { name: "Economics (Tech Business)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Social Studies (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Экономика (Технологический бизнес)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Обществознание (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: [] 
+                    },
+                    { 
+                        code: "27.03.03", 
+                        est_budget_score: "N/A", est_paid_score: "240-260",
+                        en: { name: "Systems Analysis and Control", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Системный анализ и управление", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "knt",
+                en: { 
+                    name: "Kurchatov School of Biomimetic, Plasma and Nuclear Tech (KNT)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Nuclear physics, plasma tech, biomimetics",
+                    contacts: "+7 (495) 408-58-88 | knt@mipt.ru"
+                },
+                ru: { 
+                    name: "Физтех-школа природоподобных, плазменных и ядерных технологий им. И.В. Курчатова (КНТ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Ядерная физика, плазменные технологии, биомиметика",
+                    contacts: "+7 (495) 408-58-88 | knt@mipt.ru"
+                },
+                budget_spots: 80, paid_spots: 15, tuition: "1,014,000–1,181,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Applied Math and Physics (Nuclear/Plasma)", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Chemistry (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Прикладные математика и физика (Ядерные/плазменные технологии)", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Химия (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 8", "Отдельная квота: 8"] 
+                    }
+                ]
+            },
+            {
+                id: "vshmath",
+                en: { 
+                    name: "Higher School of Modern Mathematics (VSHM)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Pure mathematics, theoretical mechanics",
+                    contacts: "+7 (495) 408-58-88 | vshm@mipt.ru"
+                },
+                ru: { 
+                    name: "Высшая школа современной математики (ВШМ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Чистая математика, теоретическая механика",
+                    contacts: "+7 (495) 408-58-88 | vshm@mipt.ru"
+                },
+                budget_spots: 60, paid_spots: 10, tuition: "1,014,000 ₽",
+                programs: [
+                    { 
+                        code: "01.03.01", 
+                        est_budget_score: "300-320", est_paid_score: "250-270",
+                        en: { name: "Mathematics", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Математика", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6"] 
+                    }
+                ]
+            },
+            {
+                id: "vshpi",
+                en: { 
+                    name: "Higher School of Software Engineering (VSHPi)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Software eng, distributed systems, AI",
+                    contacts: "+7 (495) 408-58-88 | vshpi@mipt.ru"
+                },
+                ru: { 
+                    name: "Высшая школа программной инженерии (ВШПИ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Программная инженерия, распределенные системы, ИИ",
+                    contacts: "+7 (495) 408-58-88 | vshpi@mipt.ru"
+                },
+                budget_spots: 120, paid_spots: 30, tuition: "1,187,000 ₽",
+                programs: [
+                    { 
+                        code: "09.03.04", 
+                        est_budget_score: "295-315", est_paid_score: "245-265",
+                        en: { name: "Software Engineering", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Программная инженерия", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    },
+                    { 
+                        code: "09.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Informatics and Computer Engineering", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Информатика и вычислительная техника", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    }
+                ]
+            },
+            {
+                id: "bit",
+                en: { 
+                    name: "Higher School of Biological Engineering (BIT)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Bioengineering, biotech, synthetic biology",
+                    contacts: "+7 (495) 408-58-88 | bit@mipt.ru"
+                },
+                ru: { 
+                    name: "Высшая школа биологической инженерии (БИТ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Биоинженерия, биотехнологии, синтетическая биология",
+                    contacts: "+7 (495) 408-58-88 | bit@mipt.ru"
+                },
+                budget_spots: 50, paid_spots: 15, tuition: "1,014,000 ₽",
+                programs: [
+                    { 
+                        code: "19.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Biotechnology", exams: ["Biology (EGE)(I)", "Math (EGE)(II)", "Chemistry (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Биотехнология", exams: ["Биология (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Химия (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 5", "Отдельная квота: 5"] 
+                    }
+                ]
+            },
+            {
+                id: "falt",
+                en: { 
+                    name: "Pish School of Aviation and Digital Technologies (FALT)", 
+                    location: "Institutsky Lane, 9, Dolgoprudny", 
+                    profile: "Aviation tech, unmanned systems, digital eng",
+                    contacts: "+7 (495) 408-58-88 | falt@mipt.ru"
+                },
+                ru: { 
+                    name: "Физтех-школа авиационных и цифровых технологий (ПИШ ФАЛТ)", 
+                    location: "Институтский пер., 9, г. Долгопрудный", 
+                    profile: "Авиационные технологии, беспилотные системы, цифровая инженерия",
+                    contacts: "+7 (495) 408-58-88 | falt@mipt.ru"
+                },
+                budget_spots: 90, paid_spots: 20, tuition: "1,014,000–1,181,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "240-260",
+                        en: { name: "Applied Math and Physics (Aviation)", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Прикладные математика и физика (Авиационные технологии)", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 9", "Отдельная квота: 9"] 
+                    },
+                    { 
+                        code: "09.03.04", 
+                        est_budget_score: "285-305", est_paid_score: "235-255",
+                        en: { name: "Software Engineering (Digital Eng.)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Программная инженерия (Цифровая инженерия)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 9", "Отдельная квота: 9"] 
+                    }
+                ]
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderSchool(lang) {
+            const schoolId = getQueryParam('id');
+            const school = schoolsData.find(f => f.id === schoolId);
+            const container = document.getElementById('school-content');
+            
+            if (!school) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'School not found' : 'Школа не найдена'}</h2><a href="mipt.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to MIPT' : 'Вернуться в МФТИ'}</a></div>`;
+                return;
+            }
+
+            const title = school[lang].name;
+            const info = school[lang];
+            
+            const programsHtml = school.programs.map(prog => `
+                <div class="program-card">
+                    <div class="program-header">
+                        <div>
+                            <div class="program-code">${prog.code}</div>
+                            <div class="program-name">${prog[lang].name}</div>
+                        </div>
+                        <div class="scores-box">
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Budget Score' : 'Бюджет'}</span>
+                                <span class="score-value">${prog.est_budget_score}</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Paid Score' : 'Платное'}</span>
+                                <span class="score-value paid">${prog.est_paid_score}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="exam-list">
+                        ${prog[lang].exams.map((exam, idx) => `
+                            <li class="exam-item">
+                                <span class="exam-priority">${idx + 1}</span>
+                                <div class="exam-details">
+                                    <span class="exam-type">${exam.split('(')[0].trim()}</span>
+                                    <span class="exam-format">(${exam.match(/\(([^)]+)\)/)?.[1] || ''})</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    ${prog.quotas.length > 0 ? `
+                        <div style="margin-top: 1rem;">
+                            ${prog.quotas.map(q => `<span class="quota-badge">${q}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            const infoBlock = `
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-circle-info"></i> ${lang === 'en' ? 'School Information' : 'Информация о школе'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-location-dot"></i> <span>${info.location}</span></li>
+                            <li><i class="fa-solid fa-graduation-cap"></i> <span><strong>${lang === 'en' ? 'Profile:' : 'Профиль:'}</strong> ${info.profile}</span></li>
+                            <li><i class="fa-solid fa-phone"></i> <span>${info.contacts}</span></li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-chart-pie"></i> ${lang === 'en' ? 'Admission Stats' : 'Статистика приема'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-users"></i> <span><strong>${lang === 'en' ? 'Budget spots:' : 'Бюджет:'}</strong> ${school.budget_spots}</span></li>
+                            <li><i class="fa-solid fa-wallet"></i> <span><strong>${lang === 'en' ? 'Paid spots:' : 'Платное:'}</strong> ${school.paid_spots}</span></li>
+                            <li><i class="fa-solid fa-ruble-sign"></i> <span><strong>${lang === 'en' ? 'Tuition:' : 'Стоимость:'}</strong> ${school.tuition} / year</span></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            const navLinksHtml = schoolsData
+                .filter(f => f.id !== schoolId)
+                .map(f => `<a href="?id=${f.id}" class="nav-link">${f[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header">
+                    <div class="container school-title">
+                        <h1>${title}</h1>
+                        <div class="school-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${school.programs.length} ${lang === 'en' ? 'programs' : 'направлений'}</span>
+                            <span><i class="fa-solid fa-calendar-check"></i> ${lang === 'en' ? 'Admission Rules 2026' : 'Правила приема 2026'}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container">
+                    ${infoBlock}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">${lang === 'en' ? 'Programs & Requirements' : 'Направления и требования'}</h2>
+                    ${programsHtml}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Schools' : 'Другие школы'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_uni: "Universities", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_uni: "Вузы", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderSchool(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

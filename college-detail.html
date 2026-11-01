@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Детали колледжа</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #5a5ce6; /* Общий цвет TrackMyUni */
+            --primary-hover: #4a4cd6; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #eef2ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .college-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .college-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        .programs-section { margin-bottom: 4rem; }
+        .program-card { 
+            background: var(--card-bg);
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(90, 92, 230, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .program-card:hover { transform: translateY(-2px); }
+        
+        .program-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .program-code { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .program-name { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); width: 100%; }
+        
+        .scores-box { 
+            background: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .score-item { display: flex; flex-direction: column; }
+        .score-label { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
+        .score-value { font-size: 1.2rem; font-weight: 800; color: var(--primary-color); }
+        .score-value.paid { color: var(--text-gray); }
+
+        .exam-list { list-style: none; margin-bottom: 1.5rem; }
+        .exam-item { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 1rem; 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid rgba(90, 92, 230, 0.1); 
+            font-size: 1.05rem;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-priority { 
+            min-width: 28px; 
+            height: 28px; 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .exam-details { flex-grow: 1; }
+        .exam-type { font-weight: 600; color: var(--text-dark); }
+        .exam-format { color: var(--text-gray); font-size: 0.9rem; margin-left: 0.5rem; }
+        
+        .min-score-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #e0e7ff;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .college-title h1 { font-size: 2.2rem; } 
+            .college-meta { flex-direction: column; gap: 0.5rem; }
+            .exam-item { flex-direction: column; gap: 0.3rem; }
+            .program-header { flex-direction: column; }
+            .scores-box { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="faculty-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- COLLEGES DATA BASED ON PROVIDED LIST ---
+        const collegesData = [
+            {
+                id: "mid",
+                ru: { 
+                    name: "Колледж МИД России", 
+                    location: "Москва, Озерковская набережная", 
+                    profile: "Таможенное дело, юриспруденция, документационное обеспечение",
+                    contacts: "+7 (495) 953-08-32 | info@kmid.ru",
+                    site: "https://college-mid.ru/"
+                },
+                budget_spots: 90, paid_spots: 420, tuition: "275 000 ₽/год",
+                programs: [
+                    { 
+                        code: "38.02.04", 
+                        est_budget_score: "Уточняется", est_paid_score: "275 000 ₽/год",
+                        ru: { 
+                            name: "Таможенное дело", 
+                            exams: ["Русский язык (ОГЭ)", "Математика (ОГЭ)", "Обществознание (рекомендуется)"], 
+                            durations: { base9: "2 года 10 мес.", base11: "1 год 10 мес." }
+                        }
+                    },
+                    { 
+                        code: "46.02.01", 
+                        est_budget_score: "Уточняется", est_paid_score: "275 000 ₽/год",
+                        ru: { 
+                            name: "Документационное обеспечение управления и архивоведение", 
+                            exams: ["Русский язык (ОГЭ)", "Математика (ОГЭ)"], 
+                            durations: { base9: "2 года 10 мес.", base11: "1 год 10 мес." }
+                        }
+                    },
+                    { 
+                        code: "40.02.04", 
+                        est_budget_score: "Уточняется", est_paid_score: "275 000 ₽/год",
+                        ru: { 
+                            name: "Юриспруденция", 
+                            exams: ["Русский язык (ОГЭ)", "Математика (ОГЭ)", "Обществознание (рекомендуется)"], 
+                            durations: { base9: "2 года 10 мес.", base11: "1 год 10 мес." }
+                        }
+                    }
+                ]
+            },
+            {
+                id: "mfk",
+                ru: { 
+                    name: "Московский финансовый колледж Финансового университета", 
+                    location: "Москва, ул. Олеко Дундича, д. 23", 
+                    profile: "Финансы, банковское дело, экономика",
+                    contacts: "+7 (495) 249-53-34 | mfk@fa.ru",
+                    site: "https://www.fa.ru/mfc/"
+                },
+                budget_spots: 160, paid_spots: 225, tuition: "от 218 900 ₽/год",
+                programs: [
+                    { 
+                        code: "38.02.07", 
+                        est_budget_score: "от 4.3", est_paid_score: "218 900–232 500 ₽/год",
+                        ru: { 
+                            name: "Банковское дело", 
+                            exams: ["Русский язык (ОГЭ)", "Математика (ОГЭ)", "Обществознание/Информатика"], 
+                            durations: { base9: "2 года 10 мес.", base11: "Не предусмотрено" }
+                        }
+                    },
+                    { 
+                        code: "38.02.01", 
+                        est_budget_score: "от 4.3", est_paid_score: "218 900–232 500 ₽/год",
+                        ru: { 
+                            name: "Финансы / Экономика и бухгалтерский учет", 
+                            exams: ["Русский язык (ОГЭ)", "Математика (ОГЭ)", "Обществознание/Информатика"], 
+                            durations: { base9: "2 года 10 мес.", base11: "1 год 10 мес." }
+                        }
+                    }
+                ]
+            },
+            {
+                id: "msal",
+                ru: { 
+                    name: "Юридический колледж им. Н.С. Киселевой при МГЮА", 
+                    location: "Москва, ул. Знаменка, д. 23", 
+                    profile: "Право, правоохранительная деятельность, судебное администрирование",
+                    contacts: "8 800 555-79-19 | priem@msal.ru",
+                    site: "https://msal.ru/structure/instituty/kolledzh-prava-imeni-n-s-kiselevoy/"
+                },
+                budget_spots: null, paid_spots: null, tuition: "от 188 000 ₽/год",
+                programs: [
+                    { 
+                        code: "40.02.04", 
+                        est_budget_score: "Уточняется", est_paid_score: "188 000–450 000 ₽/год",
+                        ru: { 
+                            name: "Юриспруденция", 
+                            exams: ["Русский язык (ОГЭ)", "Математика (ОГЭ)", "Обществознание/История"], 
+                            durations: { base9: "2 года 10 мес. (очная)", base11: "1 год 10 мес. (очная) / 2 года 6 мес. (заочная)" }
+                        }
+                    }
+                ]
+            },
+            {
+                id: "ranepa-college",
+                ru: { 
+                    name: "Колледж многоуровневого проф. образования РАНХиГС", 
+                    location: "Москва, проспект Вернадского, д. 82", 
+                    profile: "Экономика, менеджмент, IT, социальная работа",
+                    contacts: "+7 (495) 434-99-33",
+                    site: "https://kmpo.ranepa.ru/"
+                },
+                budget_spots: "Увеличены на 11.5%", paid_spots: null, tuition: "от 260 000 ₽/год",
+                programs: [
+                    { 
+                        code: "09.02.11", 
+                        est_budget_score: "4.0–4.5", est_paid_score: "260 000 ₽/год",
+                        ru: { 
+                            name: "Разработка и управление программным обеспечением", 
+                            exams: ["Русский язык (ОГЭ)", "Математика (ОГЭ)", "Информатика"], 
+                            durations: { base9: "Уточняется", base11: "Уточняется" }
+                        }
+                    },
+                    { 
+                        code: "38.02.01/04", 
+                        est_budget_score: "4.0–4.5", est_paid_score: "Уточняется до 01.06.2026",
+                        ru: { 
+                            name: "Экономика / Менеджмент / Документационное обеспечение", 
+                            exams: ["Русский язык (ОГЭ)", "Математика (ОГЭ)", "Обществознание"], 
+                            durations: { base9: "Уточняется", base11: "Уточняется" }
+                        }
+                    }
+                ]
+            },
+            {
+                id: "ithub",
+                ru: { 
+                    name: "IThub College", 
+                    location: "Москва и 200+ филиалов по РФ", 
+                    profile: "Программирование, ИБ, дизайн, кинопроизводство, маркетинг",
+                    contacts: "8 (800) 505-44-77 | info@ithubcollege.ru",
+                    site: "https://ithubcollege.ru/"
+                },
+                budget_spots: 0, paid_spots: 6566, tuition: "от 350 000 ₽/год",
+                programs: [
+                    { 
+                        code: "09.02.xx", 
+                        est_budget_score: "Конкурсный отбор", est_paid_score: "350 000–595 000 ₽/год",
+                        ru: { 
+                            name: "IT-направления (Разработка ПО, Гейм-дизайн, ИБ)", 
+                            exams: ["Аттестат об окончании 9 или 11 класса"], 
+                            durations: { base9: "3 года 10 мес.", base11: "2 года 10 мес." }
+                        }
+                    },
+                    { 
+                        code: "42.02.01", 
+                        est_budget_score: "Конкурсный отбор", est_paid_score: "350 000–595 000 ₽/год",
+                        ru: { 
+                            name: "Маркетинг и коммерция (Цифровой, Контент, Бренд)", 
+                            exams: ["Аттестат об окончании 9 или 11 класса"], 
+                            durations: { base9: "2 года 10 мес.", base11: "1 год 10 мес." }
+                        }
+                    }
+                ]
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'ru'; // Default to Russian for colleges
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderCollege(lang) {
+            const colId = getQueryParam('id');
+            const col = collegesData.find(c => c.id === colId);
+            const container = document.getElementById('faculty-content');
+            
+            if (!col) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'College not found' : 'Колледж не найден'}</h2><a href="colleges.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to Colleges' : 'Вернуться к списку колледжей'}</a></div>`;
+                return;
+            }
+
+            const title = col[lang].name;
+            const info = col[lang];
+            
+            const programsHtml = col.programs.map(prog => `
+                <div class="program-card">
+                    <div class="program-header">
+                        <div>
+                            <div class="program-code">${prog.code}</div>
+                            <div class="program-name">${prog[lang].name}</div>
+                        </div>
+                        <div class="scores-box">
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Passing Score' : 'Проходной балл'}</span>
+                                <span class="score-value">${prog.est_budget_score}</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Tuition' : 'Стоимость'}</span>
+                                <span class="score-value paid">${prog.est_paid_score}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 1rem; color: var(--primary-color);">${lang === 'en' ? 'Required Exams (OGE)' : 'Требования к ОГЭ'}</h3>
+                    <ul class="exam-list">
+                        ${prog[lang].exams.map((exam, idx) => `
+                            <li class="exam-item">
+                                <span class="exam-priority">${idx + 1}</span>
+                                <div class="exam-details">
+                                    <span class="exam-type">${exam.split('(')[0].trim()}</span>
+                                    <span class="exam-format">(${exam.match(/\(([^)]+)\)/)?.[1] || ''})</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 1rem; color: var(--primary-color);">${lang === 'en' ? 'Study Duration' : 'Сроки обучения'}</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <span class="min-score-badge">База 9 кл.: ${prog[lang].durations.base9}</span>
+                        <span class="min-score-badge">База 11 кл.: ${prog[lang].durations.base11}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            const infoBlock = `
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-circle-info"></i> ${lang === 'en' ? 'College Information' : 'Информация о колледже'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-location-dot"></i> <span>${info.location}</span></li>
+                            <li><i class="fa-solid fa-graduation-cap"></i> <span><strong>${lang === 'en' ? 'Profile:' : 'Профиль:'}</strong> ${info.profile}</span></li>
+                            <li><i class="fa-solid fa-phone"></i> <span>${info.contacts}</span></li>
+                            <li><i class="fa-solid fa-globe"></i> <span><a href="${info.site}" target="_blank" style="color: var(--primary-color);">${info.site}</a></span></li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-chart-pie"></i> ${lang === 'en' ? 'Admission Stats 2026' : 'Статистика приема 2026'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-users"></i> <span><strong>${lang === 'en' ? 'Budget spots:' : 'Бюджет:'}</strong> ${col.budget_spots !== null ? col.budget_spots : 'Нет данных'}</span></li>
+                            <li><i class="fa-solid fa-wallet"></i> <span><strong>${lang === 'en' ? 'Paid spots:' : 'Платное:'}</strong> ${col.paid_spots !== null ? col.paid_spots : 'Нет данных'}</span></li>
+                            <li><i class="fa-solid fa-ruble-sign"></i> <span><strong>${lang === 'en' ? 'Tuition range:' : 'Стоимость:'}</strong> ${col.tuition}</span></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            const navLinksHtml = collegesData
+                .filter(c => c.id !== colId)
+                .map(c => `<a href="?id=${c.id}" class="nav-link">${c[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header">
+                    <div class="container college-title">
+                        <h1>${title}</h1>
+                        <div class="college-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${col.programs.length} ${lang === 'en' ? 'specialties' : 'специальностей'}</span>
+                            <span><i class="fa-solid fa-calendar-check"></i> ${lang === 'en' ? 'Admission 2026' : 'Прием 2026'}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container">
+                    ${infoBlock}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">${lang === 'en' ? 'Specialties & Requirements' : 'Специальности и требования'}</h2>
+                    ${programsHtml}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Colleges' : 'Другие колледжи'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_uni: "Universities", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_uni: "Вузы", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderCollege(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

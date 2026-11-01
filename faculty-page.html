@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Правила приема</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #5a5ce6; 
+            --primary-hover: #4a4cd6; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #f5f3ff; /* Светлый фон для карточек программ */
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: #5A5CE6; }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Faculty Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .faculty-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .faculty-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        /* Info Block Styles */
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        /* Program Card Styles (HIGHLIGHTED) */
+        .programs-section { margin-bottom: 4rem; }
+        .program-card { 
+            background: var(--card-bg); /* Highlighted background */
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(90, 92, 230, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color); /* Accent border */
+            transition: transform 0.2s;
+        }
+        .program-card:hover { transform: translateY(-2px); }
+        
+        .program-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .program-code { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .program-name { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); width: 100%; }
+        
+        /* Scores inside card */
+        .scores-box { 
+            background: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .score-item { display: flex; flex-direction: column; }
+        .score-label { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
+        .score-value { font-size: 1.2rem; font-weight: 800; color: var(--primary-color); }
+        .score-value.paid { color: var(--text-gray); }
+
+        .exam-list { list-style: none; margin-bottom: 1.5rem; }
+        .exam-item { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 1rem; 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid rgba(90, 92, 230, 0.1); 
+            font-size: 1.05rem;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-priority { 
+            min-width: 28px; 
+            height: 28px; 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .exam-details { flex-grow: 1; }
+        .exam-type { font-weight: 600; color: var(--text-dark); }
+        .exam-format { color: var(--text-gray); font-size: 0.9rem; margin-left: 0.5rem; }
+        
+        .quota-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #e0e7ff;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .faculty-title h1 { font-size: 2.2rem; } 
+            .faculty-meta { flex-direction: column; gap: 0.5rem; }
+            .exam-item { flex-direction: column; gap: 0.3rem; }
+            .program-header { flex-direction: column; }
+            .scores-box { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="faculty-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- DATA FROM kcp_bak.pdf & rules_2026.pdf WITH INDIVIDUAL SCORES ---
+                // --- DATA FROM kcp_bak.pdf & rules_2026.pdf WITH UPDATED TUITION FEES ---
+        const facultiesData = [
+            {
+                id: "math-mech",
+                en: { 
+                    name: "Faculty of Mechanics and Mathematics", 
+                    location: "Main Building, Leninskie Gory, 1", 
+                    profile: "Fundamental Mathematics, Mechanics, Mathematical Physics",
+                    contacts: "+7 (495) 939-12-34 | math-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Механико-математический факультет", 
+                    location: "Главное здание, Ленинские горы, 1", 
+                    profile: "Фундаментальная математика, Механика, Математическая физика",
+                    contacts: "+7 (495) 939-12-34 | math-adm@msu.ru"
+                },
+                budget_spots: 390, paid_spots: 80, tuition: "438,375 ₽",
+                programs: [
+                    { 
+                        code: "01.05.01", 
+                        est_budget_score: "340-360", est_paid_score: "270-290",
+                        en: { name: "Fundamental Math & Mechanics (Math)", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Physics (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Фундаментальные математика и механика (Математика)", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Физика (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 25", "Отдельная квота: 25", "Целевая квота: 2"] 
+                    },
+                    { 
+                        code: "01.05.01", 
+                        est_budget_score: "335-355", est_paid_score: "265-285",
+                        en: { name: "Fundamental Math & Mechanics (Mechanics)", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Physics (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Фундаментальные математика и механика (Механика)", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Физика (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "01.05.01", 
+                        est_budget_score: "345-365", est_paid_score: "275-295",
+                        en: { name: "Fundamental Math & Mathematical Physics", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Physics (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Фундаментальная математика и математическая физика", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Физика (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    }
+                ]
+            },
+            {
+                id: "vmk",
+                en: { 
+                    name: "Faculty of Computational Mathematics and Cybernetics", 
+                    location: "Leninskie Gory, 1, bldg. 2", 
+                    profile: "Applied Mathematics, Informatics, AI, Data Science",
+                    contacts: "+7 (495) 939-38-00 | vmk-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет вычислительной математики и кибернетики", 
+                    location: "Ленинские горы, 1, корп. 2", 
+                    profile: "Прикладная математика, Информатика, ИИ, Анализ данных",
+                    contacts: "+7 (495) 939-38-00 | vmk-adm@msu.ru"
+                },
+                budget_spots: 331, paid_spots: 123, tuition: "530,317 ₽",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "350-370", est_paid_score: "280-300",
+                        en: { name: "Applied Mathematics and Informatics", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Physics (EGE)(3)", "Informatics (EGE)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Прикладная математика и информатика", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Физика (ЕГЭ)(3)", "Информатика (ЕГЭ)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 32", "Отдельная квота: 32", "Целевые квоты: 9"] 
+                    },
+                    { 
+                        code: "02.03.02", 
+                        est_budget_score: "340-360", est_paid_score: "270-290",
+                        en: { name: "Fundamental Informatics and IT", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Physics (EGE)(3)", "Informatics (EGE)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Фундаментальная информатика и информационные технологии", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Физика (ЕГЭ)(3)", "Информатика (ЕГЭ)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2", "Целевые квоты: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "physics",
+                en: { 
+                    name: "Faculty of Physics", 
+                    location: "Leninskie Gory, 1, bldg. 2", 
+                    profile: "Theoretical Physics, Particle Physics, Astrophysics, Optics",
+                    contacts: "+7 (495) 939-13-00 | phys-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Физический факультет", 
+                    location: "Ленинские горы, 1, корп. 2", 
+                    profile: "Теоретическая физика, Физика частиц, Астрофизика, Оптика",
+                    contacts: "+7 (495) 939-13-00 | phys-adm@msu.ru"
+                },
+                budget_spots: 396, paid_spots: 95, tuition: "557,792 ₽",
+                programs: [
+                    { 
+                        code: "03.05.02", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Fundamental and Applied Physics", exams: ["Physics (DVI, written)(1)", "Physics (EGE)(2)", "Math OR Informatics (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Фундаментальная и прикладная физика", exams: ["Физика (ДВИ, письменно)(1)", "Физика (ЕГЭ)(2)", "Математика ИЛИ Информатика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 35", "Отдельная квота: 35"] 
+                    },
+                    { 
+                        code: "03.05.01", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "Astronomy", exams: ["Physics (DVI, written)(1)", "Physics (EGE)(2)", "Math (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Астрономия", exams: ["Физика (ДВИ, письменно)(1)", "Физика (ЕГЭ)(2)", "Математика (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "chemistry",
+                en: { 
+                    name: "Faculty of Chemistry", 
+                    location: "Leninskie Gory, 1, bldg. 3", 
+                    profile: "Organic Chemistry, Biochemistry, Materials Science, Nanotech",
+                    contacts: "+7 (495) 939-10-00 | chem-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Химический факультет", 
+                    location: "Ленинские горы, 1, корп. 3", 
+                    profile: "Органическая химия, Биохимия, Материаловедение, Нанотехнологии",
+                    contacts: "+7 (495) 939-10-00 | chem-adm@msu.ru"
+                },
+                budget_spots: 215, paid_spots: 60, tuition: "565,370 ₽",
+                programs: [
+                    { 
+                        code: "04.05.01", 
+                        est_budget_score: "320-340", est_paid_score: "250-270",
+                        en: { name: "Fundamental and Applied Chemistry", exams: ["Chemistry (DVI, written)(1)", "Chemistry (EGE)(2)", "Math (EGE)(3)", "Physics OR Biology (EGE, choice)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Фундаментальная и прикладная химия", exams: ["Химия (ДВИ, письменно)(1)", "Химия (ЕГЭ)(2)", "Математика (ЕГЭ)(3)", "Физика ИЛИ Биология (ЕГЭ, по выбору)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22", "Целевые квоты: 6"] 
+                    }
+                ]
+            },
+            {
+                id: "biology",
+                en: { 
+                    name: "Faculty of Biology", 
+                    location: "Leninskie Gory, 1, bldg. 12", 
+                    profile: "Genetics, Ecology, Microbiology, Biophysics",
+                    contacts: "+7 (495) 939-11-00 | bio-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Биологический факультет", 
+                    location: "Ленинские горы, 1, корп. 12", 
+                    profile: "Генетика, Экология, Микробиология, Биофизика",
+                    contacts: "+7 (495) 939-11-00 | bio-adm@msu.ru"
+                },
+                budget_spots: 191, paid_spots: 70, tuition: "554,225 ₽",
+                programs: [
+                    { 
+                        code: "06.05.02", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "Fundamental and Applied Biology (Physicochemical)", exams: ["Biology (DVI, written)(1)", "Biology (EGE)(2)", "Math (EGE)(3)", "Chemistry (EGE)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Фундаментальная и прикладная биология (Физико-химическая)", exams: ["Биология (ДВИ, письменно)(1)", "Биология (ЕГЭ)(2)", "Математика (ЕГЭ)(3)", "Химия (ЕГЭ)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 16", "Отдельная квота: 16", "Целевая квота: 2"] 
+                    },
+                    { 
+                        code: "06.05.02", 
+                        est_budget_score: "320-340", est_paid_score: "250-270",
+                        en: { name: "Fundamental and Applied Biology (Bioengineering)", exams: ["Math (DVI, written)(1)", "Biology (EGE)(2)", "Math (EGE)(3)", "Chemistry (EGE)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Фундаментальная и прикладная биология (Биоинженерия)", exams: ["Математика (ДВИ, письменно)(1)", "Биология (ЕГЭ)(2)", "Математика (ЕГЭ)(3)", "Химия (ЕГЭ)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "05.03.06", 
+                        est_budget_score: "290-310", est_paid_score: "220-240",
+                        en: { name: "Ecology and Nature Management", exams: ["Biology (DVI, written)(1)", "Biology (EGE)(2)", "Math (EGE)(3)", "Chemistry (EGE)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Экология и природопользование", exams: ["Биология (ДВИ, письменно)(1)", "Биология (ЕГЭ)(2)", "Математика (ЕГЭ)(3)", "Химия (ЕГЭ)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2", "Целевая квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "soil",
+                en: { 
+                    name: "Faculty of Soil Science", 
+                    location: "Leninskie Gory, 1, bldg. 13", 
+                    profile: "Soil Ecology, Land Use, Environmental Protection",
+                    contacts: "+7 (495) 939-14-00 | soil-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет почвоведения", 
+                    location: "Ленинские горы, 1, корп. 13", 
+                    profile: "Почвенная экология, Землепользование, Охрана окружающей среды",
+                    contacts: "+7 (495) 939-14-00 | soil-adm@msu.ru"
+                },
+                budget_spots: 80, paid_spots: 13, tuition: "561,230 ₽",
+                programs: [
+                    { 
+                        code: "06.03.02", 
+                        est_budget_score: "280-300", est_paid_score: "220-240",
+                        en: { name: "Soil Science", exams: ["Biology (DVI, written)(1)", "Biology (EGE)(2)", "Math OR Chem OR Geo OR Phys OR Inf (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Почвоведение", exams: ["Биология (ДВИ, письменно)(1)", "Биология (ЕГЭ)(2)", "Математика ИЛИ Химия ИЛИ География ИЛИ Физика ИЛИ Информатика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6", "Целевые квоты: 8"] 
+                    },
+                    { 
+                        code: "05.03.06", 
+                        est_budget_score: "270-290", est_paid_score: "210-230",
+                        en: { name: "Ecology and Nature Management", exams: ["Geography (DVI, written)(1)", "Geography (EGE)(2)", "Math OR Chem OR Bio OR Inf OR Phys (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Экология и природопользование", exams: ["География (ДВИ, письменно)(1)", "География (ЕГЭ)(2)", "Математика ИЛИ Химия ИЛИ Биология ИЛИ Информатика ИЛИ Физика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2", "Целевая квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "geology",
+                en: { 
+                    name: "Faculty of Geology", 
+                    location: "Leninskie Gory, 1, bldg. 14", 
+                    profile: "Mineral Exploration, Hydrogeology, Geoecology",
+                    contacts: "+7 (495) 939-15-00 | geo-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Геологический факультет", 
+                    location: "Ленинские горы, 1, корп. 14", 
+                    profile: "Поиск полезных ископаемых, Гидрогеология, Геоэкология",
+                    contacts: "+7 (495) 939-15-00 | geo-adm@msu.ru"
+                },
+                budget_spots: 200, paid_spots: 40, tuition: "561,230 ₽",
+                programs: [
+                    { 
+                        code: "05.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "210-230",
+                        en: { name: "Geology", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Physics OR Geography OR Chemistry OR Informatics (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Геология", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Физика ИЛИ География ИЛИ Химия ИЛИ Информатика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 20", "Отдельная квота: 20", "Целевая квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "geography",
+                en: { 
+                    name: "Faculty of Geography", 
+                    location: "Leninskie Gory, 1, bldg. 15", 
+                    profile: "Cartography, Hydrometeorology, Tourism, Urban Studies",
+                    contacts: "+7 (495) 939-16-00 | geogr-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Географический факультет", 
+                    location: "Ленинские горы, 1, корп. 15", 
+                    profile: "Картография, Гидрометеорология, Туризм, Урбанистика",
+                    contacts: "+7 (495) 939-16-00 | geogr-adm@msu.ru"
+                },
+                budget_spots: 157, paid_spots: 25, tuition: "543,585 ₽",
+                programs: [
+                    { 
+                        code: "05.03.00", 
+                        est_budget_score: "290-310", est_paid_score: "230-250",
+                        en: { name: "Earth Sciences (Multidisciplinary)", exams: ["Geography (DVI, written)(1)", "Geography (EGE)(2)", "Math OR Informatics OR Biology OR Physics (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Науки о Земле (многопрофильный конкурс)", exams: ["География (ДВИ, письменно)(1)", "География (ЕГЭ)(2)", "Математика ИЛИ Информатика ИЛИ Биология ИЛИ Физика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "43.03.02", 
+                        est_budget_score: "260-280", est_paid_score: "200-220",
+                        en: { name: "Tourism", exams: ["Social Studies (DVI, written)(1)", "Social Studies (EGE)(2)", "History OR Geography OR Foreign Lang (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Туризм", exams: ["Обществознание (ДВИ, письменно)(1)", "Обществознание (ЕГЭ)(2)", "История ИЛИ География ИЛИ Иностранный язык (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "materials",
+                en: { 
+                    name: "Faculty of Materials Science", 
+                    location: "Leninskie Gory, 1, bldg. 16", 
+                    profile: "Nanomaterials, Semiconductors, Composite Materials",
+                    contacts: "+7 (495) 939-17-00 | mat-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет наук о материалах", 
+                    location: "Ленинские горы, 1, корп. 16", 
+                    profile: "Наноматериалы, Полупроводники, Композитные материалы",
+                    contacts: "+7 (495) 939-17-00 | mat-adm@msu.ru"
+                },
+                budget_spots: 28, paid_spots: 5, tuition: "561,230 ₽",
+                programs: [
+                    { 
+                        code: "04.03.02", 
+                        est_budget_score: "300-320", est_paid_score: "230-250",
+                        en: { name: "Chemistry, Physics and Mechanics of Materials", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Chemistry (EGE)(3)", "Physics OR Informatics (EGE, choice)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Химия, физика и механика материалов", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Химия (ЕГЭ)(3)", "Физика ИЛИ Информатика (ЕГЭ, по выбору)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "medicine",
+                en: { 
+                    name: "Faculty of Fundamental Medicine", 
+                    location: "Lomonosovsky Prospekt, 27, bldg. 1", 
+                    profile: "Clinical Medicine, Pharmacy, Medical Biotechnology",
+                    contacts: "+7 (495) 939-18-00 | med-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет фундаментальной медицины", 
+                    location: "Ломоносовский проспект, 27, корп. 1", 
+                    profile: "Клиническая медицина, Фармация, Медицинская биотехнология",
+                    contacts: "+7 (495) 939-18-00 | med-adm@msu.ru"
+                },
+                budget_spots: 76, paid_spots: 82, tuition: "676,000 ₽",
+                programs: [
+                    { 
+                        code: "31.05.01", 
+                        est_budget_score: "350-370", est_paid_score: "280-300",
+                        en: { name: "General Medicine", exams: ["Chemistry (DVI, written)(1)", "Chemistry (EGE)(2)", "Biology (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Лечебное дело", exams: ["Химия (ДВИ, письменно)(1)", "Химия (ЕГЭ)(2)", "Биология (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6"] 
+                    },
+                    { 
+                        code: "33.05.01", 
+                        est_budget_score: "340-360", est_paid_score: "270-290",
+                        en: { name: "Pharmacy", exams: ["Chemistry (DVI, written)(1)", "Chemistry (EGE)(2)", "Biology (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Фармация", exams: ["Химия (ДВИ, письменно)(1)", "Химия (ЕГЭ)(2)", "Биология (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2", "Целевая квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "history",
+                en: { 
+                    name: "Faculty of History", 
+                    location: "Leninskie Gory, 1, bldg. 17", 
+                    profile: "Ancient History, Modern History, Art History, Archaeology",
+                    contacts: "+7 (495) 939-19-00 | hist-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Исторический факультет", 
+                    location: "Ленинские горы, 1, корп. 17", 
+                    profile: "Древняя история, Новая история, История искусств, Археология",
+                    contacts: "+7 (495) 939-19-00 | hist-adm@msu.ru"
+                },
+                budget_spots: 145, paid_spots: 80, tuition: "528,566 ₽",
+                programs: [
+                    { 
+                        code: "46.03.01", 
+                        est_budget_score: "320-340", est_paid_score: "250-270",
+                        en: { name: "History", exams: ["History (DVI, written)(1)", "History (EGE)(2)", "Foreign Lang OR Social Studies (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "История", exams: ["История (ДВИ, письменно)(1)", "История (ЕГЭ)(2)", "Иностранный язык ИЛИ Обществознание (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 11", "Отдельная квота: 11"] 
+                    },
+                    { 
+                        code: "50.03.03", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Art History", exams: ["Creative DVI (written, oral)(1)", "History (EGE)(2)", "Foreign Lang OR Literature (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "История искусств", exams: ["Творческое ДВИ (письменно, устно)(1)", "История (ЕГЭ)(2)", "Иностранный язык ИЛИ Литература (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "philology",
+                en: { 
+                    name: "Faculty of Philology", 
+                    location: "Mokhovaya St., 9", 
+                    profile: "Russian Literature, Linguistics, Classical Philology, Translation",
+                    contacts: "+7 (495) 629-38-00 | phil-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Филологический факультет", 
+                    location: "ул. Моховая, 9", 
+                    profile: "Русская литература, Лингвистика, Классическая филология, Перевод",
+                    contacts: "+7 (495) 629-38-00 | phil-adm@msu.ru"
+                },
+                budget_spots: 206, paid_spots: 74, tuition: "518,062 ₽",
+                programs: [
+                    { 
+                        code: "45.03.01", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Philology (Russian Language and Literature)", exams: ["Literature (DVI, written)(1)", "Literature (EGE)(2)", "History OR Foreign Lang (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Филология (Русский язык и литература)", exams: ["Литература (ДВИ, письменно)(1)", "Литература (ЕГЭ)(2)", "История ИЛИ Иностранный язык (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 8", "Отдельная квота: 8"] 
+                    },
+                    { 
+                        code: "45.03.01", 
+                        est_budget_score: "340-360", est_paid_score: "270-290",
+                        en: { name: "Philology (Foreign Philology)", exams: ["Literature (DVI, written)(1)", "Literature (EGE)(2)", "Foreign Lang (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Филология (Зарубежная филология)", exams: ["Литература (ДВИ, письменно)(1)", "Литература (ЕГЭ)(2)", "Иностранный язык (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 8", "Отдельная квота: 8"] 
+                    },
+                    { 
+                        code: "45.03.03", 
+                        est_budget_score: "350-370", est_paid_score: "280-300",
+                        en: { name: "Fundamental and Applied Linguistics", exams: ["Foreign Lang (DVI, written)(1)", "Foreign Lang (EGE)(2)", "Math (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Фундаментальная и прикладная лингвистика", exams: ["Иностранный язык (ДВИ, письменно)(1)", "Иностранный язык (ЕГЭ)(2)", "Математика (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "philosophy",
+                en: { 
+                    name: "Faculty of Philosophy", 
+                    location: "Shuvalovsky Blvd., 11", 
+                    profile: "Ethics, Logic, Religious Studies, Cultural Studies, PR",
+                    contacts: "+7 (495) 939-20-00 | philo-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Философский факультет", 
+                    location: "Шуваловский бульвар, 11", 
+                    profile: "Этика, Логика, Религиоведение, Культурология, Реклама и СО",
+                    contacts: "+7 (495) 939-20-00 | philo-adm@msu.ru"
+                },
+                budget_spots: 118, paid_spots: 165, tuition: "530,277 ₽",
+                programs: [
+                    { 
+                        code: "47.03.01", 
+                        est_budget_score: "300-320", est_paid_score: "230-250",
+                        en: { name: "Philosophy", exams: ["Social Studies (DVI, written)(1)", "Social Studies (EGE)(2)", "History OR Foreign Lang OR Literature (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Философия", exams: ["Обществознание (ДВИ, письменно)(1)", "Обществознание (ЕГЭ)(2)", "История ИЛИ Иностранный язык ИЛИ Литература (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 7", "Отдельная квота: 7"] 
+                    },
+                    { 
+                        code: "47.03.03", 
+                        est_budget_score: "290-310", est_paid_score: "220-240",
+                        en: { name: "Religious Studies", exams: ["History (DVI, written)(1)", "History (EGE)(2)", "Social Studies OR Geography OR Literature OR Foreign Lang (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Религиоведение", exams: ["История (ДВИ, письменно)(1)", "История (ЕГЭ)(2)", "Обществознание ИЛИ География ИЛИ Литература ИЛИ Иностранный язык (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "42.03.01", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "Advertising and Public Relations", exams: ["Social Studies (DVI, written)(1)", "Social Studies (EGE)(2)", "History OR Informatics OR Foreign Lang OR Literature (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Реклама и связи с общественностью", exams: ["Обществознание (ДВИ, письменно)(1)", "Обществознание (ЕГЭ)(2)", "История ИЛИ Информатика ИЛИ Иностранный язык ИЛИ Литература (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "51.03.01", 
+                        est_budget_score: "295-315", est_paid_score: "225-245",
+                        en: { name: "Culturology", exams: ["Social Studies (DVI, written)(1)", "Social Studies (EGE)(2)", "History OR Foreign Lang OR Literature (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Культурология", exams: ["Обществознание (ДВИ, письменно)(1)", "Обществознание (ЕГЭ)(2)", "История ИЛИ Иностранный язык ИЛИ Литература (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "economics",
+                en: { 
+                    name: "Faculty of Economics", 
+                    location: "Shuvalovsky Blvd., 11", 
+                    profile: "Macroeconomics, Finance, Business Analytics, Management",
+                    contacts: "+7 (495) 939-21-00 | econ-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Экономический факультет", 
+                    location: "Шуваловский бульвар, 11", 
+                    profile: "Макроэкономика, Финансы, Бизнес-аналитика, Менеджмент",
+                    contacts: "+7 (495) 939-21-00 | econ-adm@msu.ru"
+                },
+                budget_spots: 196, paid_spots: 415, tuition: "785,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "340-360", est_paid_score: "270-290",
+                        en: { name: "Economics", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Foreign Lang OR Informatics OR Geography OR History OR Social Studies (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Экономика", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Иностранный язык ИЛИ Информатика ИЛИ География ИЛИ История ИЛИ Обществознание (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 17", "Отдельная квота: 17", "Целевые квоты: 9"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Management", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Foreign Lang OR Informatics OR History OR Social Studies (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Менеджмент", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Иностранный язык ИЛИ Информатика ИЛИ История ИЛИ Обществознание (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3", "Целевые квоты: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "law",
+                en: { 
+                    name: "Faculty of Law", 
+                    location: "Leninskie Gory, 1, bldg. 18", 
+                    profile: "Civil Law, Criminal Law, International Law, Constitutional Law",
+                    contacts: "+7 (495) 939-22-00 | law-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Юридический факультет", 
+                    location: "Ленинские горы, 1, корп. 18", 
+                    profile: "Гражданское право, Уголовное право, Международное право, Конституционное право",
+                    contacts: "+7 (495) 939-22-00 | law-adm@msu.ru"
+                },
+                budget_spots: 305, paid_spots: 405, tuition: "673,333 ₽",
+                programs: [
+                    { 
+                        code: "40.03.01", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Jurisprudence", exams: ["Social Studies (DVI, written)(1)", "Social Studies (EGE)(2)", "History OR Informatics OR Math (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Юриспруденция", exams: ["Обществознание (ДВИ, письменно)(1)", "Обществознание (ЕГЭ)(2)", "История ИЛИ Информатика ИЛИ Математика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 31", "Отдельная квота: 31", "Целевые квоты: 10"] 
+                    }
+                ]
+            },
+            {
+                id: "journalism",
+                en: { 
+                    name: "Faculty of Journalism", 
+                    location: "Leninskie Gory, 1, bldg. 19", 
+                    profile: "Media Communications, Digital Journalism, Photojournalism",
+                    contacts: "+7 (495) 939-23-00 | journ-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет журналистики", 
+                    location: "Ленинские горы, 1, корп. 19", 
+                    profile: "Медиакоммуникации, Цифровая журналистика, Фотожурналистика",
+                    contacts: "+7 (495) 939-23-00 | journ-adm@msu.ru"
+                },
+                budget_spots: 197, paid_spots: 265, tuition: "533,925 ₽",
+                programs: [
+                    { 
+                        code: "42.03.02", 
+                        est_budget_score: "340-360", est_paid_score: "270-290",
+                        en: { name: "Journalism", exams: ["Creative Written DVI(1)", "Literature (EGE)(2)", "Foreign Lang OR History OR Geography (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Журналистика", exams: ["Творческое письменное ДВИ(1)", "Литература (ЕГЭ)(2)", "Иностранный язык ИЛИ История ИЛИ География (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 11", "Отдельная квота: 11", "Целевая квота: 1"] 
+                    },
+                    { 
+                        code: "42.03.05", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Media Communications", exams: ["Creative Written DVI(1)", "Literature (EGE)(2)", "Social Studies OR History OR Geography (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Медиакоммуникации", exams: ["Творческое письменное ДВИ(1)", "Литература (ЕГЭ)(2)", "Обществознание ИЛИ История ИЛИ География (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 7", "Отдельная квота: 7"] 
+                    }
+                ]
+            },
+            {
+                id: "psychology",
+                en: { 
+                    name: "Faculty of Psychology", 
+                    location: "Mokhovaya St., 11, bldg. 9", 
+                    profile: "Clinical Psychology, Organizational Psychology, Cognitive Science",
+                    contacts: "+7 (495) 629-43-00 | psych-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет психологии", 
+                    location: "ул. Моховая, 11, корп. 9", 
+                    profile: "Клиническая психология, Организационная психология, Когнитивные науки",
+                    contacts: "+7 (495) 629-43-00 | psych-adm@msu.ru"
+                },
+                budget_spots: 122, paid_spots: 175, tuition: "525,195 ₽",
+                programs: [
+                    { 
+                        code: "37.05.01", 
+                        est_budget_score: "320-340", est_paid_score: "250-270",
+                        en: { name: "Clinical Psychology", exams: ["Biology (DVI, written)(1)", "Biology (EGE)(2)", "Math OR Social Studies OR Chemistry (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Клиническая психология", exams: ["Биология (ДВИ, письменно)(1)", "Биология (ЕГЭ)(2)", "Математика ИЛИ Обществознание ИЛИ Химия (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6"] 
+                    },
+                    { 
+                        code: "37.05.02", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "Service Psychology", exams: ["Biology (DVI, written)(1)", "Biology (EGE)(2)", "Math OR Social Studies (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Психология служебной деятельности", exams: ["Биология (ДВИ, письменно)(1)", "Биология (ЕГЭ)(2)", "Математика ИЛИ Обществознание (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 5", "Отдельная квота: 5"] 
+                    },
+                    { 
+                        code: "44.05.01", 
+                        est_budget_score: "300-320", est_paid_score: "230-250",
+                        en: { name: "Pedagogy and Psychology of Deviant Behavior", exams: ["Social Studies (DVI, written)(1)", "Social Studies (EGE)(2)", "Math OR Biology OR History (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Педагогика и психология девиантного поведения", exams: ["Обществознание (ДВИ, письменно)(1)", "Обществознание (ЕГЭ)(2)", "Математика ИЛИ Биология ИЛИ История (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "asia-africa",
+                en: { 
+                    name: "Institute of Asian and African Studies", 
+                    location: "Nikolskaya St., 7/9, bldg. 2", 
+                    profile: "Oriental Studies, African Studies, Regional Security",
+                    contacts: "+7 (495) 629-38-00 | isaa-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Институт стран Азии и Африки", 
+                    location: "ул. Никольская, 7/9, корп. 2", 
+                    profile: "Востоковедение, Африканистика, Региональная безопасность",
+                    contacts: "+7 (495) 629-38-00 | isaa-adm@msu.ru"
+                },
+                budget_spots: 100, paid_spots: 100, tuition: "635,000 ₽",
+                programs: [
+                    { 
+                        code: "58.03.01", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Oriental Studies and African Studies", exams: ["History (DVI, written)(1)", "History (EGE)(2)", "Foreign Lang (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Востоковедение и африканистика", exams: ["История (ДВИ, письменно)(1)", "История (ЕГЭ)(2)", "Иностранный язык (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    }
+                ]
+            },
+            {
+                id: "sociology",
+                en: { 
+                    name: "Faculty of Sociology", 
+                    location: "Leninskie Gory, 1, bldg. 20", 
+                    profile: "Social Analytics, Political Sociology, Marketing Research",
+                    contacts: "+7 (495) 939-24-00 | soc-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Социологический факультет", 
+                    location: "Ленинские горы, 1, корп. 20", 
+                    profile: "Социальная аналитика, Политическая социология, Маркетинговые исследования",
+                    contacts: "+7 (495) 939-24-00 | soc-adm@msu.ru"
+                },
+                budget_spots: 125, paid_spots: 60, tuition: "525,940 ₽",
+                programs: [
+                    { 
+                        code: "39.03.01", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "Sociology", exams: ["Social Studies (DVI, written)(1)", "Social Studies (EGE)(2)", "Math OR History (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Социология", exams: ["Обществознание (ДВИ, письменно)(1)", "Обществознание (ЕГЭ)(2)", "Математика ИЛИ История (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "41.03.06", 
+                        est_budget_score: "300-320", est_paid_score: "230-250",
+                        en: { name: "Public Policy and Social Sciences", exams: ["Social Studies (DVI, written)(1)", "Social Studies (EGE)(2)", "Foreign Lang OR History OR Geography (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Публичная политика и социальные науки", exams: ["Обществознание (ДВИ, письменно)(1)", "Обществознание (ЕГЭ)(2)", "Иностранный язык ИЛИ История ИЛИ География (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3", "Целевая квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "foreign-lang",
+                en: { 
+                    name: "Faculty of Foreign Languages and Area Studies", 
+                    location: "Leninskie Gory, 1, bldg. 21", 
+                    profile: "Translation, Linguistics, European & American Studies",
+                    contacts: "+7 (495) 939-25-00 | fllr-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет иностранных языков и регионоведения", 
+                    location: "Ленинские горы, 1, корп. 21", 
+                    profile: "Перевод, Лингвистика, Европейские и Американские исследования",
+                    contacts: "+7 (495) 939-25-00 | fllr-adm@msu.ru"
+                },
+                budget_spots: 78, paid_spots: 117, tuition: "520,313 ₽",
+                programs: [
+                    { 
+                        code: "45.05.01", 
+                        est_budget_score: "320-340", est_paid_score: "250-270",
+                        en: { name: "Translation and Translation Studies", exams: ["Foreign Lang (DVI, written)(1)", "Foreign Lang (EGE)(2)", "History OR Social Studies (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Перевод и переводоведение", exams: ["Иностранный язык (ДВИ, письменно)(1)", "Иностранный язык (ЕГЭ)(2)", "История ИЛИ Обществознание (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    },
+                    { 
+                        code: "45.03.02", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Linguistics", exams: ["Foreign Lang (DVI, written)(1)", "Foreign Lang (EGE)(2)", "History OR Social Studies (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Лингвистика", exams: ["Иностранный язык (ДВИ, письменно)(1)", "Иностранный язык (ЕГЭ)(2)", "История ИЛИ Обществознание (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    },
+                    { 
+                        code: "41.03.01", 
+                        est_budget_score: "340-360", est_paid_score: "270-290",
+                        en: { name: "Area Studies", exams: ["Foreign Lang (DVI, written)(1)", "Foreign Lang OR Social Studies OR Geography (EGE, choice)(2)", "History (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Зарубежное регионоведение", exams: ["Иностранный язык (ДВИ, письменно)(1)", "Иностранный язык ИЛИ Обществознание ИЛИ География (ЕГЭ, по выбору)(2)", "История (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "41.03.02", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "Russian Area Studies", exams: ["Social Studies (DVI, written)(1)", "History (EGE)(2)", "Social Studies OR Geography (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Регионоведение России", exams: ["Обществознание (ДВИ, письменно)(1)", "История (ЕГЭ)(2)", "Обществознание ИЛИ География (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "51.03.01", 
+                        est_budget_score: "300-320", est_paid_score: "230-250",
+                        en: { name: "Culturology", exams: ["Foreign Lang (DVI, written)(1)", "Foreign Lang OR History OR Literature (EGE, choice)(2)", "Social Studies (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Культурология", exams: ["Иностранный язык (ДВИ, письменно)(1)", "Иностранный язык ИЛИ История ИЛИ Литература (ЕГЭ, по выбору)(2)", "Обществознание (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "bioeng",
+                en: { 
+                    name: "Faculty of Bioengineering and Bioinformatics", 
+                    location: "Leninskie Gory, 1, bldg. 22", 
+                    profile: "Systems Biology, Genomics, Computational Biology",
+                    contacts: "+7 (495) 939-26-00 | bioeng-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет биоинженерии и биоинформатики", 
+                    location: "Ленинские горы, 1, корп. 22", 
+                    profile: "Системная биология, Геномика, Вычислительная биология",
+                    contacts: "+7 (495) 939-26-00 | bioeng-adm@msu.ru"
+                },
+                budget_spots: 35, paid_spots: 40, tuition: "525,195 ₽",
+                programs: [
+                    { 
+                        code: "06.05.01", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Bioengineering and Bioinformatics", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Chemistry (EGE)(3)", "Biology (EGE)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Биоинженерия и биоинформатика", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Химия (ЕГЭ)(3)", "Биология (ЕГЭ)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4", "Целевая квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "phys-chem-eng",
+                en: { 
+                    name: "Faculty of Fundamental Physical and Chemical Engineering", 
+                    location: "Leninskie Gory, 1, bldg. 23", 
+                    profile: "Quantum Technologies, Catalysis, Energy Storage",
+                    contacts: "+7 (495) 939-27-00 | ffhi-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет фундаментальной физико-химической инженерии", 
+                    location: "Ленинские горы, 1, корп. 23", 
+                    profile: "Квантовые технологии, Катализ, Накопители энергии",
+                    contacts: "+7 (495) 939-27-00 | ffhi-adm@msu.ru"
+                },
+                budget_spots: 41, paid_spots: 12, tuition: "560,833 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "320-340", est_paid_score: "250-270",
+                        en: { name: "Applied Mathematics and Physics", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Physics OR Chemistry (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Прикладные математика и физика", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Физика ИЛИ Химия (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2", "Целевая квота: 1"] 
+                    },
+                    { 
+                        code: "04.05.01", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "Fundamental Physical and Chemical Engineering", exams: ["Chemistry (DVI, written)(1)", "Chemistry (EGE)(2)", "Math (EGE)(3)", "Physics (EGE)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Фундаментальная физико-химическая инженерия", exams: ["Химия (ДВИ, письменно)(1)", "Химия (ЕГЭ)(2)", "Математика (ЕГЭ)(3)", "Физика (ЕГЭ)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "biotech",
+                en: { 
+                    name: "Faculty of Biotechnology", 
+                    location: "Leninskie Gory, 1, bldg. 24", 
+                    profile: "Industrial Biotechnology, Food Safety, Genetic Engineering",
+                    contacts: "+7 (495) 939-28-00 | biotech-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Биотехнологический факультет", 
+                    location: "Ленинские горы, 1, корп. 24", 
+                    profile: "Промышленная биотехнология, Безопасность пищевых продуктов, Генная инженерия",
+                    contacts: "+7 (495) 939-28-00 | biotech-adm@msu.ru"
+                },
+                budget_spots: 25, paid_spots: 15, tuition: "561,230 ₽",
+                programs: [
+                    { 
+                        code: "19.03.01", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "Biotechnology", exams: ["Biology (DVI, written)(1)", "Math (EGE)(2)", "Biology (EGE)(3)", "Chemistry (EGE)(4)", "Russian (EGE)(5)"] }, 
+                        ru: { name: "Биотехнология", exams: ["Биология (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Биология (ЕГЭ)(3)", "Химия (ЕГЭ)(4)", "Русский язык (ЕГЭ)(5)"] }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "space",
+                en: { 
+                    name: "Faculty of Space Research", 
+                    location: "Leninskie Gory, 1, bldg. 25", 
+                    profile: "Spacecraft Design, Orbital Mechanics, Remote Sensing",
+                    contacts: "+7 (495) 939-29-00 | space-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет космических исследований", 
+                    location: "Ленинские горы, 1, корп. 25", 
+                    profile: "Проектирование КА, Орбитальная механика, Дистанционное зондирование",
+                    contacts: "+7 (495) 939-29-00 | space-adm@msu.ru"
+                },
+                budget_spots: 55, paid_spots: 20, tuition: "Уточняется",
+                programs: [
+                    { 
+                        code: "01.05.01", 
+                        est_budget_score: "340-360", est_paid_score: "270-290",
+                        en: { name: "Space Research and Cosmonautics", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Physics OR Informatics (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Космические исследования и космонавтика", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Физика ИЛИ Информатика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6", "Целевая квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "ai",
+                en: { 
+                    name: "Faculty of Artificial Intelligence", 
+                    location: "Leninskie Gory, 1, bldg. 26", 
+                    profile: "Machine Learning, Neural Networks, Computer Vision, NLP",
+                    contacts: "+7 (495) 939-30-00 | ai-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет искусственного интеллекта", 
+                    location: "Ленинские горы, 1, корп. 26", 
+                    profile: "Машинное обучение, Нейросети, Компьютерное зрение, NLP",
+                    contacts: "+7 (495) 939-30-00 | ai-adm@msu.ru"
+                },
+                budget_spots: 20, paid_spots: 16, tuition: "Уточняется",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "360-380", est_paid_score: "290-310",
+                        en: { name: "Applied Mathematics and Informatics (AI Profile)", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Informatics OR Physics (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Прикладная математика и информатика (профиль ИИ)", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Информатика ИЛИ Физика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "gov-admin",
+                en: { 
+                    name: "Faculty of Public Administration", 
+                    location: "Leninskie Gory, 1, bldg. 27", 
+                    profile: "Public Policy, HR Management, Municipal Governance",
+                    contacts: "+7 (495) 939-31-00 | gua-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет государственного управления", 
+                    location: "Ленинские горы, 1, корп. 27", 
+                    profile: "Государственная политика, Управление персоналом, Муниципальное управление",
+                    contacts: "+7 (495) 939-31-00 | gua-adm@msu.ru"
+                },
+                budget_spots: 43, paid_spots: 193, tuition: "525,940 ₽",
+                programs: [
+                    { 
+                        code: "38.03.03", 
+                        est_budget_score: "300-320", est_paid_score: "230-250",
+                        en: { name: "Human Resource Management", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Foreign Lang OR Social Studies (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Управление персоналом", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Иностранный язык ИЛИ Обществознание (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "38.03.04", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "State and Municipal Administration", exams: ["Math (DVI, written)(1)", "Math (EGE)(2)", "Social Studies (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Государственное и муниципальное управление", exams: ["Математика (ДВИ, письменно)(1)", "Математика (ЕГЭ)(2)", "Обществознание (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    },
+                    { 
+                        code: "41.03.04", 
+                        est_budget_score: "290-310", est_paid_score: "220-240",
+                        en: { name: "Political Science", exams: ["History (DVI, written)(1)", "History (EGE)(2)", "Social Studies OR Geography OR Foreign Lang (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Политология", exams: ["История (ДВИ, письменно)(1)", "История (ЕГЭ)(2)", "Обществознание ИЛИ География ИЛИ Иностранный язык (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "world-politics",
+                en: { 
+                    name: "Faculty of World Politics", 
+                    location: "Leninskie Gory, 1, bldg. 28", 
+                    profile: "International Relations, Diplomacy, Global Security",
+                    contacts: "+7 (495) 939-32-00 | wp-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет мировой политики", 
+                    location: "Ленинские горы, 1, корп. 28", 
+                    profile: "Международные отношения, Дипломатия, Глобальная безопасность",
+                    contacts: "+7 (495) 939-32-00 | wp-adm@msu.ru"
+                },
+                budget_spots: 15, paid_spots: 180, tuition: "525,940 ₽",
+                programs: [
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "330-350", est_paid_score: "260-280",
+                        en: { name: "International Relations", exams: ["History (DVI, written)(1)", "History (EGE)(2)", "Foreign Lang OR Geography OR Social Studies (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Международные отношения", exams: ["История (ДВИ, письменно)(1)", "История (ЕГЭ)(2)", "Иностранный язык ИЛИ География ИЛИ Обществознание (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2", "Целевая квота: 1"] 
+                    }
+                ]
+            },
+            {
+                id: "global-processes",
+                en: { 
+                    name: "Faculty of Global Processes", 
+                    location: "Leninskie Gory, 1, bldg. 29", 
+                    profile: "Global Economy, Energy Diplomacy, Humanitarian Cooperation",
+                    contacts: "+7 (495) 939-33-00 | gp-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет глобальных процессов", 
+                    location: "Ленинские горы, 1, корп. 29", 
+                    profile: "Глобальная экономика, Энергетическая дипломатия, Гуманитарное сотрудничество",
+                    contacts: "+7 (495) 939-33-00 | gp-adm@msu.ru"
+                },
+                budget_spots: 25, paid_spots: 110, tuition: "519,375 ₽",
+                programs: [
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "Global Political Processes and Diplomacy", exams: ["History (DVI, written)(1)", "History (EGE)(2)", "Foreign Lang OR Social Studies OR Geography (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Глобальные политические процессы и дипломатия", exams: ["История (ДВИ, письменно)(1)", "История (ЕГЭ)(2)", "Иностранный язык ИЛИ Обществознание ИЛИ География (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 1", "Отдельная квота: 1"] 
+                    },
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "320-340", est_paid_score: "250-270",
+                        en: { name: "Global Economy / Energy & Business", exams: ["History (DVI, written)(1)", "History (EGE)(2)", "Foreign Lang OR Social Studies OR Math OR Geography OR Informatics (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Глобальная экономика / Энергетика и бизнес", exams: ["История (ДВИ, письменно)(1)", "История (ЕГЭ)(2)", "Иностранный язык ИЛИ Обществознание ИЛИ Математика ИЛИ География ИЛИ Информатика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "arts",
+                en: { 
+                    name: "Faculty of Arts", 
+                    location: "Leninskie Gory, 1, bldg. 30", 
+                    profile: "Fine Arts, Curatorial Studies, Art Criticism",
+                    contacts: "+7 (495) 939-34-00 | arts-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет искусств", 
+                    location: "Ленинские горы, 1, корп. 30", 
+                    profile: "Изобразительное искусство, Кураторство, Искусствоведение",
+                    contacts: "+7 (495) 939-34-00 | arts-adm@msu.ru"
+                },
+                budget_spots: 0, paid_spots: 25, tuition: "525,940 ₽",
+                programs: [
+                    { 
+                        code: "50.03.02", 
+                        est_budget_score: "N/A", est_paid_score: "220-240",
+                        en: { name: "Fine Arts", exams: ["Creative Written DVI(1)", "Literature (EGE)(2)", "History OR Social Studies OR Foreign Lang (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Изящные искусства", exams: ["Творческое письменное ДВИ(1)", "Литература (ЕГЭ)(2)", "История ИЛИ Обществознание ИЛИ Иностранный язык (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: [] 
+                    }
+                ]
+            },
+            {
+                id: "pol-science",
+                en: { 
+                    name: "Faculty of Political Science", 
+                    location: "Leninskie Gory, 1, bldg. 31", 
+                    profile: "Comparative Politics, Conflict Studies, Political Analytics",
+                    contacts: "+7 (495) 939-35-00 | polsci-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет политологии", 
+                    location: "Ленинские горы, 1, корп. 31", 
+                    profile: "Сравнительная политология, Конфликтология, Политическая аналитика",
+                    contacts: "+7 (495) 939-35-00 | polsci-adm@msu.ru"
+                },
+                budget_spots: 57, paid_spots: 50, tuition: "525,940 ₽",
+                programs: [
+                    { 
+                        code: "41.03.04", 
+                        est_budget_score: "310-330", est_paid_score: "240-260",
+                        en: { name: "Political Science", exams: ["History (DVI, written)(1)", "History (EGE)(2)", "Foreign Lang OR Geography OR Social Studies OR Math OR Informatics (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Политология", exams: ["История (ДВИ, письменно)(1)", "История (ЕГЭ)(2)", "Иностранный язык ИЛИ География ИЛИ Обществознание ИЛИ Математика ИЛИ Информатика (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    },
+                    { 
+                        code: "37.03.02", 
+                        est_budget_score: "300-320", est_paid_score: "230-250",
+                        en: { name: "Conflictology", exams: ["Social Studies (DVI, written)(1)", "Social Studies (EGE)(2)", "Biology OR Math OR History (EGE, choice)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Конфликтология", exams: ["Обществознание (ДВИ, письменно)(1)", "Обществознание (ЕГЭ)(2)", "Биология ИЛИ Математика ИЛИ История (ЕГЭ, по выбору)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: ["Особая квота: 2", "Отдельная квота: 2"] 
+                    }
+                ]
+            },
+            {
+                id: "teacher-edu",
+                en: { 
+                    name: "Faculty of Teacher Education", 
+                    location: "Leninskie Gory, 1, bldg. 32", 
+                    profile: "Pedagogical Education, Educational Management",
+                    contacts: "+7 (495) 939-36-00 | ped-adm@msu.ru"
+                },
+                ru: { 
+                    name: "Факультет педагогического образования", 
+                    location: "Ленинские горы, 1, корп. 32", 
+                    profile: "Педагогическое образование, Управление образованием",
+                    contacts: "+7 (495) 939-36-00 | ped-adm@msu.ru"
+                },
+                budget_spots: 0, paid_spots: 0, tuition: "Уточняется",
+                programs: [
+                    { 
+                        code: "44.05.01", 
+                        est_budget_score: "N/A", est_paid_score: "N/A",
+                        en: { name: "Pedagogical Education", exams: ["Social Studies (EGE)(1)", "History (EGE)(2)", "Literature (EGE)(3)", "Russian (EGE)(4)"] }, 
+                        ru: { name: "Педагогическое образование", exams: ["Обществознание (ЕГЭ)(1)", "История (ЕГЭ)(2)", "Литература (ЕГЭ)(3)", "Русский язык (ЕГЭ)(4)"] }, 
+                        quotas: [] 
+                    }
+                ]
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderFaculty(lang) {
+            const facultyId = getQueryParam('id');
+            const faculty = facultiesData.find(f => f.id === facultyId);
+            const container = document.getElementById('faculty-content');
+            
+            if (!faculty) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'Faculty not found' : 'Факультет не найден'}</h2><a href="msu.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to MSU' : 'Вернуться в МГУ'}</a></div>`;
+                return;
+            }
+
+            const title = faculty[lang].name;
+            const info = faculty[lang];
+            
+            // Generate Programs HTML with INDIVIDUAL scores
+            const programsHtml = faculty.programs.map(prog => `
+                <div class="program-card">
+                    <div class="program-header">
+                        <div>
+                            <div class="program-code">${prog.code}</div>
+                            <div class="program-name">${prog[lang].name}</div>
+                        </div>
+                        <div class="scores-box">
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Budget Score' : 'Бюджет'}</span>
+                                <span class="score-value">${prog.est_budget_score}</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Paid Score' : 'Платное'}</span>
+                                <span class="score-value paid">${prog.est_paid_score}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="exam-list">
+                        ${prog[lang].exams.map((exam, idx) => `
+                            <li class="exam-item">
+                                <span class="exam-priority">${idx + 1}</span>
+                                <div class="exam-details">
+                                    <span class="exam-type">${exam.split('(')[0].trim()}</span>
+                                    <span class="exam-format">(${exam.match(/\(([^)]+)\)/)?.[1] || ''})</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    ${prog.quotas.length > 0 ? `
+                        <div style="margin-top: 1rem;">
+                            ${prog.quotas.map(q => `<span class="quota-badge">${q}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            // Faculty Info Block
+            const infoBlock = `
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-circle-info"></i> ${lang === 'en' ? 'Faculty Information' : 'Информация о факультете'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-location-dot"></i> <span>${info.location}</span></li>
+                            <li><i class="fa-solid fa-graduation-cap"></i> <span><strong>${lang === 'en' ? 'Profile:' : 'Профиль:'}</strong> ${info.profile}</span></li>
+                            <li><i class="fa-solid fa-phone"></i> <span>${info.contacts}</span></li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-chart-pie"></i> ${lang === 'en' ? 'Admission Stats' : 'Статистика приема'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-users"></i> <span><strong>${lang === 'en' ? 'Budget spots:' : 'Бюджет:'}</strong> ${faculty.budget_spots}</span></li>
+                            <li><i class="fa-solid fa-wallet"></i> <span><strong>${lang === 'en' ? 'Paid spots:' : 'Платное:'}</strong> ${faculty.paid_spots}</span></li>
+                            <li><i class="fa-solid fa-ruble-sign"></i> <span><strong>${lang === 'en' ? 'Tuition:' : 'Стоимость:'}</strong> ${faculty.tuition} / year</span></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            const navLinksHtml = facultiesData
+                .filter(f => f.id !== facultyId)
+                .map(f => `<a href="?id=${f.id}" class="nav-link">${f[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header">
+                    <div class="container faculty-title">
+                        <h1>${title}</h1>
+                        <div class="faculty-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${faculty.programs.length} ${lang === 'en' ? 'programs' : 'направлений'}</span>
+                            <span><i class="fa-solid fa-calendar-check"></i> ${lang === 'en' ? 'Admission Rules 2026' : 'Правила приема 2026'}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container">
+                    ${infoBlock}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">${lang === 'en' ? 'Programs & Requirements' : 'Направления и требования'}</h2>
+                    ${programsHtml}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Faculties' : 'Другие факультеты'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_uni: "Universities", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_uni: "Вузы", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderFaculty(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

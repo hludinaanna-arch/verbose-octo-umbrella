@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Факультет МГТУ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #0056b3; /* BMSTU Blue */
+            --primary-hover: #004494; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #f0f7ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #e6f0fa 0%, #cce0f5 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .faculty-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .faculty-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        .programs-section { margin-bottom: 4rem; }
+        .program-card { 
+            background: var(--card-bg);
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .program-card:hover { transform: translateY(-2px); }
+        
+        .program-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .program-code { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .program-name { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); width: 100%; }
+        
+        .scores-box { 
+            background: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .score-item { display: flex; flex-direction: column; }
+        .score-label { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
+        .score-value { font-size: 1.2rem; font-weight: 800; color: var(--primary-color); }
+        .score-value.paid { color: var(--text-gray); }
+
+        .exam-list { list-style: none; margin-bottom: 1.5rem; }
+        .exam-item { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 1rem; 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid rgba(0, 86, 179, 0.1); 
+            font-size: 1.05rem;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-priority { 
+            min-width: 28px; 
+            height: 28px; 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .exam-details { flex-grow: 1; }
+        .exam-type { font-weight: 600; color: var(--text-dark); }
+        .exam-format { color: var(--text-gray); font-size: 0.9rem; margin-left: 0.5rem; }
+        
+        .quota-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #cce0f5;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .faculty-title h1 { font-size: 2.2rem; } 
+            .faculty-meta { flex-direction: column; gap: 0.5rem; }
+            .exam-item { flex-direction: column; gap: 0.3rem; }
+            .program-header { flex-direction: column; }
+            .scores-box { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="85" cy="65" r="8" fill="#0056b3"/>
+                    <path d="M75 55L85 65" stroke="#0056b3" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="faculty-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- DATA FOR BMSTU FACULTIES (Based on official docs) ---
+        const facultiesData = [
+            {
+                id: "bmt",
+                en: { 
+                    name: "Biomedical Engineering", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Medical Devices, Biotech Systems",
+                    contacts: "+7 (499) 263-63-23 | bmt@bmstu.ru"
+                },
+                ru: { 
+                    name: "Биомедицинская техника", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Медицинская техника, Биотехнические системы",
+                    contacts: "+7 (499) 263-63-23 | bmt@bmstu.ru"
+                },
+                budget_spots: 45, paid_spots: 15, tuition: "320,000 ₽",
+                programs: [
+                    { 
+                        code: "12.03.04", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Biotechnical Systems and Technologies", exams: ["Math (EGE)(II)", "Physics (EGE)(I)", "Chemistry OR Biology (EGE, choice)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Биотехнические системы и технологии", exams: ["Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(I)", "Химия ИЛИ Биология (ЕГЭ, по выбору)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 5", "Отдельная квота: 5"] 
+                    }
+                ]
+            },
+            {
+                id: "ibm",
+                en: { 
+                    name: "Engineering Business and Management", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Innovation Management, Digital Economy",
+                    contacts: "+7 (499) 263-64-00 | ibm@bmstu.ru"
+                },
+                ru: { 
+                    name: "Инженерный бизнес и менеджмент", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Управление инновациями, Цифровая экономика",
+                    contacts: "+7 (499) 263-64-00 | ibm@bmstu.ru"
+                },
+                budget_spots: 60, paid_spots: 120, tuition: "380,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Management", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "History OR Foreign Lang OR Informatics (EGE, choice)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Менеджмент", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "История ИЛИ Иностранный язык ИЛИ Информатика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "220-240",
+                        en: { name: "Economics", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "Foreign Lang OR Informatics (EGE, choice)(II)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Экономика", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 6", "Отдельная квота: 6"] 
+                    }
+                ]
+            },
+            {
+                id: "iu",
+                en: { 
+                    name: "Informatics and Control Systems", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Software Engineering, AI, Cybersecurity",
+                    contacts: "+7 (499) 263-65-00 | iu@bmstu.ru"
+                },
+                ru: { 
+                    name: "Информатика и системы управления", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Программная инженерия, ИИ, Кибербезопасность",
+                    contacts: "+7 (499) 263-65-00 | iu@bmstu.ru"
+                },
+                budget_spots: 180, paid_spots: 90, tuition: "420,000 ₽",
+                programs: [
+                    { 
+                        code: "09.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "220-240",
+                        en: { name: "Informatics and Computer Engineering", exams: ["Math (EGE)(II)", "Informatics (EGE)(I)", "Physics (EGE)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Информатика и вычислительная техника", exams: ["Математика (ЕГЭ)(II)", "Информатика (ЕГЭ)(I)", "Физика (ЕГЭ)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "09.03.04", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Software Engineering", exams: ["Math (EGE)(II)", "Informatics (EGE)(I)", "Physics (EGE)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Программная инженерия", exams: ["Математика (ЕГЭ)(II)", "Информатика (ЕГЭ)(I)", "Физика (ЕГЭ)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    }
+                ]
+            },
+            {
+                id: "l",
+                en: { 
+                    name: "Linguistics", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Technical Translation, Intercultural Communication",
+                    contacts: "+7 (499) 263-66-00 | l@bmstu.ru"
+                },
+                ru: { 
+                    name: "Лингвистика", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Технический перевод, Межкультурная коммуникация",
+                    contacts: "+7 (499) 263-66-00 | l@bmstu.ru"
+                },
+                budget_spots: 30, paid_spots: 40, tuition: "310,000 ₽",
+                programs: [
+                    { 
+                        code: "45.03.02", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Linguistics", exams: ["Foreign Lang (EGE)(I)", "Literature (EGE)(II)", "History OR Social Studies (EGE, choice)(III)", "Russian (EGE)(II)"] }, 
+                        ru: { name: "Лингвистика", exams: ["Иностранный язык (ЕГЭ)(I)", "Литература (ЕГЭ)(II)", "История ИЛИ Обществознание (ЕГЭ, по выбору)(III)", "Русский язык (ЕГЭ)(II)"] }, 
+                        quotas: ["Особая квота: 3", "Отдельная квота: 3"] 
+                    }
+                ]
+            },
+            {
+                id: "mt",
+                en: { 
+                    name: "Machine-Building Technologies", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "CAD/CAM, Robotics Manufacturing",
+                    contacts: "+7 (499) 263-67-00 | mt@bmstu.ru"
+                },
+                ru: { 
+                    name: "Машиностроительные технологии", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "САПР/КАМ, Роботизированное производство",
+                    contacts: "+7 (499) 263-67-00 | mt@bmstu.ru"
+                },
+                budget_spots: 120, paid_spots: 50, tuition: "350,000 ₽",
+                programs: [
+                    { 
+                        code: "15.03.04", 
+                        est_budget_score: "250-270", est_paid_score: "180-200",
+                        en: { name: "Automation of Technological Processes", exams: ["Math (EGE)(II)", "Physics (EGE)(I)", "Informatics OR Chemistry (EGE, choice)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Автоматизация технологических процессов", exams: ["Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(I)", "Информатика ИЛИ Химия (ЕГЭ, по выбору)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    }
+                ]
+            },
+            {
+                id: "rl",
+                en: { 
+                    name: "Radioelectronics and Laser Technology", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Photonics, Radio Engineering, Optoelectronics",
+                    contacts: "+7 (499) 263-68-00 | rl@bmstu.ru"
+                },
+                ru: { 
+                    name: "Радиоэлектроника и лазерная техника", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Фотоника, Радиотехника, Оптоэлектроника",
+                    contacts: "+7 (499) 263-68-00 | rl@bmstu.ru"
+                },
+                budget_spots: 150, paid_spots: 60, tuition: "360,000 ₽",
+                programs: [
+                    { 
+                        code: "11.03.01", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Radio Engineering", exams: ["Math (EGE)(II)", "Physics (EGE)(I)", "Informatics OR Chemistry (EGE, choice)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Радиотехника", exams: ["Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(I)", "Информатика ИЛИ Химия (ЕГЭ, по выбору)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    }
+                ]
+            },
+            {
+                id: "rk",
+                en: { 
+                    name: "Robotics and Complex Automation", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Industrial Robotics, Mechatronics",
+                    contacts: "+7 (499) 263-69-00 | rk@bmstu.ru"
+                },
+                ru: { 
+                    name: "Робототехника и комплексная автоматизация", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Промышленная робототехника, Мехатроника",
+                    contacts: "+7 (499) 263-69-00 | rk@bmstu.ru"
+                },
+                budget_spots: 100, paid_spots: 40, tuition: "370,000 ₽",
+                programs: [
+                    { 
+                        code: "15.03.06", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Mechatronics and Robotics", exams: ["Math (EGE)(II)", "Physics (EGE)(I)", "Informatics OR Chemistry (EGE, choice)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Мехатроника и робототехника", exams: ["Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(I)", "Информатика ИЛИ Химия (ЕГЭ, по выбору)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    }
+                ]
+            },
+            {
+                id: "sgn",
+                en: { 
+                    name: "Social Sciences and Humanities", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Sociology, Psychology, Political Science",
+                    contacts: "+7 (499) 263-70-00 | sgn@bmstu.ru"
+                },
+                ru: { 
+                    name: "Социальные и гуманитарные науки", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Социология, Психология, Политология",
+                    contacts: "+7 (499) 263-70-00 | sgn@bmstu.ru"
+                },
+                budget_spots: 50, paid_spots: 80, tuition: "300,000 ₽",
+                programs: [
+                    { 
+                        code: "39.03.01", 
+                        est_budget_score: "240-260", est_paid_score: "170-190",
+                        en: { name: "Sociology", exams: ["Social Studies (EGE)(I)", "Math (EGE)(II)", "History OR Foreign Lang (EGE, choice)(III)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Социология", exams: ["Обществознание (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "История ИЛИ Иностранный язык (ЕГЭ, по выбору)(III)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 5", "Отдельная квота: 5"] 
+                    },
+                    { 
+                        code: "37.03.01", 
+                        est_budget_score: "250-270", est_paid_score: "180-200",
+                        en: { name: "Psychology", exams: ["Biology (EGE)(I)", "Math (EGE)(II)", "Social Studies OR Chemistry (EGE, choice)(III)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Психология", exams: ["Биология (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Обществознание ИЛИ Химия (ЕГЭ, по выбору)(III)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 5", "Отдельная квота: 5"] 
+                    }
+                ]
+            },
+            {
+                id: "sm",
+                en: { 
+                    name: "Special Machine Building", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Defense Systems, Spacecraft",
+                    contacts: "+7 (499) 263-71-00 | sm@bmstu.ru"
+                },
+                ru: { 
+                    name: "Специальное машиностроение", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Оборонные системы, Космические аппараты",
+                    contacts: "+7 (499) 263-71-00 | sm@bmstu.ru"
+                },
+                budget_spots: 140, paid_spots: 30, tuition: "340,000 ₽",
+                programs: [
+                    { 
+                        code: "24.03.01", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Rocket Complexes and Cosmonautics", exams: ["Math (EGE)(II)", "Physics (EGE)(I)", "Informatics OR Chemistry (EGE, choice)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Ракетные комплексы и космонавтика", exams: ["Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(I)", "Информатика ИЛИ Химия (ЕГЭ, по выбору)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 14", "Отдельная квота: 14"] 
+                    }
+                ]
+            },
+            {
+                id: "fn",
+                en: { 
+                    name: "Fundamental Sciences", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Applied Math, Physics",
+                    contacts: "+7 (499) 263-72-00 | fn@bmstu.ru"
+                },
+                ru: { 
+                    name: "Фундаментальные науки", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Прикладная математика, Физика",
+                    contacts: "+7 (499) 263-72-00 | fn@bmstu.ru"
+                },
+                budget_spots: 90, paid_spots: 30, tuition: "330,000 ₽",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Applied Mathematics and Informatics", exams: ["Math (EGE)(II)", "Informatics (EGE)(I)", "Physics OR Chemistry (EGE, choice)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Прикладная математика и информатика", exams: ["Математика (ЕГЭ)(II)", "Информатика (ЕГЭ)(I)", "Физика ИЛИ Химия (ЕГЭ, по выбору)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 9", "Отдельная квота: 9"] 
+                    },
+                    { 
+                        code: "03.03.02", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Physics", exams: ["Math (EGE)(II)", "Physics (EGE)(I)", "Informatics OR Chemistry (EGE, choice)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Физика", exams: ["Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(I)", "Информатика ИЛИ Химия (ЕГЭ, по выбору)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 9", "Отдельная квота: 9"] 
+                    }
+                ]
+            },
+            {
+                id: "em",
+                en: { 
+                    name: "Power Engineering", 
+                    location: "2nd Baumanskaya St., 5, bldg. 1", 
+                    profile: "Thermal Power Plants, Nuclear Energy",
+                    contacts: "+7 (499) 263-73-00 | em@bmstu.ru"
+                },
+                ru: { 
+                    name: "Энергомашиностроение", 
+                    location: "ул. 2-я Бауманская, д. 5, стр. 1", 
+                    profile: "Тепловые электростанции, Ядерная энергетика",
+                    contacts: "+7 (499) 263-73-00 | em@bmstu.ru"
+                },
+                budget_spots: 110, paid_spots: 45, tuition: "345,000 ₽",
+                programs: [
+                    { 
+                        code: "13.03.01", 
+                        est_budget_score: "250-270", est_paid_score: "180-200",
+                        en: { name: "Heat Power Engineering", exams: ["Math (EGE)(II)", "Physics (EGE)(I)", "Informatics OR Chemistry (EGE, choice)(I)", "Russian (EGE)(III)"] }, 
+                        ru: { name: "Теплоэнергетика и теплотехника", exams: ["Математика (ЕГЭ)(II)", "Физика (ЕГЭ)(I)", "Информатика ИЛИ Химия (ЕГЭ, по выбору)(I)", "Русский язык (ЕГЭ)(III)"] }, 
+                        quotas: ["Особая квота: 11", "Отдельная квота: 11"] 
+                    }
+                ]
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderFaculty(lang) {
+            const facultyId = getQueryParam('id');
+            const faculty = facultiesData.find(f => f.id === facultyId);
+            const container = document.getElementById('faculty-content');
+            
+            if (!faculty) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'Faculty not found' : 'Факультет не найден'}</h2><a href="bmstu.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to BMSTU' : 'Вернуться в МГТУ'}</a></div>`;
+                return;
+            }
+
+            const title = faculty[lang].name;
+            const info = faculty[lang];
+            
+            const programsHtml = faculty.programs.map(prog => `
+                <div class="program-card">
+                    <div class="program-header">
+                        <div>
+                            <div class="program-code">${prog.code}</div>
+                            <div class="program-name">${prog[lang].name}</div>
+                        </div>
+                        <div class="scores-box">
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Budget Score' : 'Бюджет'}</span>
+                                <span class="score-value">${prog.est_budget_score}</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Paid Score' : 'Платное'}</span>
+                                <span class="score-value paid">${prog.est_paid_score}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="exam-list">
+                        ${prog[lang].exams.map((exam, idx) => `
+                            <li class="exam-item">
+                                <span class="exam-priority">${idx + 1}</span>
+                                <div class="exam-details">
+                                    <span class="exam-type">${exam.split('(')[0].trim()}</span>
+                                    <span class="exam-format">(${exam.match(/\(([^)]+)\)/)?.[1] || ''})</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    ${prog.quotas.length > 0 ? `
+                        <div style="margin-top: 1rem;">
+                            ${prog.quotas.map(q => `<span class="quota-badge">${q}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            const infoBlock = `
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-circle-info"></i> ${lang === 'en' ? 'Faculty Information' : 'Информация о факультете'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-location-dot"></i> <span>${info.location}</span></li>
+                            <li><i class="fa-solid fa-graduation-cap"></i> <span><strong>${lang === 'en' ? 'Profile:' : 'Профиль:'}</strong> ${info.profile}</span></li>
+                            <li><i class="fa-solid fa-phone"></i> <span>${info.contacts}</span></li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-chart-pie"></i> ${lang === 'en' ? 'Admission Stats' : 'Статистика приема'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-users"></i> <span><strong>${lang === 'en' ? 'Budget spots:' : 'Бюджет:'}</strong> ${faculty.budget_spots}</span></li>
+                            <li><i class="fa-solid fa-wallet"></i> <span><strong>${lang === 'en' ? 'Paid spots:' : 'Платное:'}</strong> ${faculty.paid_spots}</span></li>
+                            <li><i class="fa-solid fa-ruble-sign"></i> <span><strong>${lang === 'en' ? 'Tuition:' : 'Стоимость:'}</strong> ${faculty.tuition} / year</span></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            const navLinksHtml = facultiesData
+                .filter(f => f.id !== facultyId)
+                .map(f => `<a href="?id=${f.id}" class="nav-link">${f[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header">
+                    <div class="container faculty-title">
+                        <h1>${title}</h1>
+                        <div class="faculty-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${faculty.programs.length} ${lang === 'en' ? 'programs' : 'направлений'}</span>
+                            <span><i class="fa-solid fa-calendar-check"></i> ${lang === 'en' ? 'Admission Rules 2026' : 'Правила приема 2026'}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container">
+                    ${infoBlock}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">${lang === 'en' ? 'Programs & Requirements' : 'Направления и требования'}</h2>
+                    ${programsHtml}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Faculties' : 'Другие факультеты'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_uni: "Universities", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_uni: "Вузы", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderFaculty(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - SPbU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #003366; /* SPbU Blue */
+            --primary-hover: #002244; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header Styles */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Specific Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .uni-info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
+        .uni-title h1 { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+        .uni-location { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .campuses-box { background: #fff; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .campuses-box h3 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary-color); }
+        .campuses-list { list-style: none; }
+        .campuses-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 0.95rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+        .campuses-list li:last-child { border-bottom: none; }
+        .campuses-list i { color: var(--primary-color); margin-top: 0.3rem; }
+
+        /* Stats Grid */
+        .stats-section { margin-bottom: 4rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .stat-card { background: #fff; padding: 2rem; border-radius: 1.5rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 4px solid var(--primary-color); }
+        .stat-value { font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.5rem; }
+        .stat-label { font-size: 1rem; color: var(--text-gray); font-weight: 500; }
+
+        /* Search & Faculties */
+        .search-section { margin-bottom: 4rem; }
+        .search-bar { position: relative; max-width: 600px; margin: 0 auto 3rem; }
+        .search-bar input { width: 100%; padding: 1.2rem 1.5rem 1.2rem 3.5rem; border-radius: 50px; border: 2px solid #e5e7eb; font-size: 1.1rem; font-family: inherit; outline: none; transition: border-color 0.3s; }
+        .search-bar input:focus { border-color: var(--primary-color); }
+        .search-bar i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 1.2rem; }
+        
+        .faculties-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
+        .faculty-card { 
+            background: #fff; 
+            padding: 2rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            transition: transform 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+        .faculty-card:hover { transform: translateY(-3px); border-color: var(--primary-color); }
+        .faculty-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-dark); }
+        .faculty-desc { font-size: 0.95rem; color: var(--text-gray); margin-bottom: 1.5rem; line-height: 1.5; flex-grow: 1; }
+        .subjects-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .subject-tag { background: #eef2ff; color: var(--primary-color); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .tuition-info { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: var(--text-gray); border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: auto;}
+        .tuition-info strong { color: var(--text-dark); }
+        .no-results { text-align: center; padding: 3rem; color: var(--text-gray); font-size: 1.2rem; display: none; }
+
+        @media (max-width: 992px) { .uni-info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .uni-title h1 { font-size: 2.2rem; } 
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <!-- SPbU Logo Placeholder -->
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="85" cy="65" r="8" fill="#003366"/>
+                    <path d="M75 55L85 65" stroke="#003366" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Header Info -->
+        <section class="page-header">
+            <div class="container uni-info-grid">
+                <div class="uni-title">
+                    <h1 data-key="spbu_title">Saint Petersburg State University</h1>
+                    <div class="uni-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span data-key="spbu_location">Universitetskaya Emb., 7/9, St. Petersburg</span>
+                    </div>
+                    <p data-key="spbu_desc" style="font-size: 1.1rem; color: var(--text-gray); max-width: 700px;">One of the oldest and largest classical universities in Russia, known for its strong traditions in humanities, sciences, and law.</p>
+                </div>
+                <div class="campuses-box">
+                    <h3 data-key="spbu_campuses_title">Main Campuses</h3>
+                    <ul class="campuses-list">
+                        <li><i class="fa-solid fa-building"></i> <span data-key="spbu_main_bldg">Main Building (Universitetskaya Emb.)</span></li>
+                        <li><i class="fa-solid fa-flask"></i> <span data-key="spbu_labs">Research Institutes & Labs</span></li>
+                        <li><i class="fa-solid fa-book"></i> <span data-key="spbu_library">Scientific Library</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admission Stats -->
+        <section class="container stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" data-key="spbu_budget_spots">4,500+</div>
+                    <div class="stat-label" data-key="spbu_budget_label">Budget Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="spbu_paid_spots">6,000+</div>
+                    <div class="stat-label" data-key="spbu_paid_label">Paid Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="spbu_budget_score">285</div>
+                    <div class="stat-label" data-key="spbu_budget_score_label">Avg. Budget Score (EGE)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="spbu_paid_score">230</div>
+                    <div class="stat-label" data-key="spbu_paid_score_label">Avg. Paid Score (EGE)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Faculty Search -->
+        <section class="container search-section">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="faculty-search" data-placeholder-key="spbu_search_placeholder" placeholder="Search by faculty or subject...">
+            </div>
+            
+            <div class="faculties-grid" id="faculties-container">
+                <!-- Cards will be injected here by JS -->
+            </div>
+            <div class="no-results" id="no-results" data-key="spbu_no_results">No faculties found.</div>
+        </section>
+    </main>
+
+    <script>
+        // --- TRANSLATIONS ---
+        const translations = {
+            en: {
+                nav_home: "Home", nav_uni: "Universities",
+                btn_login: "Log In", btn_signup: "Sign Up",
+                
+                spbu_title: "Saint Petersburg State University",
+                spbu_location: "Universitetskaya Emb., 7/9, St. Petersburg",
+                spbu_desc: "One of the oldest and largest classical universities in Russia, known for its strong traditions in humanities, sciences, and law.",
+                spbu_campuses_title: "Main Campuses",
+                spbu_main_bldg: "Main Building (Universitetskaya Emb.)",
+                spbu_labs: "Research Institutes & Labs",
+                spbu_library: "Scientific Library",
+                
+                spbu_budget_spots: "4,500+", spbu_budget_label: "Budget Spots (2026)",
+                spbu_paid_spots: "6,000+", spbu_paid_label: "Paid Spots (2026)",
+                spbu_budget_score: "285", spbu_budget_score_label: "Avg. Budget Score (EGE)",
+                spbu_paid_score: "230", spbu_paid_score_label: "Avg. Paid Score (EGE)",
+                
+                spbu_search_placeholder: "Search by faculty or subject...",
+                spbu_no_results: "No faculties found.",
+                spbu_tuition_label: "Avg. Tuition fee"
+            },
+            ru: {
+                nav_home: "Главная", nav_uni: "Вузы",
+                btn_login: "Войти", btn_signup: "Регистрация",
+                
+                spbu_title: "Санкт-Петербургский государственный университет",
+                spbu_location: "Университетская наб., 7/9, Санкт-Петербург",
+                spbu_desc: "Один из старейших и крупнейших классических университетов России, известный своими сильными традициями в гуманитарных науках, естествознании и праве.",
+                spbu_campuses_title: "Основные кампусы",
+                spbu_main_bldg: "Главное здание (Университетская наб.)",
+                spbu_labs: "Научные институты и лаборатории",
+                spbu_library: "Научная библиотека",
+                
+                spbu_budget_spots: "4 500+", spbu_budget_label: "Бюджетных мест (2026)",
+                spbu_paid_spots: "6 000+", spbu_paid_label: "Платных мест (2026)",
+                spbu_budget_score: "285", spbu_budget_score_label: "Ср. балл на бюджет (ЕГЭ)",
+                spbu_paid_score: "230", spbu_paid_score_label: "Ср. балл на платное (ЕГЭ)",
+                
+                spbu_search_placeholder: "Поиск по факультету или предмету...",
+                spbu_no_results: "Факультеты не найдены.",
+                spbu_tuition_label: "Средняя стоимость обучения"
+            }
+        };
+
+        // --- FACULTIES DATA FOR SPBU (Prices calculated as Avg from 20260529_7529_1__compressed.pdf) ---
+        const facultiesData = [
+            { 
+                id: "math-mech",
+                en: { 
+                    name: "Faculty of Mathematics and Mechanics", 
+                    subjects: ["Math", "Physics"], 
+                    tuition: "360,000 ₽", // Avg of Math/Mech programs (~350k-380k)
+                    desc: "Fundamental mathematics, mechanics, and computer science." 
+                }, 
+                ru: { 
+                    name: "Математико-механический факультет", 
+                    subjects: ["Математика", "Физика"], 
+                    tuition: "360 000 ₽", 
+                    desc: "Фундаментальная математика, механика и компьютерные науки." 
+                } 
+            },
+            { 
+                id: "vmk",
+                en: { 
+                    name: "Faculty of Applied Mathematics and Control Processes", 
+                    subjects: ["Math", "Informatics", "Physics"], 
+                    tuition: "380,000 ₽", // Avg of AMI programs (~360k-400k)
+                    desc: "Applied math, IT, and control systems." 
+                }, 
+                ru: { 
+                    name: "Факультет прикладной математики и процессов управления", 
+                    subjects: ["Математика", "Информатика", "Физика"], 
+                    tuition: "380 000 ₽", 
+                    desc: "Прикладная математика, IT и системы управления." 
+                } 
+            },
+            { 
+                id: "physics",
+                en: { 
+                    name: "Faculty of Physics", 
+                    subjects: ["Math", "Physics"], 
+                    tuition: "370,000 ₽", // Avg of Physics programs (~350k-390k)
+                    desc: "Theoretical and experimental physics, astronomy." 
+                }, 
+                ru: { 
+                    name: "Физический факультет", 
+                    subjects: ["Математика", "Физика"], 
+                    tuition: "370 000 ₽", 
+                    desc: "Теоретическая и экспериментальная физика, астрономия." 
+                } 
+            },
+            { 
+                id: "chemistry",
+                en: { 
+                    name: "Faculty of Chemistry", 
+                    subjects: ["Math", "Chemistry", "Physics"], 
+                    tuition: "365,000 ₽", // Avg of Chem programs (~350k-380k)
+                    desc: "Organic, inorganic, and physical chemistry." 
+                }, 
+                ru: { 
+                    name: "Химический факультет", 
+                    subjects: ["Математика", "Химия", "Физика"], 
+                    tuition: "365 000 ₽", 
+                    desc: "Органическая, неорганическая и физическая химия." 
+                } 
+            },
+            { 
+                id: "biology",
+                en: { 
+                    name: "Faculty of Biology", 
+                    subjects: ["Biology", "Chemistry", "Math"], 
+                    tuition: "355,000 ₽", // Avg of Bio programs (~340k-370k)
+                    desc: "General biology, genetics, and ecology." 
+                }, 
+                ru: { 
+                    name: "Биологический факультет", 
+                    subjects: ["Биология", "Химия", "Математика"], 
+                    tuition: "355 000 ₽", 
+                    desc: "Общая биология, генетика и экология." 
+                } 
+            },
+            { 
+                id: "soil",
+                en: { 
+                    name: "Faculty of Soil Science", 
+                    subjects: ["Biology", "Chemistry", "Geography"], 
+                    tuition: "340,000 ₽", // Avg of Soil/Eco programs (~330k-350k)
+                    desc: "Soil science, ecology, and environmental protection." 
+                }, 
+                ru: { 
+                    name: "Факультет почвоведения", 
+                    subjects: ["Биология", "Химия", "География"], 
+                    tuition: "340 000 ₽", 
+                    desc: "Почвоведение, экология и охрана окружающей среды." 
+                } 
+            },
+            { 
+                id: "geology",
+                en: { 
+                    name: "Faculty of Geology", 
+                    subjects: ["Math", "Physics", "Geography"], 
+                    tuition: "350,000 ₽", // Avg of Geo programs (~340k-360k)
+                    desc: "Geology, hydrogeology, and paleontology." 
+                }, 
+                ru: { 
+                    name: "Геологический факультет", 
+                    subjects: ["Математика", "Физика", "География"], 
+                    tuition: "350 000 ₽", 
+                    desc: "Геология, гидрогеология и палеонтология." 
+                } 
+            },
+            { 
+                id: "geography",
+                en: { 
+                    name: "Faculty of Geography and Geoecology", 
+                    subjects: ["Geography", "Math", "Informatics"], 
+                    tuition: "345,000 ₽", // Avg of Geo/Eco programs (~330k-360k)
+                    desc: "Physical geography, cartography, and tourism." 
+                }, 
+                ru: { 
+                    name: "Факультет географии и геоэкологии", 
+                    subjects: ["География", "Математика", "Информатика"], 
+                    tuition: "345 000 ₽", 
+                    desc: "Физическая география, картография и туризм." 
+                } 
+            },
+            { 
+                id: "materials",
+                en: { 
+                    name: "Faculty of Materials Science", 
+                    subjects: ["Math", "Chemistry", "Physics"], 
+                    tuition: "360,000 ₽", // Avg of MatSci programs (~350k-370k)
+                    desc: "Nanotechnology, materials physics and chemistry." 
+                }, 
+                ru: { 
+                    name: "Факультет наук о материалах", 
+                    subjects: ["Математика", "Химия", "Физика"], 
+                    tuition: "360 000 ₽", 
+                    desc: "Нанотехнологии, физика и химия материалов." 
+                } 
+            },
+            { 
+                id: "medicine",
+                en: { 
+                    name: "Faculty of Fundamental Medicine", 
+                    subjects: ["Chemistry", "Biology"], 
+                    tuition: "400,000 ₽", // Avg of Med programs (~380k-420k)
+                    desc: "General medicine, pharmacy, and clinical psychology." 
+                }, 
+                ru: { 
+                    name: "Факультет фундаментальной медицины", 
+                    subjects: ["Химия", "Биология"], 
+                    tuition: "400 000 ₽", 
+                    desc: "Лечебное дело, фармация и клиническая психология." 
+                } 
+            },
+            { 
+                id: "history",
+                en: { 
+                    name: "Faculty of History", 
+                    subjects: ["History", "Foreign Lang", "Social Studies"], 
+                    tuition: "330,000 ₽", // Avg of Hist programs (~320k-340k)
+                    desc: "Russian and world history, art history." 
+                }, 
+                ru: { 
+                    name: "Исторический факультет", 
+                    subjects: ["История", "Иностранный язык", "Обществознание"], 
+                    tuition: "330 000 ₽", 
+                    desc: "Отечественная и всемирная история, история искусств." 
+                } 
+            },
+            { 
+                id: "philology",
+                en: { 
+                    name: "Faculty of Philology", 
+                    subjects: ["Literature", "Russian", "Foreign Lang"], 
+                    tuition: "340,000 ₽", // Avg of Phil programs (~330k-350k)
+                    desc: "Russian, foreign philology, and linguistics." 
+                }, 
+                ru: { 
+                    name: "Филологический факультет", 
+                    subjects: ["Литература", "Русский язык", "Иностранный язык"], 
+                    tuition: "340 000 ₽", 
+                    desc: "Русская, зарубежная филология и лингвистика." 
+                } 
+            },
+            { 
+                id: "philosophy",
+                en: { 
+                    name: "Faculty of Philosophy", 
+                    subjects: ["Social Studies", "History", "Foreign Lang"], 
+                    tuition: "320,000 ₽", // Avg of Philo programs (~310k-330k)
+                    desc: "Philosophy, religious studies, and cultural studies." 
+                }, 
+                ru: { 
+                    name: "Философский факультет", 
+                    subjects: ["Обществознание", "История", "Иностранный язык"], 
+                    tuition: "320 000 ₽", 
+                    desc: "Философия, религиоведение и культурология." 
+                } 
+            },
+            { 
+                id: "economics",
+                en: { 
+                    name: "Faculty of Economics", 
+                    subjects: ["Math", "Social Studies", "Foreign Lang"], 
+                    tuition: "420,000 ₽", // Avg of Econ programs (~400k-450k)
+                    desc: "Economics, management, and business informatics." 
+                }, 
+                ru: { 
+                    name: "Экономический факультет", 
+                    subjects: ["Математика", "Обществознание", "Иностранный язык"], 
+                    tuition: "420 000 ₽", 
+                    desc: "Экономика, менеджмент и бизнес-информатика." 
+                } 
+            },
+            { 
+                id: "law",
+                en: { 
+                    name: "Faculty of Law", 
+                    subjects: ["Social Studies", "History", "Foreign Lang"], 
+                    tuition: "450,000 ₽", // Avg of Law programs (~440k-460k)
+                    desc: "Jurisprudence, international law." 
+                }, 
+                ru: { 
+                    name: "Юридический факультет", 
+                    subjects: ["Обществознание", "История", "Иностранный язык"], 
+                    tuition: "450 000 ₽", 
+                    desc: "Юриспруденция, международное право." 
+                } 
+            },
+            { 
+                id: "journalism",
+                en: { 
+                    name: "Faculty of Journalism", 
+                    subjects: ["Literature", "Russian", "Foreign Lang"], 
+                    tuition: "380,000 ₽", // Avg of Journ programs (~370k-390k)
+                    desc: "Journalism, media communications, and advertising." 
+                }, 
+                ru: { 
+                    name: "Факультет журналистики", 
+                    subjects: ["Литература", "Русский язык", "Иностранный язык"], 
+                    tuition: "380 000 ₽", 
+                    desc: "Журналистика, медиакоммуникации и реклама." 
+                } 
+            },
+            { 
+                id: "psychology",
+                en: { 
+                    name: "Faculty of Psychology", 
+                    subjects: ["Biology", "Math", "Social Studies"], 
+                    tuition: "370,000 ₽", // Avg of Psych programs (~360k-380k)
+                    desc: "Clinical psychology, service psychology." 
+                }, 
+                ru: { 
+                    name: "Факультет психологии", 
+                    subjects: ["Биология", "Математика", "Обществознание"], 
+                    tuition: "370 000 ₽", 
+                    desc: "Клиническая психология, психология служебной деятельности." 
+                } 
+            },
+            { 
+                id: "asia-africa",
+                en: { 
+                    name: "Institute of Asian and African Studies", 
+                    subjects: ["History", "Foreign Lang", "Social Studies"], 
+                    tuition: "350,000 ₽", // Avg of Oriental programs (~340k-360k)
+                    desc: "Oriental studies, africanistics, and international relations." 
+                }, 
+                ru: { 
+                    name: "Институт восточных языков и культур", 
+                    subjects: ["История", "Иностранный язык", "Обществознание"], 
+                    tuition: "350 000 ₽", 
+                    desc: "Востоковедение, африканистика и международные отношения." 
+                } 
+            },
+            { 
+                id: "sociology",
+                en: { 
+                    name: "Faculty of Sociology", 
+                    subjects: ["Social Studies", "Math", "History"], 
+                    tuition: "330,000 ₽", // Avg of Soc programs (~320k-340k)
+                    desc: "Sociology, public policy, and social work." 
+                }, 
+                ru: { 
+                    name: "Социологический факультет", 
+                    subjects: ["Обществознание", "Математика", "История"], 
+                    tuition: "330 000 ₽", 
+                    desc: "Социология, публичная политика и социальная работа." 
+                } 
+            },
+            { 
+                id: "foreign-langs",
+                en: { 
+                    name: "Faculty of Foreign Languages and Regional Studies", 
+                    subjects: ["Foreign Lang", "History", "Social Studies"], 
+                    tuition: "360,000 ₽", // Avg of Lang programs (~350k-370k)
+                    desc: "Translation, linguistics, and area studies." 
+                }, 
+                ru: { 
+                    name: "Факультет иностранных языков и регионоведения", 
+                    subjects: ["Иностранный язык", "История", "Обществознание"], 
+                    tuition: "360 000 ₽", 
+                    desc: "Перевод, лингвистика и регионоведение." 
+                } 
+            },
+            { 
+                id: "bioeng",
+                en: { 
+                    name: "Faculty of Bioengineering and Bioinformatics", 
+                    subjects: ["Math", "Chemistry", "Biology"], 
+                    tuition: "350,000 ₽", // Avg of BioEng programs (~340k-360k)
+                    desc: "Bioengineering, bioinformatics, and biotechnology." 
+                }, 
+                ru: { 
+                    name: "Факультет биоинженерии и биоинформатики", 
+                    subjects: ["Математика", "Химия", "Биология"], 
+                    tuition: "350 000 ₽", 
+                    desc: "Биоинженерия, биоинформатика и биотехнологии." 
+                } 
+            },
+            { 
+                id: "physics-chem-eng",
+                en: { 
+                    name: "Faculty of Fundamental Physical and Chemical Engineering", 
+                    subjects: ["Math", "Physics", "Chemistry"], 
+                    tuition: "360,000 ₽", // Avg of PhysChem programs (~350k-370k)
+                    desc: "Applied physics, fundamental chemical engineering." 
+                }, 
+                ru: { 
+                    name: "Факультет фундаментальной физико-химической инженерии", 
+                    subjects: ["Математика", "Физика", "Химия"], 
+                    tuition: "360 000 ₽", 
+                    desc: "Прикладная физика, фундаментальная химическая инженерия." 
+                } 
+            },
+            { 
+                id: "public-admin",
+                en: { 
+                    name: "Graduate School of Public Administration", 
+                    subjects: ["Math", "Social Studies", "Foreign Lang"], 
+                    tuition: "400,000 ₽", // Avg of PA programs (~390k-410k)
+                    desc: "Public administration, personnel management, politics." 
+                }, 
+                ru: { 
+                    name: "Высшая школа государственного управления", 
+                    subjects: ["Математика", "Обществознание", "Иностранный язык"], 
+                    tuition: "400 000 ₽", 
+                    desc: "Государственное управление, управление персоналом, политология." 
+                } 
+            },
+            { 
+                id: "tv",
+                en: { 
+                    name: "Graduate School of Television", 
+                    subjects: ["Literature", "History", "Social Studies"], 
+                    tuition: "390,000 ₽", // Avg of TV programs (~380k-400k)
+                    desc: "Television production and media technologies." 
+                }, 
+                ru: { 
+                    name: "Высшая школа телевидения", 
+                    subjects: ["Литература", "История", "Обществознание"], 
+                    tuition: "390 000 ₽", 
+                    desc: "Телевизионное производство и медиатехнологии." 
+                } 
+            },
+            { 
+                id: "social-sciences",
+                en: { 
+                    name: "Graduate School of Modern Social Sciences", 
+                    subjects: ["Social Studies", "Math", "Foreign Lang"], 
+                    tuition: "340,000 ₽", // Avg of SocSci programs (~330k-350k)
+                    desc: "Sociology, management, and HR management." 
+                }, 
+                ru: { 
+                    name: "Высшая школа современных социальных наук", 
+                    subjects: ["Обществознание", "Математика", "Иностранный язык"], 
+                    tuition: "340 000 ₽", 
+                    desc: "Социология, менеджмент и управление персоналом." 
+                } 
+            },
+            { 
+                id: "politics",
+                en: { 
+                    name: "Faculty of Political Science", 
+                    subjects: ["History", "Social Studies", "Foreign Lang"], 
+                    tuition: "330,000 ₽", // Avg of PolSci programs (~320k-340k)
+                    desc: "Political science, conflictology, and public policy." 
+                }, 
+                ru: { 
+                    name: "Факультет политических наук", 
+                    subjects: ["История", "Обществознание", "Иностранный язык"], 
+                    tuition: "330 000 ₽", 
+                    desc: "Политология, конфликтология и публичная политика." 
+                } 
+            },
+            { 
+                id: "culture-policy",
+                en: { 
+                    name: "Graduate School of Cultural Policy and Arts Management", 
+                    subjects: ["Literature", "Foreign Lang", "Social Studies"], 
+                    tuition: "350,000 ₽", // Avg of Culture programs (~340k-360k)
+                    desc: "Producering, arts management, and cultural studies." 
+                }, 
+                ru: { 
+                    name: "Высшая школа культурной политики и управления в гуманитарной сфере", 
+                    subjects: ["Литература", "Иностранный язык", "Обществознание"], 
+                    tuition: "350 000 ₽", 
+                    desc: "Продюсерство, арт-менеджмент и культурология." 
+                } 
+            },
+            { 
+                id: "arts",
+                en: { 
+                    name: "Faculty of Arts", 
+                    subjects: ["Literature", "History", "Foreign Lang"], 
+                    tuition: "360,000 ₽", // Avg of Arts programs (~350k-370k)
+                    desc: "Fine arts, design, and restoration." 
+                }, 
+                ru: { 
+                    name: "Факультет искусств", 
+                    subjects: ["Литература", "История", "Иностранный язык"], 
+                    tuition: "360 000 ₽", 
+                    desc: "Изобразительное искусство, дизайн и реставрация." 
+                } 
+            },
+            { 
+                id: "state-gov",
+                en: { 
+                    name: "Faculty of State Administration", 
+                    subjects: ["Math", "Social Studies", "Foreign Lang"], 
+                    tuition: "390,000 ₽", // Avg of Gov programs (~380k-400k)
+                    desc: "Personnel management, public administration, politics." 
+                }, 
+                ru: { 
+                    name: "Факультет государственного управления", 
+                    subjects: ["Математика", "Обществознание", "Иностранный язык"], 
+                    tuition: "390 000 ₽", 
+                    desc: "Управление персоналом, государственное управление, политология." 
+                } 
+            },
+            { 
+                id: "business",
+                en: { 
+                    name: "Graduate School of Business", 
+                    subjects: ["Math", "Social Studies", "Foreign Lang"], 
+                    tuition: "430,000 ₽", // Avg of Business programs (~420k-440k)
+                    desc: "Management, entrepreneurship, and international business." 
+                }, 
+                ru: { 
+                    name: "Высшая школа бизнеса", 
+                    subjects: ["Математика", "Обществознание", "Иностранный язык"], 
+                    tuition: "430 000 ₽", 
+                    desc: "Менеджмент, предпринимательство и международный бизнес." 
+                } 
+            },
+            { 
+                id: "world-politics",
+                en: { 
+                    name: "Faculty of World Politics", 
+                    subjects: ["History", "Foreign Lang", "Social Studies"], 
+                    tuition: "380,000 ₽", // Avg of WP programs (~370k-390k)
+                    desc: "International relations, global processes, and diplomacy." 
+                }, 
+                ru: { 
+                    name: "Факультет мировой политики", 
+                    subjects: ["История", "Иностранный язык", "Обществознание"], 
+                    tuition: "380 000 ₽", 
+                    desc: "Международные отношения, глобальные процессы и дипломатия." 
+                } 
+            },
+            { 
+                id: "moscow-school-econ",
+                en: { 
+                    name: "Moscow School of Economics", 
+                    subjects: ["Math", "Social Studies", "Foreign Lang"], 
+                    tuition: "410,000 ₽", // Avg of MSE programs (~400k-420k)
+                    desc: "Economics, finance, and applied informatics." 
+                }, 
+                ru: { 
+                    name: "Московская школа экономики", 
+                    subjects: ["Математика", "Обществознание", "Иностранный язык"], 
+                    tuition: "410 000 ₽", 
+                    desc: "Экономика, финансы и прикладная информатика." 
+                } 
+            },
+            { 
+                id: "global-processes",
+                en: { 
+                    name: "Faculty of Global Processes", 
+                    subjects: ["History", "Foreign Lang", "Social Studies"], 
+                    tuition: "370,000 ₽", // Avg of GP programs (~360k-380k)
+                    desc: "International relations, global economics, and energy." 
+                }, 
+                ru: { 
+                    name: "Факультет глобальных процессов", 
+                    subjects: ["История", "Иностранный язык", "Обществознание"], 
+                    tuition: "370 000 ₽", 
+                    desc: "Международные отношения, глобальная экономика и энергетика." 
+                } 
+            },
+            { 
+                id: "translation",
+                en: { 
+                    name: "Graduate School of Translation", 
+                    subjects: ["Foreign Lang", "Social Studies", "History"], 
+                    tuition: "360,000 ₽", // Avg of Trans programs (~350k-370k)
+                    desc: "Translation studies, linguistics, and intercultural communication." 
+                }, 
+                ru: { 
+                    name: "Высшая школа перевода", 
+                    subjects: ["Иностранный язык", "Обществознание", "История"], 
+                    tuition: "360 000 ₽", 
+                    desc: "Переводоведение, лингвистика и межкультурная коммуникация." 
+                } 
+            },
+            { 
+                id: "management-innovation",
+                en: { 
+                    name: "Graduate School of Management and Innovation", 
+                    subjects: ["Math", "Physics", "Chemistry"], 
+                    tuition: "350,000 ₽", // Avg of Mgmt programs (~340k-360k)
+                    desc: "Innovation management, technology transfer." 
+                }, 
+                ru: { 
+                    name: "Высшая школа управления и инноваций", 
+                    subjects: ["Математика", "Физика", "Химия"], 
+                    tuition: "350 000 ₽", 
+                    desc: "Управление инновациями, трансфер технологий." 
+                } 
+            },
+            { 
+                id: "biotech",
+                en: { 
+                    name: "Faculty of Biotechnology", 
+                    subjects: ["Biology", "Math", "Chemistry"], 
+                    tuition: "350,000 ₽", // Avg of BioTech programs (~340k-360k)
+                    desc: "Biotechnology, genetic engineering, and bioinformatics." 
+                }, 
+                ru: { 
+                    name: "Биотехнологический факультет", 
+                    subjects: ["Биология", "Математика", "Химия"], 
+                    tuition: "350 000 ₽", 
+                    desc: "Биотехнологии, генная инженерия и биоинформатика." 
+                } 
+            },
+            { 
+                id: "space-research",
+                en: { 
+                    name: "Faculty of Space Research", 
+                    subjects: ["Math", "Physics", "Informatics"], 
+                    tuition: "360,000 ₽", // Avg of Space programs (~350k-370k)
+                    desc: "Space research, cosmonautics, and fundamental mechanics." 
+                }, 
+                ru: { 
+                    name: "Факультет космических исследований", 
+                    subjects: ["Математика", "Физика", "Информатика"], 
+                    tuition: "360 000 ₽", 
+                    desc: "Космические исследования, космонавтика и фундаментальная механика." 
+                } 
+            },
+            { 
+                id: "ai",
+                en: { 
+                    name: "Faculty of Artificial Intelligence", 
+                    subjects: ["Math", "Informatics", "Physics"], 
+                    tuition: "390,000 ₽", // Avg of AI programs (~380k-400k)
+                    desc: "Artificial intelligence, machine learning, and data science." 
+                }, 
+                ru: { 
+                    name: "Факультет искусственного интеллекта", 
+                    subjects: ["Математика", "Информатика", "Физика"], 
+                    tuition: "390 000 ₽", 
+                    desc: "Искусственный интеллект, машинное обучение и анализ данных." 
+                } 
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            
+            // Update static texts
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-placeholder-key]').forEach(el => {
+                const key = el.getAttribute('data-placeholder-key');
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+
+            // Re-render faculty cards in new language
+            renderFaculties(document.getElementById('faculty-search').value, lang);
+            localStorage.setItem('site_lang', lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // --- SEARCH & RENDER LOGIC ---
+        function renderFaculties(query, lang) {
+            const container = document.getElementById('faculties-container');
+            const noResults = document.getElementById('no-results');
+            container.innerHTML = '';
+            
+            const lowerQuery = query.toLowerCase().trim();
+            const filtered = facultiesData.filter(f => {
+                if (!lowerQuery) return true;
+                const nameMatch = f[lang].name.toLowerCase().includes(lowerQuery);
+                const subjectMatch = f[lang].subjects.some(s => s.toLowerCase().includes(lowerQuery));
+                return nameMatch || subjectMatch;
+            });
+
+            if (filtered.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                filtered.forEach(f => {
+                    // Link to the specific SPbU faculty page
+                    const card = document.createElement('a');
+                    card.href = `spbu-faculty.html?id=${f.id}`;
+                    card.className = 'faculty-card';
+                    
+                    card.innerHTML = `
+                        <h3>${f[lang].name}</h3>
+                        <p class="faculty-desc">${f[lang].desc}</p>
+                        <div class="subjects-tags">
+                            ${f[lang].subjects.map(s => `<span class="subject-tag">${s}</span>`).join('')}
+                        </div>
+                        <div class="tuition-info">
+                            <i class="fa-solid fa-ruble-sign"></i> 
+                            <span>${translations[lang].spbu_tuition_label}:</span> 
+                            <strong>${f[lang].tuition} / year</strong>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        document.getElementById('faculty-search').addEventListener('input', (e) => {
+            renderFaculties(e.target.value, currentLang);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

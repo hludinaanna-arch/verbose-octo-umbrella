@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - MGIMO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #8b0000; /* MGIMO Dark Red */
+            --primary-hover: #6a0000; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header Styles */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Specific Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .uni-info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
+        .uni-title h1 { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+        .uni-location { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .campuses-box { background: #fff; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .campuses-box h3 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary-color); }
+        .campuses-list { list-style: none; }
+        .campuses-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 0.95rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+        .campuses-list li:last-child { border-bottom: none; }
+        .campuses-list i { color: var(--primary-color); margin-top: 0.3rem; }
+
+        /* Stats Grid */
+        .stats-section { margin-bottom: 4rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .stat-card { background: #fff; padding: 2rem; border-radius: 1.5rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 4px solid var(--primary-color); }
+        .stat-value { font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.5rem; }
+        .stat-label { font-size: 1rem; color: var(--text-gray); font-weight: 500; }
+
+        /* Search & Faculties */
+        .search-section { margin-bottom: 4rem; }
+        .search-bar { position: relative; max-width: 600px; margin: 0 auto 3rem; }
+        .search-bar input { width: 100%; padding: 1.2rem 1.5rem 1.2rem 3.5rem; border-radius: 50px; border: 2px solid #e5e7eb; font-size: 1.1rem; font-family: inherit; outline: none; transition: border-color 0.3s; }
+        .search-bar input:focus { border-color: var(--primary-color); }
+        .search-bar i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 1.2rem; }
+        
+        .faculties-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
+        .faculty-card { 
+            background: #fff; 
+            padding: 2rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            transition: transform 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+        .faculty-card:hover { transform: translateY(-3px); border-color: var(--primary-color); }
+        .faculty-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-dark); }
+        .faculty-desc { font-size: 0.95rem; color: var(--text-gray); margin-bottom: 1.5rem; line-height: 1.5; flex-grow: 1; }
+        .subjects-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .subject-tag { background: #fef2f2; color: var(--primary-color); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .tuition-info { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: var(--text-gray); border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: auto;}
+        .tuition-info strong { color: var(--text-dark); }
+        .no-results { text-align: center; padding: 3rem; color: var(--text-gray); font-size: 1.2rem; display: none; }
+
+        @media (max-width: 992px) { .uni-info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .uni-title h1 { font-size: 2.2rem; } 
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <!-- MGIMO Logo Placeholder -->
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="85" cy="65" r="8" fill="#8b0000"/>
+                    <path d="M75 55L85 65" stroke="#8b0000" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Header Info -->
+        <section class="page-header">
+            <div class="container uni-info-grid">
+                <div class="uni-title">
+                    <h1 data-key="mgimo_title">MGIMO University</h1>
+                    <div class="uni-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span data-key="mgimo_location">Vernadskogo Ave., 76, Moscow</span>
+                    </div>
+                    <p data-key="mgimo_desc" style="font-size: 1.1rem; color: var(--text-gray); max-width: 700px;">Russia's leading university for international relations, diplomacy, economics, and law with unique language programs.</p>
+                </div>
+                <div class="campuses-box">
+                    <h3 data-key="mgimo_campuses_title">Main Campus</h3>
+                    <ul class="campuses-list">
+                        <li><i class="fa-solid fa-building"></i> <span data-key="mgimo_main_bldg">Main Building (Vernadskogo Ave.)</span></li>
+                        <li><i class="fa-solid fa-flask"></i> <span data-key="mgimo_labs">Research Centers & Labs</span></li>
+                        <li><i class="fa-solid fa-book"></i> <span data-key="mgimo_library">Scientific Library</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admission Stats -->
+        <section class="container stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" data-key="mgimo_budget_spots">2,500+</div>
+                    <div class="stat-label" data-key="mgimo_budget_label">Budget Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="mgimo_paid_spots">3,000+</div>
+                    <div class="stat-label" data-key="mgimo_paid_label">Paid Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="mgimo_budget_score">295</div>
+                    <div class="stat-label" data-key="mgimo_budget_score_label">Avg. Budget Score (EGE)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="mgimo_paid_score">240</div>
+                    <div class="stat-label" data-key="mgimo_paid_score_label">Avg. Paid Score (EGE)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Faculty Search -->
+        <section class="container search-section">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="faculty-search" data-placeholder-key="mgimo_search_placeholder" placeholder="Search by faculty or subject...">
+            </div>
+            
+            <div class="faculties-grid" id="faculties-container">
+                <!-- Cards will be injected here by JS -->
+            </div>
+            <div class="no-results" id="no-results" data-key="mgimo_no_results">No faculties found.</div>
+        </section>
+    </main>
+
+    <script>
+        // --- TRANSLATIONS ---
+        const translations = {
+            en: {
+                nav_home: "Home", nav_uni: "Universities",
+                btn_login: "Log In", btn_signup: "Sign Up",
+                
+                mgimo_title: "MGIMO University",
+                mgimo_location: "Vernadskogo Ave., 76, Moscow",
+                mgimo_desc: "Russia's leading university for international relations, diplomacy, economics, and law with unique language programs.",
+                mgimo_campuses_title: "Main Campus",
+                mgimo_main_bldg: "Main Building (Vernadskogo Ave.)",
+                mgimo_labs: "Research Centers & Labs",
+                mgimo_library: "Scientific Library",
+                
+                mgimo_budget_spots: "2,500+", mgimo_budget_label: "Budget Spots (2026)",
+                mgimo_paid_spots: "3,000+", mgimo_paid_label: "Paid Spots (2026)",
+                mgimo_budget_score: "295", mgimo_budget_score_label: "Avg. Budget Score (EGE)",
+                mgimo_paid_score: "240", mgimo_paid_score_label: "Avg. Paid Score (EGE)",
+                
+                mgimo_search_placeholder: "Search by faculty or subject...",
+                mgimo_no_results: "No faculties found.",
+                mgimo_tuition_label: "Avg. Tuition fee"
+            },
+            ru: {
+                nav_home: "Главная", nav_uni: "Вузы",
+                btn_login: "Войти", btn_signup: "Регистрация",
+                
+                mgimo_title: "МГИМО МИД России",
+                mgimo_location: "просп. Вернадского, 76, Москва",
+                mgimo_desc: "Ведущий университет России в области международных отношений, дипломатии, экономики и права с уникальными языковыми программами.",
+                mgimo_campuses_title: "Основной кампус",
+                mgimo_main_bldg: "Главное здание (просп. Вернадского)",
+                mgimo_labs: "Научные центры и лаборатории",
+                mgimo_library: "Научная библиотека",
+                
+                mgimo_budget_spots: "2 500+", mgimo_budget_label: "Бюджетных мест (2026)",
+                mgimo_paid_spots: "3 000+", mgimo_paid_label: "Платных мест (2026)",
+                mgimo_budget_score: "295", mgimo_budget_score_label: "Ср. балл на бюджет (ЕГЭ)",
+                mgimo_paid_score: "240", mgimo_paid_score_label: "Ср. балл на платное (ЕГЭ)",
+                
+                mgimo_search_placeholder: "Поиск по факультету или предмету...",
+                mgimo_no_results: "Факультеты не найдены.",
+                mgimo_tuition_label: "Средняя стоимость обучения"
+            }
+        };
+
+        // --- FACULTIES DATA FOR MGIMO (Prices calculated as Avg from stoimost-obucheniya...pdf) ---
+        const facultiesData = [
+            { 
+                id: "mo",
+                en: { 
+                    name: "Faculty of International Relations (FIR)", 
+                    subjects: ["History", "Foreign Lang", "Social Studies"], 
+                    tuition: "640,000 ₽", // Avg of MO programs (~630k-650k)
+                    desc: "International relations, regional studies, political science." 
+                }, 
+                ru: { 
+                    name: "Факультет международных отношений (ФМО)", 
+                    subjects: ["История", "Иностранный язык", "Обществознание"], 
+                    tuition: "640 000 ₽", 
+                    desc: "Международные отношения, регионоведение, политология." 
+                } 
+            },
+            { 
+                id: "meo",
+                en: { 
+                    name: "Faculty of International Economic Relations (FIER)", 
+                    subjects: ["Math", "Foreign Lang", "Social Studies"], 
+                    tuition: "680,000 ₽", // Avg of MEO programs (~670k-690k)
+                    desc: "World economy, international finance, business." 
+                }, 
+                ru: { 
+                    name: "Факультет международных экономических отношений (ФМЭО)", 
+                    subjects: ["Математика", "Иностранный язык", "Обществознание"], 
+                    tuition: "680 000 ₽", 
+                    desc: "Мировая экономика, международные финансы, бизнес." 
+                } 
+            },
+            { 
+                id: "mj",
+                en: { 
+                    name: "Faculty of International Journalism (FIJ)", 
+                    subjects: ["Literature", "Foreign Lang", "History"], 
+                    tuition: "650,000 ₽", // Avg of MJ programs (~640k-660k)
+                    desc: "International journalism, media communications." 
+                }, 
+                ru: { 
+                    name: "Факультет международной журналистики (ФМЖ)", 
+                    subjects: ["Литература", "Иностранный язык", "История"], 
+                    tuition: "650 000 ₽", 
+                    desc: "Международная журналистика, медиакоммуникации." 
+                } 
+            },
+            { 
+                id: "mp",
+                en: { 
+                    name: "International Law Faculty (ILF)", 
+                    subjects: ["Social Studies", "History", "Foreign Lang"], 
+                    tuition: "630,000 ₽", // Avg of MP programs (~620k-640k)
+                    desc: "International law, private law, European law." 
+                }, 
+                ru: { 
+                    name: "Международно-правовой факультет (МПФ)", 
+                    subjects: ["Обществознание", "История", "Иностранный язык"], 
+                    tuition: "630 000 ₽", 
+                    desc: "Международное право, частное право, европейское право." 
+                } 
+            },
+            { 
+                id: "mb",
+                en: { 
+                    name: "Faculty of International Business and Administration (FIBA)", 
+                    subjects: ["Math", "Foreign Lang", "Social Studies"], 
+                    tuition: "720,000 ₽", // Avg of MB programs (~710k-730k)
+                    desc: "International business, management, marketing." 
+                }, 
+                ru: { 
+                    name: "Факультет международного бизнеса и делового администрирования (ФМБиДА)", 
+                    subjects: ["Математика", "Иностранный язык", "Обществознание"], 
+                    tuition: "720 000 ₽", 
+                    desc: "Международный бизнес, менеджмент, маркетинг." 
+                } 
+            },
+            { 
+                id: "miep",
+                en: { 
+                    name: "Institute of International Energy Policy and Diplomacy (IIEPD)", 
+                    subjects: ["Math", "Physics", "Social Studies"], 
+                    tuition: "660,000 ₽", // Avg of MIEP programs (~650k-670k)
+                    desc: "Energy policy, resource management, geostrategy." 
+                }, 
+                ru: { 
+                    name: "Институт международной энергетической политики и дипломатии (ИМЭПиД)", 
+                    subjects: ["Математика", "Физика", "Обществознание"], 
+                    tuition: "660 000 ₽", 
+                    desc: "Энергетическая политика, управление ресурсами, геостратегия." 
+                } 
+            },
+            { 
+                id: "ffe",
+                en: { 
+                    name: "Faculty of Financial Economics (FFE)", 
+                    subjects: ["Math", "Informatics", "Social Studies"], 
+                    tuition: "690,000 ₽", // Avg of FFE programs (~680k-700k)
+                    desc: "Finance, accounting, business informatics." 
+                }, 
+                ru: { 
+                    name: "Факультет финансовой экономики (ФФЭ)", 
+                    subjects: ["Математика", "Информатика", "Обществознание"], 
+                    tuition: "690 000 ₽", 
+                    desc: "Финансы, учет, бизнес-информатика." 
+                } 
+            },
+            { 
+                id: "fl",
+                en: { 
+                    name: "Faculty of Linguistics (FL)", 
+                    subjects: ["Foreign Lang", "Literature", "History"], 
+                    tuition: "620,000 ₽", // Avg of FL programs (~610k-630k)
+                    desc: "Translation, linguistics, intercultural communication." 
+                }, 
+                ru: { 
+                    name: "Факультет лингвистики (ФЛ)", 
+                    subjects: ["Иностранный язык", "Литература", "История"], 
+                    tuition: "620 000 ₽", 
+                    desc: "Перевод, лингвистика, межкультурная коммуникация." 
+                } 
+            },
+            { 
+                id: "da",
+                en: { 
+                    name: "Diplomatic Academy", 
+                    subjects: ["History", "Social Studies", "Foreign Lang"], 
+                    tuition: "750,000 ₽", // Avg of DA programs (~740k-760k)
+                    desc: "Public administration, diplomacy, global governance." 
+                }, 
+                ru: { 
+                    name: "Дипломатическая академия (ДА)", 
+                    subjects: ["История", "Обществознание", "Иностранный язык"], 
+                    tuition: "750 000 ₽", 
+                    desc: "Государственное управление, дипломатия, глобальное управление." 
+                } 
+            },
+            { 
+                id: "fdp",
+                en: { 
+                    name: "Faculty of Pre-university Training (FDP)", 
+                    subjects: ["Social Studies", "History", "Foreign Lang"], 
+                    tuition: "580,000 ₽", // Avg of FDP programs (~570k-590k)
+                    desc: "Preparatory courses, foundation year programs." 
+                }, 
+                ru: { 
+                    name: "Факультет довузовской подготовки (ФДП)", 
+                    subjects: ["Обществознание", "История", "Иностранный язык"], 
+                    tuition: "580 000 ₽", 
+                    desc: "Подготовительные курсы, программы фундаментального года." 
+                } 
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            
+            // Update static texts
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-placeholder-key]').forEach(el => {
+                const key = el.getAttribute('data-placeholder-key');
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+
+            // Re-render faculty cards in new language
+            renderFaculties(document.getElementById('faculty-search').value, lang);
+            localStorage.setItem('site_lang', lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // --- SEARCH & RENDER LOGIC ---
+        function renderFaculties(query, lang) {
+            const container = document.getElementById('faculties-container');
+            const noResults = document.getElementById('no-results');
+            container.innerHTML = '';
+            
+            const lowerQuery = query.toLowerCase().trim();
+            const filtered = facultiesData.filter(f => {
+                if (!lowerQuery) return true;
+                const nameMatch = f[lang].name.toLowerCase().includes(lowerQuery);
+                const subjectMatch = f[lang].subjects.some(s => s.toLowerCase().includes(lowerQuery));
+                return nameMatch || subjectMatch;
+            });
+
+            if (filtered.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                filtered.forEach(f => {
+                    // Link to the specific MGIMO faculty page
+                    const card = document.createElement('a');
+                    card.href = `mgimo-faculty.html?id=${f.id}`;
+                    card.className = 'faculty-card';
+                    
+                    card.innerHTML = `
+                        <h3>${f[lang].name}</h3>
+                        <p class="faculty-desc">${f[lang].desc}</p>
+                        <div class="subjects-tags">
+                            ${f[lang].subjects.map(s => `<span class="subject-tag">${s}</span>`).join('')}
+                        </div>
+                        <div class="tuition-info">
+                            <i class="fa-solid fa-ruble-sign"></i> 
+                            <span>${translations[lang].mgimo_tuition_label}:</span> 
+                            <strong>${f[lang].tuition} / year</strong>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        document.getElementById('faculty-search').addEventListener('input', (e) => {
+            renderFaculties(e.target.value, currentLang);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

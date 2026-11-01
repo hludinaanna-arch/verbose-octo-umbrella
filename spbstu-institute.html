@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - SPbSTU Institute</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #0056b3; /* SPbSTU Blue */
+            --primary-hover: #004494; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #eef2ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .institute-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .institute-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        .programs-section { margin-bottom: 4rem; }
+        .program-card { 
+            background: var(--card-bg);
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .program-card:hover { transform: translateY(-2px); }
+        
+        .program-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .program-code { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .program-name { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); width: 100%; }
+        
+        .scores-box { 
+            background: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .score-item { display: flex; flex-direction: column; }
+        .score-label { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
+        .score-value { font-size: 1.2rem; font-weight: 800; color: var(--primary-color); }
+        .score-value.paid { color: var(--text-gray); }
+
+        .exam-list { list-style: none; margin-bottom: 1.5rem; }
+        .exam-item { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 1rem; 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid rgba(0, 86, 179, 0.1); 
+            font-size: 1.05rem;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-priority { 
+            min-width: 28px; 
+            height: 28px; 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .exam-details { flex-grow: 1; }
+        .exam-type { font-weight: 600; color: var(--text-dark); }
+        .exam-format { color: var(--text-gray); font-size: 0.9rem; margin-left: 0.5rem; }
+        
+        .min-score-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #dbeafe;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .institute-title h1 { font-size: 2.2rem; } 
+            .institute-meta { flex-direction: column; gap: 0.5rem; }
+            .exam-item { flex-direction: column; gap: 0.3rem; }
+            .program-header { flex-direction: column; }
+            .scores-box { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="85" cy="65" r="8" fill="#0056b3"/>
+                    <path d="M75 55L85 65" stroke="#0056b3" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="institute-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- DATA BASED ON Pravila_priema.pdf & order-955-10-04-2026.pdf ---
+        const institutesData = [
+            {
+                id: "immim",
+                en: { 
+                    name: "Institute of Mathematics and Computer Science", 
+                    location: "Polytechnicheskaya St., 29, bldg. 1", 
+                    profile: "Applied math, computer science, software engineering",
+                    contacts: "+7 (812) 552-60-00 | immim@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт математики и компьютерных наук", 
+                    location: "ул. Политехническая, 29, корп. 1", 
+                    profile: "Прикладная математика, компьютерные науки, программная инженерия",
+                    contacts: "+7 (812) 552-60-00 | immim@spbstu.ru"
+                },
+                budget_spots: 450, paid_spots: 200, tuition: "360,000–438,000 ₽",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Applied Mathematics and Informatics", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Прикладная математика и информатика", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 45", "Отдельная квота: 45"] 
+                    },
+                    { 
+                        code: "02.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Mathematics and Computer Science", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Математика и компьютерные науки", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 45", "Отдельная квота: 45"] 
+                    },
+                    { 
+                        code: "09.03.04", 
+                        est_budget_score: "275-295", est_paid_score: "205-225",
+                        en: { name: "Software Engineering", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Программная инженерия", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 45", "Отдельная квота: 45"] 
+                    }
+                ]
+            },
+            {
+                id: "ipm",
+                en: { 
+                    name: "Institute of Physics and Nanotechnology", 
+                    location: "Polytechnicheskaya St., 29, bldg. 2", 
+                    profile: "Physics, nanotechnology, materials science",
+                    contacts: "+7 (812) 552-60-00 | ipm@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт физики и нанотехнологий", 
+                    location: "ул. Политехническая, 29, корп. 2", 
+                    profile: "Физика, нанотехнологии, материаловедение",
+                    contacts: "+7 (812) 552-60-00 | ipm@spbstu.ru"
+                },
+                budget_spots: 320, paid_spots: 150, tuition: "290,000–330,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Applied Mathematics and Physics", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Прикладные математика и физика", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 32", "Отдельная квота: 32"] 
+                    },
+                    { 
+                        code: "03.03.02", 
+                        est_budget_score: "265-285", est_paid_score: "195-215",
+                        en: { name: "Physics", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Физика", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 32", "Отдельная квота: 32"] 
+                    },
+                    { 
+                        code: "28.03.01", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Nanotechnologies and Microsystems Technology", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Нанотехнологии и микросистемная техника", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 32", "Отдельная квота: 32"] 
+                    }
+                ]
+            },
+            {
+                id: "imi",
+                en: { 
+                    name: "Institute of Mechanical Engineering", 
+                    location: "Polytechnicheskaya St., 29, bldg. 3", 
+                    profile: "Mechanical engineering, robotics, mechatronics",
+                    contacts: "+7 (812) 552-60-00 | imi@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт машиностроения", 
+                    location: "ул. Политехническая, 29, корп. 3", 
+                    profile: "Машиностроение, робототехника, мехатроника",
+                    contacts: "+7 (812) 552-60-00 | imi@spbstu.ru"
+                },
+                budget_spots: 380, paid_spots: 180, tuition: "290,000–320,000 ₽",
+                programs: [
+                    { 
+                        code: "15.03.01", 
+                        est_budget_score: "265-285", est_paid_score: "195-215",
+                        en: { name: "Machine Building", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Машиностроение", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 38", "Отдельная квота: 38"] 
+                    },
+                    { 
+                        code: "15.03.03", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Applied Mechanics", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Прикладная механика", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 38", "Отдельная квота: 38"] 
+                    },
+                    { 
+                        code: "15.03.06", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Mechatronics and Robotics", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Мехатроника и робототехника", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 38", "Отдельная квота: 38"] 
+                    }
+                ]
+            },
+            {
+                id: "ieet",
+                en: { 
+                    name: "Institute of Energy and Transport Systems", 
+                    location: "Polytechnicheskaya St., 29, bldg. 4", 
+                    profile: "Energy systems, electrical engineering, nuclear tech",
+                    contacts: "+7 (812) 552-60-00 | ieet@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт энергетики и транспортных систем", 
+                    location: "ул. Политехническая, 29, корп. 4", 
+                    profile: "Энергетические системы, электротехника, ядерные технологии",
+                    contacts: "+7 (812) 552-60-00 | ieet@spbstu.ru"
+                },
+                budget_spots: 350, paid_spots: 160, tuition: "290,000–330,000 ₽",
+                programs: [
+                    { 
+                        code: "13.03.01", 
+                        est_budget_score: "265-285", est_paid_score: "195-215",
+                        en: { name: "Heat Power Engineering and Heat Engineering", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Теплоэнергетика и теплотехника", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 35", "Отдельная квота: 35"] 
+                    },
+                    { 
+                        code: "13.03.02", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Electric Power Engineering and Electrical Engineering", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Электроэнергетика и электротехника", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 35", "Отдельная квота: 35"] 
+                    },
+                    { 
+                        code: "14.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Nuclear Energy and Thermophysics", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Ядерная энергетика и теплофизика", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 35", "Отдельная квота: 35"] 
+                    }
+                ]
+            },
+            {
+                id: "ict",
+                en: { 
+                    name: "Institute of Chemical Technologies", 
+                    location: "Polytechnicheskaya St., 29, bldg. 5", 
+                    profile: "Chemical technology, biotechnology, food tech",
+                    contacts: "+7 (812) 552-60-00 | ict@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт химических технологий", 
+                    location: "ул. Политехническая, 29, корп. 5", 
+                    profile: "Химическая технология, биотехнологии, пищевые технологии",
+                    contacts: "+7 (812) 552-60-00 | ict@spbstu.ru"
+                },
+                budget_spots: 280, paid_spots: 120, tuition: "290,000–320,000 ₽",
+                programs: [
+                    { 
+                        code: "18.03.01", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Chemical Technology", exams: ["Math (EGE)(I)", "Chemistry (EGE)(II)", "Physics OR Informatics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, chem: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Химическая технология", exams: ["Математика (ЕГЭ)(I)", "Химия (ЕГЭ)(II)", "Физика ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, chem: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 28", "Отдельная квота: 28"] 
+                    },
+                    { 
+                        code: "19.03.01", 
+                        est_budget_score: "255-275", est_paid_score: "185-205",
+                        en: { name: "Biotechnology", exams: ["Math (EGE)(I)", "Chemistry (EGE)(II)", "Biology OR Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, chem: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Биотехнология", exams: ["Математика (ЕГЭ)(I)", "Химия (ЕГЭ)(II)", "Биология ИЛИ Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, chem: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 28", "Отдельная квота: 28"] 
+                    },
+                    { 
+                        code: "19.03.04", 
+                        est_budget_score: "250-270", est_paid_score: "180-200",
+                        en: { name: "Technology of Food Products and Public Catering Organization", exams: ["Math (EGE)(I)", "Chemistry (EGE)(II)", "Biology OR Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, chem: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Технология продукции и организация общественного питания", exams: ["Математика (ЕГЭ)(I)", "Химия (ЕГЭ)(II)", "Биология ИЛИ Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, chem: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 28", "Отдельная квота: 28"] 
+                    }
+                ]
+            },
+            {
+                id: "ice",
+                en: { 
+                    name: "Institute of Civil Engineering", 
+                    location: "Polytechnicheskaya St., 29, bldg. 6", 
+                    profile: "Construction, architecture, urban planning",
+                    contacts: "+7 (812) 552-60-00 | ice@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт строительства и архитектуры", 
+                    location: "ул. Политехническая, 29, корп. 6", 
+                    profile: "Строительство, архитектура, градостроительство",
+                    contacts: "+7 (812) 552-60-00 | ice@spbstu.ru"
+                },
+                budget_spots: 300, paid_spots: 140, tuition: "304,000–344,000 ₽",
+                programs: [
+                    { 
+                        code: "07.03.03", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Architectural Environment Design", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Дизайн архитектурной среды", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 30", "Отдельная квота: 30"] 
+                    },
+                    { 
+                        code: "08.03.01", 
+                        est_budget_score: "265-285", est_paid_score: "195-215",
+                        en: { name: "Construction", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Строительство", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 30", "Отдельная квота: 30"] 
+                    },
+                    { 
+                        code: "07.03.04", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Urban Planning", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Informatics OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Градостроительство", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Информатика ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, phys: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 30", "Отдельная квота: 30"] 
+                    }
+                ]
+            },
+            {
+                id: "iec",
+                en: { 
+                    name: "Institute of Economics and Management", 
+                    location: "Polytechnicheskaya St., 29, bldg. 7", 
+                    profile: "Economics, management, business informatics",
+                    contacts: "+7 (812) 552-60-00 | iec@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт экономики и управления", 
+                    location: "ул. Политехническая, 29, корп. 7", 
+                    profile: "Экономика, менеджмент, бизнес-информатика",
+                    contacts: "+7 (812) 552-60-00 | iec@spbstu.ru"
+                },
+                budget_spots: 250, paid_spots: 200, tuition: "348,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "275-295", est_paid_score: "205-225",
+                        en: { name: "Economics", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "Informatics OR Foreign Lang OR History OR Geography (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 25", "Отдельная квота: 25"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Management", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "Informatics OR Foreign Lang OR History (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Менеджмент", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "Информатика ИЛИ Иностранный язык ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 25", "Отдельная квота: 25"] 
+                    },
+                    { 
+                        code: "38.03.05", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Business Informatics", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Social Studies OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Бизнес-информатика", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Обществознание ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 25", "Отдельная квота: 25"] 
+                    }
+                ]
+            },
+            {
+                id: "ihss",
+                en: { 
+                    name: "Institute of Humanities and Social Sciences", 
+                    location: "Polytechnicheskaya St., 29, bldg. 8", 
+                    profile: "Sociology, psychology, linguistics, advertising",
+                    contacts: "+7 (812) 552-60-00 | ihss@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт гуманитарных и социальных наук", 
+                    location: "ул. Политехническая, 29, корп. 8", 
+                    profile: "Социология, психология, лингвистика, реклама",
+                    contacts: "+7 (812) 552-60-00 | ihss@spbstu.ru"
+                },
+                budget_spots: 180, paid_spots: 150, tuition: "320,000–348,000 ₽",
+                programs: [
+                    { 
+                        code: "39.03.01", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Sociology", exams: ["Social Studies (EGE)(I)", "Math (EGE)(II)", "History OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc: 60, math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Социология", exams: ["Обществознание (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "История ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc: 60, math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "37.03.01", 
+                        est_budget_score: "255-275", est_paid_score: "185-205",
+                        en: { name: "Psychology (Pedagogical-Psychological Education)", exams: ["Biology (EGE)(I)", "Math (EGE)(II)", "Social Studies OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { bio: 60, math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Психология (Психолого-педагогическое образование)", exams: ["Биология (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Обществознание ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { bio: 60, math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "42.03.01", 
+                        est_budget_score: "265-285", est_paid_score: "195-215",
+                        en: { name: "Advertising and Public Relations", exams: ["Social Studies (EGE)(I)", "Russian (EGE)(II)", "Informatics OR Foreign Lang OR History (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc: 60, rus: 60, choice: 60, rus2: 60 } }, 
+                        ru: { name: "Реклама и связи с общественностью", exams: ["Обществознание (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Информатика ИЛИ Иностранный язык ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc: 60, rus: 60, choice: 60, rus2: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    }
+                ]
+            },
+            {
+                id: "iln",
+                en: { 
+                    name: "Institute of Law", 
+                    location: "Polytechnicheskaya St., 29, bldg. 9", 
+                    profile: "Jurisprudence, international law",
+                    contacts: "+7 (812) 552-60-00 | iln@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт права", 
+                    location: "ул. Политехническая, 29, корп. 9", 
+                    profile: "Юриспруденция, международное право",
+                    contacts: "+7 (812) 552-60-00 | iln@spbstu.ru"
+                },
+                budget_spots: 120, paid_spots: 100, tuition: "348,000 ₽",
+                programs: [
+                    { 
+                        code: "40.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Jurisprudence", exams: ["Social Studies (EGE)(I)", "History (EGE)(II)", "Foreign Lang OR Informatics OR Math (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc: 60, hist: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Юриспруденция", exams: ["Обществознание (ЕГЭ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика ИЛИ Математика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc: 60, hist: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    }
+                ]
+            },
+            {
+                id: "id",
+                en: { 
+                    name: "Institute of Design", 
+                    location: "Polytechnicheskaya St., 29, bldg. 10", 
+                    profile: "Design, art, creative industries",
+                    contacts: "+7 (812) 552-60-00 | id@spbstu.ru"
+                },
+                ru: { 
+                    name: "Институт дизайна", 
+                    location: "ул. Политехническая, 29, корп. 10", 
+                    profile: "Дизайн, искусство, креативные индустрии",
+                    contacts: "+7 (812) 552-60-00 | id@spbstu.ru"
+                },
+                budget_spots: 40, paid_spots: 60, tuition: "544,000 ₽",
+                programs: [
+                    { 
+                        code: "54.03.01", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Design", exams: ["Creative Exam (DVI)(I)", "Literature (EGE)(II)", "History OR Social Studies (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { creative_dvi: 60, lit: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Дизайн", exams: ["Творческое испытание (ДВИ)(I)", "Литература (ЕГЭ)(II)", "История ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { creative_dvi: 60, lit: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    }
+                ]
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderInstitute(lang) {
+            const instId = getQueryParam('id');
+            const inst = institutesData.find(f => f.id === instId);
+            const container = document.getElementById('institute-content');
+            
+            if (!inst) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'Institute not found' : 'Институт не найден'}</h2><a href="spbstu.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to SPbSTU' : 'Вернуться в СПбПУ'}</a></div>`;
+                return;
+            }
+
+            const title = inst[lang].name;
+            const info = inst[lang];
+            
+            const programsHtml = inst.programs.map(prog => `
+                <div class="program-card">
+                    <div class="program-header">
+                        <div>
+                            <div class="program-code">${prog.code}</div>
+                            <div class="program-name">${prog[lang].name}</div>
+                        </div>
+                        <div class="scores-box">
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Budget Score' : 'Бюджет'}</span>
+                                <span class="score-value">${prog.est_budget_score}</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Paid Score' : 'Платное'}</span>
+                                <span class="score-value paid">${prog.est_paid_score}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="exam-list">
+                        ${prog[lang].exams.map((exam, idx) => `
+                            <li class="exam-item">
+                                <span class="exam-priority">${idx + 1}</span>
+                                <div class="exam-details">
+                                    <span class="exam-type">${exam.split('(')[0].trim()}</span>
+                                    <span class="exam-format">(${exam.match(/\(([^)]+)\)/)?.[1] || ''})</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 1rem; color: var(--primary-color);">${lang === 'en' ? 'Minimum Scores (EGE)' : 'Минимальные баллы (ЕГЭ)'}</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        ${Object.entries(prog[lang].min_scores).map(([key, val]) => `
+                            <span class="min-score-badge">${key.toUpperCase()}: ${val}</span>
+                        `).join('')}
+                    </div>
+
+                    ${prog.quotas.length > 0 ? `
+                        <div style="margin-top: 1rem;">
+                            ${prog.quotas.map(q => `<span class="min-score-badge" style="background: #fff; border-color: #dbeafe;">${q}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            const infoBlock = `
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-circle-info"></i> ${lang === 'en' ? 'Institute Information' : 'Информация об институте'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-location-dot"></i> <span>${info.location}</span></li>
+                            <li><i class="fa-solid fa-graduation-cap"></i> <span><strong>${lang === 'en' ? 'Profile:' : 'Профиль:'}</strong> ${info.profile}</span></li>
+                            <li><i class="fa-solid fa-phone"></i> <span>${info.contacts}</span></li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-chart-pie"></i> ${lang === 'en' ? 'Admission Stats' : 'Статистика приема'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-users"></i> <span><strong>${lang === 'en' ? 'Budget spots:' : 'Бюджет:'}</strong> ${inst.budget_spots}</span></li>
+                            <li><i class="fa-solid fa-wallet"></i> <span><strong>${lang === 'en' ? 'Paid spots:' : 'Платное:'}</strong> ${inst.paid_spots}</span></li>
+                            <li><i class="fa-solid fa-ruble-sign"></i> <span><strong>${lang === 'en' ? 'Tuition:' : 'Стоимость:'}</strong> ${inst.tuition} / year</span></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            const navLinksHtml = institutesData
+                .filter(f => f.id !== instId)
+                .map(f => `<a href="?id=${f.id}" class="nav-link">${f[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header">
+                    <div class="container institute-title">
+                        <h1>${title}</h1>
+                        <div class="institute-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${inst.programs.length} ${lang === 'en' ? 'programs' : 'направлений'}</span>
+                            <span><i class="fa-solid fa-calendar-check"></i> ${lang === 'en' ? 'Admission Rules 2026' : 'Правила приема 2026'}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container">
+                    ${infoBlock}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">${lang === 'en' ? 'Programs & Requirements' : 'Направления и требования'}</h2>
+                    ${programsHtml}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Institutes' : 'Другие институты'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_uni: "Universities", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_uni: "Вузы", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderInstitute(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

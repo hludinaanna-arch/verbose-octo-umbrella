@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Календарь Абитуриента 2026/2027</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #5a5ce6; 
+            --primary-hover: #4a4cd6; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            
+            /* Event Colors */
+            --color-uni: #3b82f6;      /* Blue */
+            --color-olymp: #10b981;    /* Green */
+            --color-admission: #ef4444;/* Red */
+            --color-exam: #f59e0b;     /* Orange */
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Header */
+        .page-header { padding: 3rem 0 2rem; text-align: center; }
+        .page-header h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-header p { color: var(--text-gray); font-size: 1.1rem; }
+
+        /* Legend */
+        .legend { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; font-weight: 500; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+
+        /* Calendar Controls */
+        .calendar-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; background: #fff; padding: 1rem 2rem; border-radius: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .month-title { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
+        .nav-btn { background: var(--bg-light); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; color: var(--text-dark); }
+        .nav-btn:hover { background: var(--primary-color); color: #fff; }
+
+        /* Calendar Grid */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-bottom: 4rem; }
+        .day-name { text-align: center; font-weight: 700; color: var(--text-gray); padding: 1rem 0; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+        .day-cell { background: #fff; border-radius: 1rem; min-height: 140px; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; transition: transform 0.2s; border: 1px solid transparent; }
+        .day-cell:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: #e5e7eb; }
+        .day-cell.empty { background: transparent; box-shadow: none; pointer-events: none; }
+        .day-number { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.8rem; color: var(--text-dark); }
+        .day-cell.weekend .day-number { color: var(--color-admission); }
+        
+        .event-pill { font-size: 0.75rem; padding: 0.3rem 0.6rem; border-radius: 6px; margin-bottom: 0.4rem; cursor: pointer; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.2s; color: #fff; }
+        .event-pill:hover { opacity: 0.85; }
+        .event-uni { background-color: var(--color-uni); }
+        .event-olymp { background-color: var(--color-olymp); }
+        .event-admission { background-color: var(--color-admission); }
+        .event-exam { background-color: var(--color-exam); }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { background: #fff; padding: 2.5rem; border-radius: 1.5rem; width: 90%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; transform: scale(0.95); transition: transform 0.3s; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .close-modal { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.5rem; color: var(--text-gray); cursor: pointer; background: none; border: none; }
+        .modal-tag { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: #fff; margin-bottom: 1rem; }
+        .modal-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-dark); }
+        .modal-desc { color: var(--text-gray); margin-bottom: 2rem; line-height: 1.6; }
+        .modal-btn { display: block; width: 100%; padding: 1rem; background: var(--primary-color); color: #fff; text-align: center; border-radius: 0.8rem; font-weight: 600; transition: background 0.3s; border: none; cursor: pointer; font-size: 1.05rem; }
+        .modal-btn:hover { background: var(--primary-hover); }
+
+        @media (max-width: 1024px) {
+            .calendar-grid { grid-template-columns: repeat(7, minmax(120px, 1fr)); overflow-x: auto; padding-bottom: 1rem; }
+            .day-cell { min-height: 120px; }
+        }
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 1.5rem; }
+            nav { flex-wrap: wrap; justify-content: center; }
+            .calendar-controls { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html">Главная</a>
+                <a href="universities.html">Вузы</a>
+                <a href="olympiads.html">Олимпиады</a>
+                <a href="volunteering.html">Волонтерство</a>
+                <a href="calendar.html" style="color: var(--primary-color);">Календарь</a>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login">Войти</a>
+                <a href="#" class="btn btn-signup">Регистрация</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="container page-header">
+            <h1>Календарь Абитуриента 2026/2027</h1>
+            <p>Все важные даты: олимпиады, дни открытых дверей, ЕГЭ и приемная кампания</p>
+        </section>
+
+        <section class="container">
+            <div class="legend">
+                <div class="legend-item"><div class="dot" style="background: var(--color-uni);"></div> Вузы и ДОД</div>
+                <div class="legend-item"><div class="dot" style="background: var(--color-olymp);"></div> Олимпиады</div>
+                <div class="legend-item"><div class="dot" style="background: var(--color-exam);"></div> ЕГЭ / Экзамены</div>
+                <div class="legend-item"><div class="dot" style="background: var(--color-admission);"></div> Приемная кампания</div>
+            </div>
+
+            <div class="calendar-controls">
+                <button class="nav-btn" id="prev-month"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="month-title" id="current-month-display">Июнь 2026</div>
+                <button class="nav-btn" id="next-month"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+            <div class="calendar-grid" id="calendar-grid">
+                <div class="day-name">Пн</div><div class="day-name">Вт</div><div class="day-name">Ср</div>
+                <div class="day-name">Чт</div><div class="day-name">Пт</div><div class="day-name">Сб</div><div class="day-name">Вс</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Event Modal -->
+    <div class="modal-overlay" id="event-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal">&times;</button>
+            <span class="modal-tag" id="modal-tag">Категория</span>
+            <h2 class="modal-title" id="modal-title">Название события</h2>
+            <p class="modal-desc" id="modal-desc">Описание события...</p>
+            <a href="#" class="modal-btn" id="modal-link">Подробнее</a>
+        </div>
+    </div>
+
+    <script>
+        // --- EVENTS DATA (Based on official 2026 rules from provided PDFs & 2026/2027 Olympiad schedules) ---
+        const events = [
+            // ==================== ИЮНЬ 2026 (Приемная кампания + ЕГЭ) ====================
+            { date: '2026-06-04', title: 'ЕГЭ (Математика)', type: 'exam', desc: 'Экзамен по математике (базовый и профильный уровни).', link: '#', linkText: 'Расписание ЕГЭ' },
+            { date: '2026-06-08', title: 'ЕГЭ (Инф, Био)', type: 'exam', desc: 'Экзамены по выбору.', link: '#', linkText: 'Расписание ЕГЭ' },
+            { date: '2026-06-11', title: 'ЕГЭ (История, Физика)', type: 'exam', desc: 'Экзамены по выбору.', link: '#', linkText: 'Расписание ЕГЭ' },
+            { date: '2026-06-15', title: 'ЕГЭ (Общество, Англ)', type: 'exam', desc: 'Экзамены по выбору.', link: '#', linkText: 'Расписание ЕГЭ' },
+            { date: '2026-06-20', title: 'СТАРТ ПРИЕМНОЙ КАМПАНИИ', type: 'admission', desc: 'Начало приема заявлений и документов во все вузы России (согласно правилам ВШЭ, РАНХиГС, СПбГУ).', link: 'universities.html', linkText: 'Выбрать вуз' },
+            { date: '2026-06-27', title: 'Результаты ЕГЭ (Мат, Инф)', type: 'exam', desc: 'Официальная публикация результатов.', link: '#', linkText: 'Проверить баллы' },
+
+            // ==================== ИЮЛЬ 2026 (Дедлайны подачи) ====================
+            { date: '2026-07-10', title: 'Конец приема с ДВИ', type: 'admission', desc: 'Завершение приема документов на направления с творческими испытаниями (Журналистика, Дизайн).', link: 'universities.html', linkText: 'Сроки подачи' },
+            { date: '2026-07-14', title: 'Конец приема на бюджет (ВШЭ)', type: 'admission', desc: 'Завершение приема документов на бюджетные места в НИУ ВШЭ (согласно Приложению 1).', link: 'hse.html', linkText: 'Перейти к ВШЭ' },
+            { date: '2026-07-25', title: 'Конец приема на бюджет (РАНХиГС)', type: 'admission', desc: 'Завершение приема документов на бюджет в РАНХиГС и большинстве вузов.', link: 'ranepa.html', linkText: 'Перейти к РАНХиГС' },
+            { date: '2026-07-27', title: 'Конкурсные списки', type: 'admission', desc: 'Публикация ранжированных списков абитуриентов (РАНХиГС).', link: 'universities.html', linkText: 'Проверить списки' },
+
+            // ==================== АВГУСТ 2026 (Зачисление) ====================
+            { date: '2026-08-01', title: 'Приоритетное зачисление (БВИ)', type: 'admission', desc: 'Завершение приема согласий на зачисление для льготников (до 12:00 МСК). Приказы 3 августа.', link: 'universities.html', linkText: 'Этапы зачисления' },
+            { date: '2026-08-03', title: 'Конец приема на платное (ВШЭ)', type: 'admission', desc: 'Завершение приема документов на платные места в НИУ ВШЭ.', link: 'hse.html', linkText: 'Перейти к ВШЭ' },
+            { date: '2026-08-05', title: 'Основное зачисление (Бюджет)', type: 'admission', desc: 'Завершение приема согласий на основные бюджетные места (до 12:00 МСК). Приказы 7 августа.', link: 'universities.html', linkText: 'Этапы зачисления' },
+            { date: '2026-08-09', title: 'Дополнительное зачисление', type: 'admission', desc: 'Заполнение оставшихся вакантных мест.', link: 'universities.html', linkText: 'Этапы зачисления' },
+            { date: '2026-08-12', title: 'Конец приема на платное (ВШЭ/РАНХиГС)', type: 'admission', desc: 'Завершение приема документов на платные места в большинстве вузов.', link: 'universities.html', linkText: 'Платное обучение' },
+            { date: '2026-08-15', title: 'Конец приема документов (МФТИ)', type: 'admission', desc: 'Завершение приема документов в МФТИ (согласно Правилам приема).', link: 'mipt.html', linkText: 'Перейти к МФТИ' },
+            { date: '2026-08-17', title: 'Заключение договоров (ВШЭ)', type: 'admission', desc: 'Крайний срок заключения договоров об оказании платных образовательных услуг в ВШЭ.', link: 'hse.html', linkText: 'Перейти к ВШЭ' },
+            { date: '2026-08-20', title: 'Зачисление на платное (СПбГУ)', type: 'admission', desc: 'Завершение заключения договоров и зачисления на коммерческой основе в СПбГУ.', link: 'spbu.html', linkText: 'Перейти к СПбГУ' },
+
+            // ==================== СЕНТЯБРЬ 2026 (Старт олимпиад 2026/2027) ====================
+            { date: '2026-09-01', title: 'Старт учебного года', type: 'uni', desc: 'Начало 11 класса. Самое время планировать участие в олимпиадах и волонтерстве.', link: 'index.html', linkText: 'На главную' },
+            { date: '2026-09-15', title: 'Регистрация на ВсОШ (Школьный этап)', type: 'olymp', desc: 'Начало регистрации на школьный этап Всероссийской олимпиады школьников.', link: 'olympiad-detail.html?id=vsosh', linkText: 'Подробнее о ВсОШ' },
+            { date: '2026-09-20', title: 'Регистрация на Высшую пробу', type: 'olymp', desc: 'Открытие регистрации на олимпиаду «Высшая проба» (НИУ ВШЭ).', link: 'olympiad-detail.html?id=vysshaya-proba', linkText: 'Подробнее' },
+            { date: '2026-09-25', title: 'Регистрация на МОШ', type: 'olymp', desc: 'Открытие регистрации на Московскую олимпиаду школьников.', link: 'olympiad-detail.html?id=mosh', linkText: 'Подробнее о МОШ' },
+
+            // ==================== ОКТЯБРЬ 2026 (Отборочные туры) ====================
+            { date: '2026-10-01', title: 'Отборочный тур Высшей пробы', type: 'olymp', desc: 'Начало дистанционного отборочного этапа олимпиады «Высшая проба».', link: 'olympiad-detail.html?id=vysshaya-proba', linkText: 'Подробнее' },
+            { date: '2026-10-10', title: 'Отборочный тур МОШ', type: 'olymp', desc: 'Начало дистанционного отборочного этапа Московской олимпиады школьников.', link: 'olympiad-detail.html?id=mosh', linkText: 'Подробнее о МОШ' },
+            { date: '2026-10-15', title: 'Регистрация на Ломоносов', type: 'olymp', desc: 'Открытие регистрации на олимпиаду «Ломоносов» (МГУ).', link: 'olympiad-detail.html?id=lomonosov', linkText: 'Подробнее' },
+            { date: '2026-10-20', title: 'Регистрация на Физтех', type: 'olymp', desc: 'Открытие регистрации на олимпиаду «Физтех» (МФТИ).', link: 'olympiad-detail.html?id=phystech', linkText: 'Подробнее' },
+            { date: '2026-10-25', title: 'ДОД НИУ ВШЭ (Осень)', type: 'uni', desc: 'Осенний день открытых дверей Высшей школы экономики.', link: 'hse.html', linkText: 'Перейти к ВШЭ' },
+
+            // ==================== НОЯБРЬ 2026 ====================
+            { date: '2026-11-01', title: 'Отборочный тур Ломоносова', type: 'olymp', desc: 'Начало дистанционного отборочного этапа олимпиады «Ломоносов».', link: 'olympiad-detail.html?id=lomonosov', linkText: 'Подробнее' },
+            { date: '2026-11-10', title: 'Отборочный тур Физтеха', type: 'olymp', desc: 'Начало дистанционного отборочного этапа олимпиады «Физтех».', link: 'olympiad-detail.html?id=phystech', linkText: 'Подробнее' },
+            { date: '2026-11-15', title: 'ДОД МГУ (Осень)', type: 'uni', desc: 'Осенний день открытых дверей МГУ им. Ломоносова.', link: 'msu.html', linkText: 'Перейти к МГУ' },
+            { date: '2026-11-20', title: 'Регистрация на Росатом', type: 'olymp', desc: 'Открытие регистрации на олимпиаду «Росатом».', link: 'olympiad-detail.html?id=rosatom', linkText: 'Подробнее' },
+
+            // ==================== ДЕКАБРЬ 2026 ====================
+            { date: '2026-12-01', title: 'Отборочный тур Росатома', type: 'olymp', desc: 'Начало дистанционного отборочного этапа олимпиады «Росатом».', link: 'olympiad-detail.html?id=rosatom', linkText: 'Подробнее' },
+            { date: '2026-12-10', title: 'Регистрация на Покори Воробьёвы горы!', type: 'olymp', desc: 'Открытие регистрации на совместную олимпиаду МГУ и МГТУ.', link: 'olympiad-detail.html?id=pvg', linkText: 'Подробнее' },
+            { date: '2026-12-15', title: 'Регистрация на Звезду', type: 'olymp', desc: 'Открытие регистрации на инженерную олимпиаду «Звезда».', link: 'olympiad-detail.html?id=zvezda', linkText: 'Подробнее' },
+            { date: '2026-12-20', title: 'ДОД МГТУ им. Баумана (Зима)', type: 'uni', desc: 'Зимний день открытых дверей в главном корпусе Бауманки.', link: 'bmstu.html', linkText: 'Перейти к МГТУ' },
+
+            // ==================== ЯНВАРЬ 2027 (Заключительные этапы) ====================
+            { date: '2027-01-15', title: 'Финал Высшей пробы', type: 'olymp', desc: 'Заключительный этап олимпиады «Высшая проба» (НИУ ВШЭ).', link: 'olympiad-detail.html?id=vysshaya-proba', linkText: 'Подробнее' },
+            { date: '2027-01-20', title: 'Финал МОШ (Экономика)', type: 'olymp', desc: 'Заключительный этап Московской олимпиады школьников по экономике.', link: 'olympiad-detail.html?id=mosh', linkText: 'Подробнее о МОШ' },
+            { date: '2027-01-25', title: 'ДОД НИУ ВШЭ (Зима)', type: 'uni', desc: 'Зимний день открытых дверей Высшей школы экономики в Москве.', link: 'hse.html', linkText: 'Перейти к ВШЭ' },
+            { date: '2027-01-30', title: 'Финал Ломоносова', type: 'olymp', desc: 'Заключительный этап олимпиады «Ломоносов» (МГУ).', link: 'olympiad-detail.html?id=lomonosov', linkText: 'Подробнее' },
+
+            // ==================== ФЕВРАЛЬ 2027 ====================
+            { date: '2027-02-05', title: 'Финал Физтеха (МФТИ)', type: 'olymp', desc: 'Заключительный этап олимпиады «Физтех» по физике и математике.', link: 'olympiad-detail.html?id=phystech', linkText: 'Подробнее' },
+            { date: '2027-02-12', title: 'Финал Росатома', type: 'olymp', desc: 'Заключительный этап олимпиады «Росатом».', link: 'olympiad-detail.html?id=rosatom', linkText: 'Подробнее' },
+            { date: '2027-02-15', title: 'Финал Покори Воробьёвы горы!', type: 'olymp', desc: 'Заключительный этап совместной олимпиады МГУ и МГТУ.', link: 'olympiad-detail.html?id=pvg', linkText: 'Подробнее' },
+            { date: '2027-02-20', title: 'ДОД МГУ (Зима)', type: 'uni', desc: 'Единый зимний день открытых дверей МГУ им. Ломоносова.', link: 'msu.html', linkText: 'Перейти к МГУ' },
+            { date: '2027-02-25', title: 'Финал Звезды', type: 'olymp', desc: 'Заключительный этап инженерной олимпиады «Звезда».', link: 'olympiad-detail.html?id=zvezda', linkText: 'Подробнее' },
+
+            // ==================== МАРТ 2027 ====================
+            { date: '2027-03-05', title: 'Финал ВсОШ (Математика)', type: 'olymp', desc: 'Заключительный этап Всероссийской олимпиады школьников по математике.', link: 'olympiad-detail.html?id=vsosh', linkText: 'Подробнее о ВсОШ' },
+            { date: '2027-03-12', title: 'ДОД МГТУ им. Баумана (Весна)', type: 'uni', desc: 'Весенний день открытых дверей в главном корпусе Бауманки.', link: 'bmstu.html', linkText: 'Перейти к МГТУ' },
+            { date: '2027-03-15', title: 'Финал ВсОШ (Информатика)', type: 'olymp', desc: 'Заключительный этап ВсОШ по информатике.', link: 'olympiad-detail.html?id=vsosh', linkText: 'Подробнее о ВсОШ' },
+            { date: '2027-03-20', title: 'ДОД СПбГУ (Весна)', type: 'uni', desc: 'Весенний день открытых дверей Санкт-Петербургского государственного университета.', link: 'spbu.html', linkText: 'Перейти к СПбГУ' },
+            { date: '2027-03-25', title: 'Финал ВсОШ (Физика)', type: 'olymp', desc: 'Заключительный этап ВсОШ по физике.', link: 'olympiad-detail.html?id=vsosh', linkText: 'Подробнее о ВсОШ' },
+
+            // ==================== АПРЕЛЬ 2027 ====================
+            { date: '2027-04-02', title: 'Финал ВсОШ (Химия, Биология)', type: 'olymp', desc: 'Заключительный этап ВсОШ по химии и биологии.', link: 'olympiad-detail.html?id=vsosh', linkText: 'Подробнее о ВсОШ' },
+            { date: '2027-04-10', title: 'ДОД МИФИ (Весна)', type: 'uni', desc: 'Весенний день открытых дверей НИЯУ МИФИ.', link: 'mephi.html', linkText: 'Перейти к МИФИ' },
+            { date: '2027-04-15', title: 'Результаты ВсОШ', type: 'olymp', desc: 'Публикация итоговых результатов и дипломов Всероссийской олимпиады школьников.', link: 'olympiad-detail.html?id=vsosh', linkText: 'Подробнее о ВсОШ' },
+            { date: '2027-04-25', title: 'Результаты всех олимпиад', type: 'olymp', desc: 'Публикация дипломов и результатов перечневых олимпиад 2026/2027.', link: 'olympiads.html', linkText: 'Все олимпиады' },
+
+            // ==================== МАЙ 2027 (ЕГЭ 2027) ====================
+            { date: '2027-05-25', title: 'Старт ЕГЭ 2027 (Гео, Лит, Хим)', type: 'exam', desc: 'Предполагаемое начало основной волны Единого государственного экзамена 2027 года.', link: '#', linkText: 'Расписание ЕГЭ' },
+            { date: '2027-05-28', title: 'ЕГЭ 2027 (Русский язык)', type: 'exam', desc: 'Обязательный экзамен для всех выпускников.', link: '#', linkText: 'Расписание ЕГЭ' },
+
+            // ==================== ИЮНЬ 2027 (ЕГЭ + Старт ПК 2027) ====================
+            { date: '2027-06-02', title: 'ЕГЭ 2027 (Математика)', type: 'exam', desc: 'Экзамен по математике (базовый и профильный уровни).', link: '#', linkText: 'Расписание ЕГЭ' },
+            { date: '2027-06-07', title: 'ЕГЭ 2027 (Инф, Био)', type: 'exam', desc: 'Экзамены по выбору.', link: '#', linkText: 'Расписание ЕГЭ' },
+            { date: '2027-06-10', title: 'ЕГЭ 2027 (История, Физика)', type: 'exam', desc: 'Экзамены по выбору.', link: '#', linkText: 'Расписание ЕГЭ' },
+            { date: '2027-06-15', title: 'ЕГЭ 2027 (Общество, Англ)', type: 'exam', desc: 'Экзамены по выбору.', link: '#', linkText: 'Расписание ЕГЭ' },
+            { date: '2027-06-20', title: 'СТАРТ ПРИЕМНОЙ КАМПАНИИ 2027', type: 'admission', desc: 'Ожидаемое начало приема заявлений и документов во все вузы России на 2027/2028 учебный год.', link: 'universities.html', linkText: 'Выбрать вуз' },
+            { date: '2027-06-28', title: 'Результаты ЕГЭ 2027 (Мат, Инф)', type: 'exam', desc: 'Официальная публикация результатов.', link: '#', linkText: 'Проверить баллы' }
+        ];
+
+        let currentDate = new Date(2026, 5, 1); // Start at June 2026 (Admission campaign start)
+        const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+        
+        const grid = document.getElementById('calendar-grid');
+        const monthDisplay = document.getElementById('current-month-display');
+        const prevBtn = document.getElementById('prev-month');
+        const nextBtn = document.getElementById('next-month');
+
+        function renderCalendar() {
+            const dayCells = grid.querySelectorAll('.day-cell');
+            dayCells.forEach(cell => cell.remove());
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            monthDisplay.textContent = `${monthNames[month]} ${year}`;
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const adjustedFirstDay = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < adjustedFirstDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'day-cell empty';
+                grid.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell';
+                
+                const currentDayOfWeek = new Date(year, month, day).getDay();
+                if (currentDayOfWeek === 0 || currentDayOfWeek === 6) {
+                    cell.classList.add('weekend');
+                }
+
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                cell.innerHTML = `<div class="day-number">${day}</div>`;
+
+                const dayEvents = events.filter(e => e.date === dateStr);
+                dayEvents.forEach(ev => {
+                    const pill = document.createElement('div');
+                    pill.className = `event-pill event-${ev.type}`;
+                    pill.textContent = ev.title;
+                    pill.onclick = () => openModal(ev);
+                    cell.appendChild(pill);
+                });
+
+                grid.appendChild(cell);
+            }
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        // --- MODAL LOGIC ---
+        const modal = document.getElementById('event-modal');
+        const closeBtn = document.getElementById('close-modal');
+        const mTag = document.getElementById('modal-tag');
+        const mTitle = document.getElementById('modal-title');
+        const mDesc = document.getElementById('modal-desc');
+        const mLink = document.getElementById('modal-link');
+
+        const typeLabels = {
+            'uni': { text: 'Вуз / ДОД', color: 'var(--color-uni)' },
+            'olymp': { text: 'Олимпиада', color: 'var(--color-olymp)' },
+            'admission': { text: 'Приемная кампания', color: 'var(--color-admission)' },
+            'exam': { text: 'ЕГЭ / Экзамен', color: 'var(--color-exam)' }
+        };
+
+        function openModal(ev) {
+            const info = typeLabels[ev.type];
+            mTag.textContent = info.text;
+            mTag.style.backgroundColor = info.color;
+            mTitle.textContent = ev.title;
+            mDesc.textContent = ev.desc;
+            
+            if (ev.link && ev.link !== '#') {
+                mLink.href = ev.link;
+                mLink.textContent = ev.linkText || 'Подробнее';
+                mLink.style.display = 'block';
+            } else {
+                mLink.style.display = 'none';
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+        // Init
+        renderCalendar();
+    </script>
+</body>
+</html>

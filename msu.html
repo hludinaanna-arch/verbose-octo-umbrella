@@ -1,0 +1,779 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - MSU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-color: #5a5ce6; --primary-hover: #4a4cd6; --text-dark: #111; --text-gray: #6b7280; --bg-light: #f9fafb; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header Styles */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: #5A5CE6; }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Specific Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .uni-info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
+        .uni-title h1 { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+        .uni-location { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .campuses-box { background: #fff; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .campuses-box h3 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary-color); }
+        .campuses-list { list-style: none; }
+        .campuses-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 0.95rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+        .campuses-list li:last-child { border-bottom: none; }
+        .campuses-list i { color: var(--primary-color); margin-top: 0.3rem; }
+
+        /* Stats Grid */
+        .stats-section { margin-bottom: 4rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .stat-card { background: #fff; padding: 2rem; border-radius: 1.5rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 4px solid var(--primary-color); }
+        .stat-value { font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.5rem; }
+        .stat-label { font-size: 1rem; color: var(--text-gray); font-weight: 500; }
+
+        /* Search & Faculties */
+        .search-section { margin-bottom: 4rem; }
+        .search-bar { position: relative; max-width: 600px; margin: 0 auto 3rem; }
+        .search-bar input { width: 100%; padding: 1.2rem 1.5rem 1.2rem 3.5rem; border-radius: 50px; border: 2px solid #e5e7eb; font-size: 1.1rem; font-family: inherit; outline: none; transition: border-color 0.3s; }
+        .search-bar input:focus { border-color: var(--primary-color); }
+        .search-bar i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 1.2rem; }
+        
+        .faculties-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
+        .faculty-card { 
+            background: #fff; 
+            padding: 2rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            transition: transform 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+        .faculty-card:hover { transform: translateY(-3px); border-color: var(--primary-color); }
+        .faculty-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-dark); }
+        .faculty-desc { font-size: 0.95rem; color: var(--text-gray); margin-bottom: 1.5rem; line-height: 1.5; flex-grow: 1; }
+        .subjects-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .subject-tag { background: #eef2ff; color: var(--primary-color); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .tuition-info { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: var(--text-gray); border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: auto;}
+        .tuition-info strong { color: var(--text-dark); }
+        .no-results { text-align: center; padding: 3rem; color: var(--text-gray); font-size: 1.2rem; display: none; }
+
+        @media (max-width: 992px) { .uni-info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .uni-title h1 { font-size: 2.2rem; } 
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <a href="olympiads.html" data-key="nav_olymp">Olympiads</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Header Info -->
+        <section class="page-header">
+            <div class="container uni-info-grid">
+                <div class="uni-title">
+                    <h1 data-key="msu_title">Lomonosov Moscow State University</h1>
+                    <div class="uni-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span data-key="msu_location">Leninskie Gory, 1, Moscow, Russia</span>
+                    </div>
+                    <p data-key="msu_desc" style="font-size: 1.1rem; color: var(--text-gray); max-width: 700px;">Russia's oldest and most prestigious university, founded in 1755. A global leader in natural sciences, humanities, and fundamental research.</p>
+                </div>
+                <div class="campuses-box">
+                    <h3 data-key="msu_campuses_title">Main Campuses</h3>
+                    <ul class="campuses-list">
+                        <li><i class="fa-solid fa-building"></i> <span data-key="msu_main_bldg">Main Building (Sparrow Hills)</span></li>
+                        <li><i class="fa-solid fa-flask"></i> <span data-key="msu_science_park">Science Park (Vorobyovy Gory)</span></li>
+                        <li><i class="fa-solid fa-book"></i> <span data-key="msu_library">Fundamental Library (Mokhovaya St.)</span></li>
+                        <li><i class="fa-solid fa-atom"></i> <span data-key="msu_research_inst">Research Institutes (Various districts)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admission Stats -->
+        <section class="container stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" data-key="msu_budget_spots">4,200+</div>
+                    <div class="stat-label" data-key="msu_budget_label">Budget Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="msu_paid_spots">12,500+</div>
+                    <div class="stat-label" data-key="msu_paid_label">Paid Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="msu_budget_score">275</div>
+                    <div class="stat-label" data-key="msu_budget_score_label">Avg. Budget Score (EGE)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="msu_paid_score">195</div>
+                    <div class="stat-label" data-key="msu_paid_score_label">Avg. Paid Score (EGE)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Faculty Search -->
+        <section class="container search-section">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="faculty-search" data-placeholder-key="msu_search_placeholder" placeholder="Search by subject (e.g., Math, Physics, Biology)...">
+            </div>
+            
+            <div class="faculties-grid" id="faculties-container">
+                <!-- Cards will be injected here by JS -->
+            </div>
+            <div class="no-results" id="no-results" data-key="msu_no_results">No faculties found for this subject.</div>
+        </section>
+    </main>
+
+    <script>
+        // --- TRANSLATIONS ---
+        const translations = {
+            en: {
+                nav_home: "Home", nav_uni: "Universities", nav_olymp: "Olympiads",
+                btn_login: "Log In", btn_signup: "Sign Up",
+                
+                // MSU Page Content
+                msu_title: "Lomonosov Moscow State University",
+                msu_location: "Leninskie Gory, 1, Moscow, Russia",
+                msu_desc: "Russia's oldest and most prestigious university, founded in 1755. A global leader in natural sciences, humanities, and fundamental research.",
+                msu_campuses_title: "Main Campuses",
+                msu_main_bldg: "Main Building (Sparrow Hills)",
+                msu_science_park: "Science Park (Vorobyovy Gory)",
+                msu_library: "Fundamental Library (Mokhovaya St.)",
+                msu_research_inst: "Research Institutes (Various districts)",
+                
+                msu_budget_spots: "4,200+", msu_budget_label: "Budget Spots (2026)",
+                msu_paid_spots: "12,500+", msu_paid_label: "Paid Spots (2026)",
+                msu_budget_score: "275", msu_budget_score_label: "Avg. Budget Score (EGE)",
+                msu_paid_score: "195", msu_paid_score_label: "Avg. Paid Score (EGE)",
+                
+                msu_search_placeholder: "Search by subject (e.g., Math, Physics, Biology)...",
+                msu_no_results: "No faculties found for this subject.",
+                msu_tuition_label: "Tuition fee"
+            },
+            ru: {
+                nav_home: "Главная", nav_uni: "Вузы", nav_olymp: "Олимпиады",
+                btn_login: "Войти", btn_signup: "Регистрация",
+                
+                msu_title: "МГУ им. М.В. Ломоносова",
+                msu_location: "Ленинские горы, 1, Москва, Россия",
+                msu_desc: "Старейший и наиболее престижный университет России, основанный в 1755 году. Мировой лидер в области естественных наук, гуманитарных дисциплин и фундаментальных исследований.",
+                msu_campuses_title: "Основные кампусы",
+                msu_main_bldg: "Главное здание (Воробьёвы горы)",
+                msu_science_park: "Научный парк (Воробьёвы горы)",
+                msu_library: "Фундаментальная библиотека (ул. Моховая)",
+                msu_research_inst: "НИИ и институты (разные районы)",
+                
+                msu_budget_spots: "4 200+", msu_budget_label: "Бюджетных мест (2026)",
+                msu_paid_spots: "12 500+", msu_paid_label: "Платных мест (2026)",
+                msu_budget_score: "275", msu_budget_score_label: "Ср. балл на бюджет (ЕГЭ)",
+                msu_paid_score: "195", msu_paid_score_label: "Ср. балл на платное (ЕГЭ)",
+                
+                msu_search_placeholder: "Поиск по предмету (например, Математика, Физика, Биология)...",
+                msu_no_results: "Факультеты с таким предметом не найдены.",
+                msu_tuition_label: "Стоимость обучения"
+            }
+        };
+
+        // --- FACULTY DATA WITH UPDATED TUITION FEES ---
+        const facultiesData = [
+            { 
+                id: "math-mech",
+                en: { 
+                    name: "Faculty of Mechanics and Mathematics", 
+                    subjects: ["Math (Profile)", "Physics"], 
+                    tuition: "438,375 ₽",
+                    desc: "Specialties: Fundamental Math & Mechanics (Math/Mechanics/Math Physics). DVI: Written Math Exam (Priority 1). Required EGE: Math (Profile) (2), Physics (3)."
+                }, 
+                ru: { 
+                    name: "Механико-математический факультет", 
+                    subjects: ["Математика (профиль)", "Физика"], 
+                    tuition: "438 375 ₽",
+                    desc: "Специальности: Фундаментальные математика и механика (Математика/Механика/Фундаментальная математика и матфизика). ДВИ: Письменный экзамен по математике (Приоритет 1). Обязательные ЕГЭ: Математика (профиль) (2), Физика (3)."
+                } 
+            },
+            { 
+                id: "vmk",
+                en: { 
+                    name: "Faculty of Computational Mathematics and Cybernetics", 
+                    subjects: ["Math (Profile)", "Informatics", "Physics"], 
+                    tuition: "530,317 ₽",
+                    desc: "Directions: Applied Math & Informatics, Fundamental Informatics. DVI: Written Math Exam (1). Required EGE: Math (Profile) (2), Physics (3), Informatics (4)."
+                }, 
+                ru: { 
+                    name: "Факультет ВМК", 
+                    subjects: ["Математика (профиль)", "Информатика", "Физика"], 
+                    tuition: "530 317 ₽",
+                    desc: "Направления: Прикладная математика и информатика, Фундаментальная информатика и ИТ. ДВИ: Письменный экзамен по математике (1). Обязательные ЕГЭ: Математика (профиль) (2), Физика (3), Информатика (4)."
+                } 
+            },
+            { 
+                id: "physics",
+                en: { 
+                    name: "Faculty of Physics", 
+                    subjects: ["Physics", "Math (Profile)", "Informatics"], 
+                    tuition: "557,792 ₽",
+                    desc: "Specialties: Fundamental & Applied Physics, Astronomy. DVI: Written Physics Exam (1). Required EGE: Physics (2), Math OR Informatics (3)."
+                }, 
+                ru: { 
+                    name: "Физический факультет", 
+                    subjects: ["Физика", "Математика (профиль)", "Информатика"], 
+                    tuition: "557 792 ₽",
+                    desc: "Специальности: Фундаментальная и прикладная физика, Астрономия. ДВИ: Письменный экзамен по физике (1). Обязательные ЕГЭ: Физика (2), Математика ИЛИ Информатика (3)."
+                } 
+            },
+            { 
+                id: "chemistry",
+                en: { 
+                    name: "Faculty of Chemistry", 
+                    subjects: ["Chemistry", "Math (Profile)", "Physics", "Biology"], 
+                    tuition: "565,370 ₽",
+                    desc: "Specialty: Fundamental & Applied Chemistry. DVI: Written Chemistry Exam (1). Required EGE: Chemistry (2), Math (Profile) (3), Physics OR Biology (4)."
+                }, 
+                ru: { 
+                    name: "Химический факультет", 
+                    subjects: ["Химия", "Математика (профиль)", "Физика", "Биология"], 
+                    tuition: "565 370 ₽",
+                    desc: "Специальность: Фундаментальная и прикладная химия. ДВИ: Письменный экзамен по химии (1). Обязательные ЕГЭ: Химия (2), Математика (профиль) (3), Физика ИЛИ Биология (4)."
+                } 
+            },
+            { 
+                id: "biology",
+                en: { 
+                    name: "Faculty of Biology", 
+                    subjects: ["Biology", "Chemistry", "Math (Profile/Base)"], 
+                    tuition: "554,225 ₽",
+                    desc: "Specialties: Fundamental & Applied Biology, Ecology. DVI: Written Biology Exam (1). Required EGE: Biology (2), Math (Profile/Base) (3), Chemistry (4)."
+                }, 
+                ru: { 
+                    name: "Биологический факультет", 
+                    subjects: ["Биология", "Химия", "Математика (профиль/база)"], 
+                    tuition: "554 225 ₽",
+                    desc: "Специальности: Фундаментальная и прикладная биология, Экология и природопользование. ДВИ: Письменный экзамен по биологии (1). Обязательные ЕГЭ: Биология (2), Математика (профиль/база) (3), Химия (4)."
+                } 
+            },
+            { 
+                id: "materials",
+                en: { 
+                    name: "Faculty of Materials Science", 
+                    subjects: ["Math (Profile)", "Chemistry", "Physics", "Informatics"], 
+                    tuition: "561,230 ₽",
+                    desc: "Direction: Chemistry, Physics & Mechanics of Materials. DVI: Written Math Exam (1). Required EGE: Math (Profile) (2), Chemistry (3), Physics OR Informatics (4)."
+                }, 
+                ru: { 
+                    name: "Факультет наук о материалах", 
+                    subjects: ["Математика (профиль)", "Химия", "Физика", "Информатика"], 
+                    tuition: "561 230 ₽",
+                    desc: "Направление: Химия, физика и механика материалов. ДВИ: Письменный экзамен по математике (1). Обязательные ЕГЭ: Математика (профиль) (2), Химия (3), Физика ИЛИ Информатика (4)."
+                } 
+            },
+            { 
+                id: "soil",
+                en: { 
+                    name: "Faculty of Soil Science", 
+                    subjects: ["Biology", "Math (Profile/Base)", "Chemistry", "Geography", "Physics", "Informatics"], 
+                    tuition: "561,230 ₽",
+                    desc: "Directions: Soil Science, Ecology. DVI: Written Biology/Geography Exam (1). Required EGE: Biology/Geography (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Факультет почвоведения", 
+                    subjects: ["Биология", "Математика (профиль/база)", "Химия", "География", "Физика", "Информатика"], 
+                    tuition: "561 230 ₽",
+                    desc: "Направления: Почвоведение, Экология и природопользование. ДВИ: Письменный экзамен по биологии/географии (1). Обязательные ЕГЭ: Биология/География (2), один из: Химия/Физика/География/Информатика (3)."
+                } 
+            },
+            { 
+                id: "geology",
+                en: { 
+                    name: "Faculty of Geology", 
+                    subjects: ["Math (Profile/Base)", "Physics", "Geography", "Chemistry", "Informatics"], 
+                    tuition: "561,230 ₽",
+                    desc: "Direction: Geology. DVI: Written Math Exam (1). Required EGE: Math (Profile/Base) (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Геологический факультет", 
+                    subjects: ["Математика (профиль/база)", "Физика", "География", "Химия", "Информатика"], 
+                    tuition: "561 230 ₽",
+                    desc: "Направление: Геология. ДВИ: Письменный экзамен по математике (1). Обязательные ЕГЭ: Математика (профиль/база) (2), один из: Физика/География/Химия/Информатика (3)."
+                } 
+            },
+            { 
+                id: "geography",
+                en: { 
+                    name: "Faculty of Geography", 
+                    subjects: ["Geography", "Math (Profile/Base)", "Informatics", "Biology", "Physics", "Social Studies"], 
+                    tuition: "543,585 ₽",
+                    desc: "Group: Earth Sciences, Tourism. DVI: Written Geo/Social Studies Exam (1). Required EGE: Geo/Social Studies (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Географический факультет", 
+                    subjects: ["География", "Математика (профиль/база)", "Информатика", "Биология", "Физика", "Обществознание"], 
+                    tuition: "543 585 ₽",
+                    desc: "Группа: Науки о Земле, Туризм. ДВИ: Письменный экзамен по географии/обществознанию (1). Обязательные ЕГЭ: География/Обществознание (2), один из: Математика/Информатика/Биология/Физика (3)."
+                } 
+            },
+            { 
+                id: "medicine",
+                en: { 
+                    name: "Faculty of Fundamental Medicine", 
+                    subjects: ["Chemistry", "Biology", "Russian"], 
+                    tuition: "676,000 ₽",
+                    desc: "Specialties: General Medicine, Pharmacy. DVI: Written Chemistry Exam (1). Required EGE: Chemistry (2), Biology (3)."
+                }, 
+                ru: { 
+                    name: "Факультет фундаментальной медицины", 
+                    subjects: ["Химия", "Биология", "Русский язык"], 
+                    tuition: "676 000 ₽",
+                    desc: "Специальности: Лечебное дело, Фармация. ДВИ: Письменный экзамен по химии (1). Обязательные ЕГЭ: Химия (2), Биология (3)."
+                } 
+            },
+            { 
+                id: "bioeng",
+                en: { 
+                    name: "Faculty of Bioengineering and Bioinformatics", 
+                    subjects: ["Math (Profile)", "Chemistry", "Biology"], 
+                    tuition: "525,195 ₽",
+                    desc: "Specialty: Bioengineering & Bioinformatics. DVI: Written Math Exam (1). Required EGE: Math (Profile) (2), Chemistry (3), Biology (4)."
+                }, 
+                ru: { 
+                    name: "Факультет биоинженерии и биоинформатики", 
+                    subjects: ["Математика (профиль)", "Химия", "Биология"], 
+                    tuition: "525 195 ₽",
+                    desc: "Специальность: Биоинженерия и биоинформатика. ДВИ: Письменный экзамен по математике (1). Обязательные ЕГЭ: Математика (профиль) (2), Химия (3), Биология (4)."
+                } 
+            },
+            { 
+                id: "phys-chem-eng",
+                en: { 
+                    name: "Faculty of Fundamental Physical and Chemical Engineering", 
+                    subjects: ["Math (Profile)", "Physics", "Chemistry"], 
+                    tuition: "560,833 ₽",
+                    desc: "Directions: Applied Math & Physics, Fundamental Phys-Chem Eng. DVI: Written Math/Chem Exam (1). Required EGE: Math/Chem (2), Physics/Chem (3)."
+                }, 
+                ru: { 
+                    name: "Факультет фундаментальной физико-химической инженерии", 
+                    subjects: ["Математика (профиль)", "Физика", "Химия"], 
+                    tuition: "560 833 ₽",
+                    desc: "Направления: Прикладные математика и физика, Фундаментальная физико-химическая инженерия. ДВИ: Письменный экзамен по математике/химии (1). Обязательные ЕГЭ: Математика/Химия (2), Физика/Химия (3)."
+                } 
+            },
+            { 
+                id: "biotech",
+                en: { 
+                    name: "Faculty of Biotechnology", 
+                    subjects: ["Biology", "Math (Profile)", "Chemistry"], 
+                    tuition: "561,230 ₽",
+                    desc: "Direction: Biotechnology. DVI: Written Biology Exam (1). Required EGE: Math (Profile) (2), Biology (3), Chemistry (4)."
+                }, 
+                ru: { 
+                    name: "Биотехнологический факультет", 
+                    subjects: ["Биология", "Математика (профиль)", "Химия"], 
+                    tuition: "561 230 ₽",
+                    desc: "Направление: Биотехнология. ДВИ: Письменный экзамен по биологии (1). Обязательные ЕГЭ: Математика (профиль) (2), Биология (3), Химия (4)."
+                } 
+            },
+            { 
+                id: "space",
+                en: { 
+                    name: "Faculty of Space Research", 
+                    subjects: ["Math (Profile)", "Physics", "Informatics"], 
+                    tuition: "Уточняется",
+                    desc: "Specialty: Space Research & Cosmonautics. DVI: Written Math Exam (1). Required EGE: Math (Profile) (2), Physics OR Informatics (3)."
+                }, 
+                ru: { 
+                    name: "Факультет космических исследований", 
+                    subjects: ["Математика (профиль)", "Физика", "Информатика"], 
+                    tuition: "Уточняется",
+                    desc: "Специальность: Космические исследования и космонавтика. ДВИ: Письменный экзамен по математике (1). Обязательные ЕГЭ: Математика (профиль) (2), Физика ИЛИ Информатика (3)."
+                } 
+            },
+            { 
+                id: "ai",
+                en: { 
+                    name: "Faculty of Artificial Intelligence", 
+                    subjects: ["Math (Profile)", "Informatics", "Physics"], 
+                    tuition: "Уточняется",
+                    desc: "Direction: Applied Math & Informatics (AI Profile). DVI: Written Math Exam (1). Required EGE: Math (Profile) (2), Informatics OR Physics (3)."
+                }, 
+                ru: { 
+                    name: "Факультет искусственного интеллекта", 
+                    subjects: ["Математика (профиль)", "Информатика", "Физика"], 
+                    tuition: "Уточняется",
+                    desc: "Направление: Прикладная математика и информатика (профиль ИИ). ДВИ: Письменный экзамен по математике (1). Обязательные ЕГЭ: Математика (профиль) (2), Информатика ИЛИ Физика (3)."
+                } 
+            },
+            { 
+                id: "history",
+                en: { 
+                    name: "Faculty of History", 
+                    subjects: ["History", "Foreign Lang", "Social Studies", "Literature"], 
+                    tuition: "528,566 ₽",
+                    desc: "Directions: History, Art History. DVI: Written History/Creative Exam (1). Required EGE: History (2), Foreign Lang OR Social Studies/Literature (3)."
+                }, 
+                ru: { 
+                    name: "Исторический факультет", 
+                    subjects: ["История", "Иностранный язык", "Обществознание", "Литература"], 
+                    tuition: "528 566 ₽",
+                    desc: "Направления: История, История искусств. ДВИ: Письменный экзамен по истории/Творческое испытание (1). Обязательные ЕГЭ: История (2), Иностранный язык ИЛИ Обществознание/Литература (3)."
+                } 
+            },
+            { 
+                id: "philology",
+                en: { 
+                    name: "Faculty of Philology", 
+                    subjects: ["Literature", "History", "Foreign Lang", "Math (Profile/Base)"], 
+                    tuition: "518,062 ₽",
+                    desc: "Directions: Philology, Linguistics. DVI: Written Literature/Foreign Lang Exam (1). Required EGE: Lit/Foreign Lang (2), History OR Foreign Lang/Math (3)."
+                }, 
+                ru: { 
+                    name: "Филологический факультет", 
+                    subjects: ["Литература", "История", "Иностранный язык", "Математика (профиль/база)"], 
+                    tuition: "518 062 ₽",
+                    desc: "Направления: Филология, Фундаментальная и прикладная лингвистика. ДВИ: Письменный экзамен по литературе/иностранному языку (1). Обязательные ЕГЭ: Литература/Иностранный язык (2), История ИЛИ Иностранный язык/Математика (3)."
+                } 
+            },
+            { 
+                id: "philosophy",
+                en: { 
+                    name: "Faculty of Philosophy", 
+                    subjects: ["Social Studies", "History", "Foreign Lang", "Literature", "Geography"], 
+                    tuition: "530,277 ₽",
+                    desc: "Directions: Philosophy, Religious Studies, PR, Culturology. DVI: Written Social Studies/History Exam (1). Required EGE: Social Studies/History (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Философский факультет", 
+                    subjects: ["Обществознание", "История", "Иностранный язык", "Литература", "География"], 
+                    tuition: "530 277 ₽",
+                    desc: "Направления: Философия, Религиоведение, Реклама и связи с общественностью, Культурология. ДВИ: Письменный экзамен по обществознанию/истории (1). Обязательные ЕГЭ: Обществознание/История (2), один из: История/Иностранный язык/Литература/География (3)."
+                } 
+            },
+            { 
+                id: "economics",
+                en: { 
+                    name: "Faculty of Economics", 
+                    subjects: ["Math (Profile)", "Foreign Lang", "Informatics", "Geography", "History", "Social Studies"], 
+                    tuition: "785,000 ₽",
+                    desc: "Directions: Economics, Management. DVI: Written Math Exam (1). Required EGE: Math (Profile) (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Экономический факультет", 
+                    subjects: ["Математика (профиль)", "Иностранный язык", "Информатика", "География", "История", "Обществознание"], 
+                    tuition: "785 000 ₽",
+                    desc: "Направления: Экономика, Менеджмент. ДВИ: Письменный экзамен по математике (1). Обязательные ЕГЭ: Математика (профиль) (2), один из: Иностранный язык/Информатика/География/История/Обществознание (3)."
+                } 
+            },
+            { 
+                id: "law",
+                en: { 
+                    name: "Faculty of Law", 
+                    subjects: ["Social Studies", "History", "Informatics", "Math (Profile/Base)", "Foreign Lang"], 
+                    tuition: "673,333 ₽",
+                    desc: "Direction: Jurisprudence. DVI: Written Social Studies Exam (1). Required EGE: Social Studies (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Юридический факультет", 
+                    subjects: ["Обществознание", "История", "Информатика", "Математика (профиль/база)", "Иностранный язык"], 
+                    tuition: "673 333 ₽",
+                    desc: "Направление: Юриспруденция. ДВИ: Письменный экзамен по обществознанию (1). Обязательные ЕГЭ: Обществознание (2), один из: История/Информатика/Математика (профиль/база)/Иностранный язык (3)."
+                } 
+            },
+            { 
+                id: "journalism",
+                en: { 
+                    name: "Faculty of Journalism", 
+                    subjects: ["Literature", "Foreign Lang", "History", "Geography", "Social Studies"], 
+                    tuition: "533,925 ₽",
+                    desc: "Directions: Journalism, Media Communications. DVI: Creative Written Exam (1). Required EGE: Literature (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Факультет журналистики", 
+                    subjects: ["Литература", "Иностранный язык", "История", "География", "Обществознание"], 
+                    tuition: "533 925 ₽",
+                    desc: "Направления: Журналистика, Медиакоммуникации. ДВИ: Творческое письменное испытание (1). Обязательные ЕГЭ: Литература (2), один из: Иностранный язык/История/География/Обществознание (3)."
+                } 
+            },
+            { 
+                id: "psychology",
+                en: { 
+                    name: "Faculty of Psychology", 
+                    subjects: ["Biology", "Math (Profile/Base)", "Social Studies", "Chemistry"], 
+                    tuition: "525,195 ₽",
+                    desc: "Specialties: Clinical Psychology, Service Psychology, Pedagogy & Psych. DVI: Written Bio/Social Studies Exam (1). Required EGE: Bio/Social Studies (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Факультет психологии", 
+                    subjects: ["Биология", "Математика (профиль/база)", "Обществознание", "Химия"], 
+                    tuition: "525 195 ₽",
+                    desc: "Специальности: Клиническая психология, Психология служебной деятельности, Педагогика и психология девиантного поведения. ДВИ: Письменный экзамен по биологии/обществознанию (1). Обязательные ЕГЭ: Биология/Обществознание (2), один из: Математика/Обществознание/Химия/История (3)."
+                } 
+            },
+            { 
+                id: "asia-africa",
+                en: { 
+                    name: "Institute of Asian and African Studies", 
+                    subjects: ["History", "Foreign Lang"], 
+                    tuition: "635,000 ₽",
+                    desc: "Direction: Oriental Studies & African Studies. DVI: Written History Exam (1). Required EGE: History (2), Foreign Lang (3)."
+                }, 
+                ru: { 
+                    name: "Институт стран Азии и Африки", 
+                    subjects: ["История", "Иностранный язык"], 
+                    tuition: "635 000 ₽",
+                    desc: "Направление: Востоковедение и африканистика. ДВИ: Письменный экзамен по истории (1). Обязательные ЕГЭ: История (2), Иностранный язык (3)."
+                } 
+            },
+            { 
+                id: "sociology",
+                en: { 
+                    name: "Faculty of Sociology", 
+                    subjects: ["Social Studies", "Math (Profile/Base)", "History", "Foreign Lang"], 
+                    tuition: "525,940 ₽",
+                    desc: "Directions: Sociology, Public Policy. DVI: Written Social Studies Exam (1). Required EGE: Social Studies (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Социологический факультет", 
+                    subjects: ["Обществознание", "Математика (профиль/база)", "История", "Иностранный язык"], 
+                    tuition: "525 940 ₽",
+                    desc: "Направления: Социология, Публичная политика и социальные науки. ДВИ: Письменный экзамен по обществознанию (1). Обязательные ЕГЭ: Обществознание (2), один из: Математика/История/Иностранный язык/География (3)."
+                } 
+            },
+            { 
+                id: "foreign-lang",
+                en: { 
+                    name: "Faculty of Foreign Languages and Area Studies", 
+                    subjects: ["Foreign Lang", "History", "Social Studies", "Geography", "Literature"], 
+                    tuition: "520,313 ₽",
+                    desc: "Specialties: Translation, Linguistics; Directions: Area Studies. DVI: Written Foreign Lang/Social Studies Exam (1). Required EGE: Foreign Lang/Social Studies (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Факультет иностранных языков и регионоведения", 
+                    subjects: ["Иностранный язык", "История", "Обществознание", "География", "Литература"], 
+                    tuition: "520 313 ₽",
+                    desc: "Специальности: Перевод и переводоведение, Лингвистика; Направления: Зарубежное регионоведение, Регионоведение России, Культурология. ДВИ: Письменный экзамен по иностранному языку/обществознанию (1). Обязательные ЕГЭ: Иностранный язык/Обществознание (2), один из: История/Обществознание/География/Литература (3)."
+                } 
+            },
+            { 
+                id: "gov-admin",
+                en: { 
+                    name: "Faculty of Public Administration", 
+                    subjects: ["Math (Profile/Base)", "Social Studies", "History", "Foreign Lang"], 
+                    tuition: "525,940 ₽",
+                    desc: "Directions: HR Mgmt, State & Municipal Admin, Political Science, Management. DVI: Written Math/History/Social Studies Exam (1). Required EGE: Math/History/Social Studies (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Факультет государственного управления", 
+                    subjects: ["Математика (профиль/база)", "Обществознание", "История", "Иностранный язык"], 
+                    tuition: "525 940 ₽",
+                    desc: "Направления: Управление персоналом, ГМУ, Политология, Менеджмент. ДВИ: Письменный экзамен по математике/истории/обществознанию (1). Обязательные ЕГЭ: Математика/История/Обществознание (2), один из: Иностранный язык/Обществознание/История/География (3)."
+                } 
+            },
+            { 
+                id: "world-politics",
+                en: { 
+                    name: "Faculty of World Politics", 
+                    subjects: ["History", "Foreign Lang", "Geography", "Social Studies"], 
+                    tuition: "525,940 ₽",
+                    desc: "Direction: International Relations. DVI: Written History Exam (1). Required EGE: History (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Факультет мировой политики", 
+                    subjects: ["История", "Иностранный язык", "География", "Обществознание"], 
+                    tuition: "525 940 ₽",
+                    desc: "Направление: Международные отношения. ДВИ: Письменный экзамен по истории (1). Обязательные ЕГЭ: История (2), один из: Иностранный язык/География/Обществознание (3)."
+                } 
+            },
+            { 
+                id: "global-processes",
+                en: { 
+                    name: "Faculty of Global Processes", 
+                    subjects: ["History", "Foreign Lang", "Social Studies", "Geography", "Math (Profile/Base)", "Informatics"], 
+                    tuition: "519,375 ₽",
+                    desc: "Direction: International Relations (Global Processes). DVI: Written History/Foreign Lang Exam (1). Required EGE: History (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Факультет глобальных процессов", 
+                    subjects: ["История", "Иностранный язык", "Обществознание", "География", "Математика (профиль/база)", "Информатика"], 
+                    tuition: "519 375 ₽",
+                    desc: "Направление: Международные отношения (программы Глобальные процессы). ДВИ: Письменный экзамен по истории/иностранному языку (1). Обязательные ЕГЭ: История (2), один из: Иностранный язык/Обществознание/География/Математика/Информатика (3)."
+                } 
+            },
+            { 
+                id: "arts",
+                en: { 
+                    name: "Faculty of Arts", 
+                    subjects: ["Literature", "History", "Social Studies", "Foreign Lang"], 
+                    tuition: "525,940 ₽",
+                    desc: "Direction: Fine Arts. DVI: Creative Written Exam (1). Required EGE: Literature (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Факультет искусств", 
+                    subjects: ["Литература", "История", "Обществознание", "Иностранный язык"], 
+                    tuition: "525 940 ₽",
+                    desc: "Направление: Изящные искусства. ДВИ: Творческое письменное испытание (1). Обязательные ЕГЭ: Литература (2), один из: История/Обществознание/Иностранный язык (3)."
+                } 
+            },
+            { 
+                id: "pol-science",
+                en: { 
+                    name: "Faculty of Political Science", 
+                    subjects: ["History", "Foreign Lang", "Geography", "Social Studies", "Math (Profile/Base)", "Informatics", "Biology"], 
+                    tuition: "525,940 ₽",
+                    desc: "Directions: Political Science, Conflictology. DVI: Written History/Social Studies Exam (1). Required EGE: History/Social Studies (2), Choice of 3rd subject (3)."
+                }, 
+                ru: { 
+                    name: "Факультет политологии", 
+                    subjects: ["История", "Иностранный язык", "География", "Обществознание", "Математика (профиль/база)", "Информатика", "Биология"], 
+                    tuition: "525 940 ₽",
+                    desc: "Направления: Политология, Конфликтология. ДВИ: Письменный экзамен по истории/обществознанию (1). Обязательные ЕГЭ: История/Обществознание (2), один из: Иностранный язык/География/Обществознание/Математика/Информатика/Биология (3)."
+                } 
+            },
+            { 
+                id: "teacher-edu",
+                en: { 
+                    name: "Faculty of Teacher Education", 
+                    subjects: ["Social Studies", "History", "Literature"], 
+                    tuition: "Уточняется",
+                    desc: "Specialty: Pedagogical Education. No specific DVI. Required EGE: Social Studies, History, Literature."
+                }, 
+                ru: { 
+                    name: "Факультет педагогического образования", 
+                    subjects: ["Обществознание", "История", "Литература"], 
+                    tuition: "Уточняется",
+                    desc: "Специальность: Педагогическое образование. Специфические ДВИ не предусмотрены. Обязательные ЕГЭ: Обществознание, История, Литература."
+                } 
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            
+            // Update static texts
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-placeholder-key]').forEach(el => {
+                const key = el.getAttribute('data-placeholder-key');
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+
+            // Re-render faculty cards in new language
+            renderFaculties(document.getElementById('faculty-search').value, lang);
+            localStorage.setItem('site_lang', lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // --- SEARCH & RENDER LOGIC ---
+        function renderFaculties(query, lang) {
+            const container = document.getElementById('faculties-container');
+            const noResults = document.getElementById('no-results');
+            container.innerHTML = '';
+            
+            const lowerQuery = query.toLowerCase().trim();
+            const filtered = facultiesData.filter(f => {
+                if (!lowerQuery) return true;
+                const nameMatch = f[lang].name.toLowerCase().includes(lowerQuery);
+                const subjectMatch = f[lang].subjects.some(s => s.toLowerCase().includes(lowerQuery));
+                return nameMatch || subjectMatch;
+            });
+
+            if (filtered.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                filtered.forEach(f => {
+                    // Ссылка ведет на универсальный шаблон страницы факультета
+                    const card = document.createElement('a');
+                    card.href = `faculty-page.html?id=${f.id}`;
+                    card.className = 'faculty-card';
+                    
+                    card.innerHTML = `
+                        <h3>${f[lang].name}</h3>
+                        <p class="faculty-desc">${f[lang].desc}</p>
+                        <div class="subjects-tags">
+                            ${f[lang].subjects.map(s => `<span class="subject-tag">${s}</span>`).join('')}
+                        </div>
+                        <div class="tuition-info">
+                            <i class="fa-solid fa-ruble-sign"></i> 
+                            <span>${translations[lang].msu_tuition_label}:</span> 
+                            <strong>${f[lang].tuition} / year</strong>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        document.getElementById('faculty-search').addEventListener('input', (e) => {
+            renderFaculties(e.target.value, currentLang);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

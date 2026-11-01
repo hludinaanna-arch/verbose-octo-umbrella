@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Детали Олимпиады</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #5a5ce6; 
+            --primary-hover: #4a4cd6; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #eef2ff;
+            --hse-blue: #005bac; 
+            --mos-red: #d32f2f;  
+            --mipt-blue: #003366;
+            --spbu-blue: #004b8d;
+            --msu-red: #9e1b32;
+            --rosatom-green: #009639;
+            --star-orange: #f57c00;
+            --pvg-gold: #c5a028;
+            --turgor-purple: #6a1b9a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #dce4f5 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .olympiad-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .olympiad-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        .details-section { margin-bottom: 4rem; }
+        .detail-card { 
+            background: var(--card-bg);
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(90, 92, 230, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .detail-card:hover { transform: translateY(-2px); }
+        
+        .subject-tag { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #e0e7ff;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .schedule-table-wrapper { overflow-x: auto; margin-top: 1rem; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .schedule-table { width: 100%; border-collapse: collapse; background: #fff; min-width: 600px; }
+        .schedule-table th, .schedule-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #f3f4f6; font-size: 0.95rem; }
+        .schedule-table th { font-weight: 700; color: var(--primary-color); background: #f8fafc; }
+        
+        .benefit-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #e0e7ff;
+            padding: 0.5rem 1rem; 
+            border-radius: 20px; 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .uni-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+        .uni-tag { 
+            background: #fff; 
+            color: var(--text-dark); 
+            border: 1px solid #e5e7eb;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 8px; 
+            font-size: 0.85rem; 
+            font-weight: 500;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .olympiad-title h1 { font-size: 2.2rem; } 
+            .olympiad-meta { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="olympiads.html" data-key="nav_olymp">Olympiads</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="olympiad-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- OLYMPIAD DATA WITH EXTENDED INFO ---
+        const olympiadsData = [
+            {
+                id: "vsosh",
+                en: { name: "All-Russian Olympiad of School Students (VsOSh)", level: "Level 1 (Highest)", organizer: "Ministry of Education of the Russian Federation", description: "The most prestigious national competition. Winners and prize-winners get admission without entrance exams to any university in Russia for profiles matching their subject.", subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Geography", "Informatics", "History", "Social Studies", "Russian Language", "Literature", "Foreign Languages", "Ecology", "Economics", "Art"], benefits: ["Admission without entrance exams (BVI)", "100 points for corresponding EGE subject", "Increased state scholarship"], regions: ["All regions of Russia (School & Municipal stages)", "Regional centers (Regional stage)", "Moscow/St. Petersburg (Final stage)"], contacts: { email: "vsosh@edu.gov.ru", phone: "+7 (495) 951-00-00", site: "vos.olimpiada.ru" }, universities: ["MSU", "SPbU", "HSE", "MIPT", "BMSTU", "MEPhI", "RANEPA", "MGIMO", "FinUniv", "All Russian Universities"], schedule: [{ stage: "School Stage", dates: "Sep - Oct 2025" }, { stage: "Municipal Stage", dates: "Nov - Dec 2025" }, { stage: "Regional Stage", dates: "Jan - Feb 2026" }, { stage: "Final Stage", dates: "Mar - Apr 2026" }] },
+                ru: { name: "Всероссийская олимпиада школьников (ВсОШ)", level: "1 уровень (Высший)", organizer: "Министерство просвещения РФ", description: "Самое престижное национальное соревнование. Победители и призеры получают право поступления без вступительных испытаний (БВИ) в любой вуз России по профилю предмета.", subjects: ["Математика", "Физика", "Химия", "Биология", "География", "Информатика", "История", "Обществознание", "Русский язык", "Литература", "Иностранные языки", "Экология", "Экономика", "Искусство (МХК)"], benefits: ["Поступление без вступительных испытаний (БВИ)", "100 баллов за соответствующий предмет ЕГЭ", "Повышенная государственная стипендия"], regions: ["Все регионы РФ (Школьный и муниципальный этапы)", "Региональные центры (Региональный этап)", "Москва/Санкт-Петербург (Заключительный этап)"], contacts: { email: "vsosh@edu.gov.ru", phone: "+7 (495) 951-00-00", site: "vos.olimpiada.ru" }, universities: ["МГУ", "СПбГУ", "ВШЭ", "МФТИ", "МГТУ им. Баумана", "НИЯУ МИФИ", "РАНХиГС", "МГИМО", "Финуниверситет", "Все вузы России"], schedule: [{ stage: "Школьный этап", dates: "Сен - Окт 2025" }, { stage: "Муниципальный этап", dates: "Ноя - Дек 2025" }, { stage: "Региональный этап", dates: "Янв - Фев 2026" }, { stage: "Заключительный этап", dates: "Мар - Апр 2026" }] }
+            },
+            {
+                id: "vysshaya-proba",
+                en: { name: "Vysshaya Proba Olympiad", level: "Level 1-3 (depending on profile)", organizer: "HSE University", description: "One of the largest multidisciplinary olympiads in Russia, organized by HSE. It includes 26 profiles. Winners and prize-winners of the 11th grade receive the right to admission without entrance exams (BVI) or 100 points for the corresponding EGE subject at HSE and partner universities. To confirm the privilege, you must score at least 75 points in the corresponding EGE subject.", subjects: ["Data Analysis", "Biology", "Oriental Studies", "Eastern Languages", "Design", "Journalism", "Engineering Sciences", "Foreign Languages", "Informatics", "History", "Art History", "Cultural Studies", "Mathematics", "International Relations", "Social Studies", "Business Basics", "Law", "Industrial Programming", "Psychology", "Russian Language", "Sociology", "Philology", "Philosophy", "Financial Literacy", "Chemistry", "Economics"], benefits: ["Admission without entrance exams (BVI) for 11th grade", "100 points for corresponding EGE subject", "Additional points for individual achievements"], regions: ["Arkhangelsk", "Belgorod", "Vladivostok", "Voronezh", "Yekaterinburg", "Izhevsk", "Kazan", "Kaliningrad", "Krasnodar", "Krasnoyarsk", "Kursk", "Moscow", "Nizhny Novgorod", "Novosibirsk", "Orenburg", "Penza", "Perm", "Petropavlovsk-Kamchatsky", "Rostov-on-Don", "Samara", "St. Petersburg", "Simferopol", "Stavropol", "Tyumen", "Ufa", "Sirius", "Khabarovsk", "Khanty-Mansiysk", "Cheboksary", "Chelyabinsk", "Yakutsk"], contacts: { email: "olymp@hse.ru", phone: "+7 (495) 772-95-90", site: "olymp.hse.ru", address: "Moscow, Myasnitskaya str., 20" }, universities: ["HSE", "MSU", "SPbU", "MIPT", "BMSTU", "RANEPA", "FinUniv", "MGIMO", "ITMO", "Partner Universities"], schedule: [{ stage: "Registration", dates: "Aug 20 – Sep 22, 2026" }, { stage: "Qualifying Round (Tour 1, Online)", dates: "Sep 25 – Oct 4, 2026" }, { stage: "Qualifying Round (Tour 2, Online)", dates: "Nov 13 – Nov 22, 2026" }, { stage: "Final Round (Offline in 33 cities)", dates: "Feb 2027" }] },
+                ru: { name: "Олимпиада «Высшая проба»", level: "1-3 уровень (в зависимости от профиля)", organizer: "НИУ ВШЭ", description: "Одна из крупнейших многопрофильных олимпиад в России, проводимая НИУ ВШЭ. Включает 26 профилей. Дипломанты 11 класса получают право поступления без вступительных испытаний (БВИ) или 100 баллов за соответствующий предмет ЕГЭ в ВШЭ и вузах-партнерах. Для подтверждения льготы необходимо набрать не менее 75 баллов на ЕГЭ по профильному предмету.", subjects: ["Анализ данных", "Биология", "Востоковедение", "Восточные языки", "Дизайн", "Журналистика", "Инженерные науки", "Иностранные языки", "Информатика", "История", "История искусств", "Культурология", "Математика", "Международные отношения", "Обществознание", "Основы бизнеса", "Право", "Промышленное программирование", "Психология", "Русский язык", "Социология", "Филология", "Философия", "Финансовая грамотность", "Химия", "Экономика"], benefits: ["Поступление без вступительных испытаний (БВИ) для 11 класса", "100 баллов за соответствующий предмет ЕГЭ", "Дополнительные баллы за индивидуальные достижения"], regions: ["Архангельск", "Белгород", "Владивосток", "Воронеж", "Екатеринбург", "Ижевск", "Казань", "Калининград", "Краснодар", "Красноярск", "Курск", "Москва", "Нижний Новгород", "Новосибирск", "Оренбург", "Пенза", "Пермь", "Петропавловск-Камчатский", "Ростов-на-Дону", "Самара", "Санкт-Петербург", "Симферополь", "Ставрополь", "Тюмень", "Уфа", "ФТ «Сириус»", "Хабаровск", "Ханты-Мансийск", "Чебоксары", "Челябинск", "Якутск"], contacts: { email: "olymp@hse.ru", phone: "+7 (495) 772-95-90", site: "olymp.hse.ru", address: "г. Москва, ул. Мясницкая, д. 20" }, universities: ["НИУ ВШЭ", "МГУ", "СПбГУ", "МФТИ", "МГТУ им. Баумана", "РАНХиГС", "Финуниверситет", "МГИМО", "ИТМО", "Вузы-партнеры"], schedule: [{ stage: "Регистрация", dates: "20 августа – 22 сентября 2026" }, { stage: "Отборочный этап (1 тур, онлайн)", dates: "25 сентября – 4 октября 2026" }, { stage: "Отборочный этап (2 тур, онлайн)", dates: "13 ноября – 22 ноября 2026" }, { stage: "Заключительный этап (очно в 33 городах)", dates: "Февраль 2027" }] }
+            },
+            {
+                id: "mosh",
+                en: { name: "Moscow Olympiad for School Students (MOSh)", level: "Level 1-2 (depending on profile)", organizer: "Department of Education of Moscow & CPM", description: "One of the oldest and largest multidisciplinary olympiads in Russia. Despite the name, it is open to school students from all over Russia. 19 profiles are included in the official Ministry of Science and Higher Education list for 2025/2026. Winners get BVI or 100 EGE points at MSU, HSE, MIPT, and other top universities.", subjects: ["Astronomy (Lvl 1)", "Genetics (Lvl 2)", "Biology (Lvl 2)", "Informatics (Lvl 2)", "Physics (Lvl 2)", "Economics (Lvl 2)", "Mathematics (Lvl 2)", "History (Lvl 2)", "Social Studies (Lvl 2)", "Law (Lvl 2)", "Linguistics (Lvl 2)", "Philology (Lvl 2)", "Chemistry (Lvl 2)", "Geography (Lvl 2)", "Arabic Language", "Bioeconomics", "Art", "Ecology", "Probability and Statistics", "History of Art", "Robotics", "Financial Literacy", "Pre-professional: Engineering", "Pre-professional: IT", "Pre-professional: Research"], benefits: ["Admission without entrance exams (BVI) for 11th grade", "100 points for corresponding EGE subject", "Additional points for individual achievements"], regions: ["Online (Qualifying stage via Sirius.Online)", "Moscow", "St. Petersburg", "Volgograd", "Yekaterinburg", "Irkutsk", "Kazan", "Krasnoyarsk", "Murmansk", "Nizhny Novgorod", "Novokuznetsk", "Samara", "Saransk", "Tambov", "Ufa", "Cheboksary", "Yakutsk", "Kaliningrad region"], contacts: { email: "mos@olimpiada.ru", phone: "Coordination by CPM (Center for Pedagogical Excellence)", site: "mos.olimpiada.ru", address: "Moscow, Octobersky Lane, 11 (CPM)" }, universities: ["MSU", "HSE", "MIPT", "SPbU", "BMSTU", "RANEPA", "FinUniv", "MGIMO", "MEPhI", "Partner Universities"], schedule: [{ stage: "Registration & Qualifying Round (Online)", dates: "Oct - Dec 2026" }, { stage: "Final Round: History of Art", dates: "Dec 7, 2025" }, { stage: "Final Round: Robotics", dates: "Dec 16-22, 2025" }, { stage: "Final Round: Economics", dates: "Jan 25 - Feb 15, 2026" }, { stage: "Final Round: Physics", dates: "Feb 28, 2026" }, { stage: "Final Round: Other subjects", dates: "Jan - Mar 2026" }] },
+                ru: { name: "Московская олимпиада школьников (МОШ)", level: "1-2 уровень (в зависимости от профиля)", organizer: "Департамент образования г. Москвы и ЦПМ", description: "Одна из старейших и крупнейших многопрофильных олимпиад России. Несмотря на название, участвовать могут школьники со всей страны. 19 профилей МОШ входят в официальный Перечень олимпиад Минобрнауки на 2025/2026 год. Победители и призеры получают БВИ или 100 баллов за ЕГЭ в МГУ, ВШЭ, МФТИ и других ведущих вузах.", subjects: ["Астрономия (1 ур.)", "Генетика (2 ур.)", "Биология (2 ур.)", "Информатика (2 ур.)", "Физика (2 ур.)", "Экономика (2 ур.)", "Математика (2 ур.)", "История (2 ур.)", "Обществознание (2 ур.)", "Право (2 ур.)", "Лингвистика (2 ур.)", "Филология (2 ур.)", "Химия (2 ур.)", "География (2 ур.)", "Арабский язык", "Биоэкономика", "Изобразительное искусство", "Экология", "Вероятность и статистика", "История искусств", "Робототехника", "Финансовая грамотность", "Предпроф: Инженерия", "Предпроф: ИТ", "Предпроф: Исследования"], benefits: ["Поступление без вступительных испытаний (БВИ) для 11 класса", "100 баллов за соответствующий предмет ЕГЭ", "Дополнительные баллы за индивидуальные достижения"], regions: ["Онлайн (Отборочный этап на платформе Сириус.Онлайн)", "Москва", "Санкт-Петербург", "Волгоград", "Екатеринбург", "Иркутск", "Казань", "Красноярск", "Мурманск", "Нижний Новгород", "Новокузнецк", "Самара", "Саранск", "Тамбов", "Уфа", "Чебоксары", "Якутск", "Города Калининградской области"], contacts: { email: "mos@olimpiada.ru", phone: "Координация через ГАОУ ДПО ЦПМ", site: "mos.olimpiada.ru", address: "г. Москва, Октябрьский пер., д. 11 (ЦПМ)" }, universities: ["МГУ", "ВШЭ", "МФТИ", "СПбГУ", "МГТУ им. Баумана", "РАНХиГС", "Финуниверситет", "МГИМО", "НИЯУ МИФИ", "Вузы-партнеры"], schedule: [{ stage: "Регистрация и Отборочный этап (онлайн)", dates: "Окт - Дек 2026" }, { stage: "Заключительный этап: История искусств", dates: "7 декабря 2025" }, { stage: "Заключительный этап: Робототехника", dates: "16-22 декабря 2025" }, { stage: "Заключительный этап: Экономика", dates: "25 января - 15 февраля 2026" }, { stage: "Заключительный этап: Физика", dates: "28 февраля 2026" }, { stage: "Заключительный этап: Остальные предметы", dates: "Янв - Мар 2026" }] }
+            },
+            {
+                id: "spbu",
+                en: { name: "St. Petersburg State University Olympiad", level: "Level 1-3 (depending on profile)", organizer: "SPbU", description: "Comprehensive competition covering humanities, natural sciences, and engineering. Winners get BVI or 100 points for SPbU and partner universities. Confirmation threshold: 75 EGE points.", subjects: ["Biology (Lvl 1)", "Chemistry (Lvl 1)", "Mathematics (Lvl 1)", "Physics (Lvl 1)", "Informatics (Lvl 2)", "History (Lvl 2)", "Social Studies (Lvl 2)", "Law (Lvl 2)", "Economics (Lvl 2)", "Geography (Lvl 2)", "Journalism (Lvl 2)", "Medicine (Lvl 2)", "Philology (Lvl 2)", "Political Science (Lvl 2)", "Spanish Language (Lvl 2)", "English Language (Lvl 2)", "Engineering Systems (Lvl 3)"], benefits: ["Admission without entrance exams (BVI) for 11th grade", "100 points for corresponding EGE subject", "Priority in tie-breaking situations"], regions: ["Online (Qualifying)", "St. Petersburg", "Moscow", "Kazan", "Novosibirsk", "Yekaterinburg", "Rostov-on-Don", "Samara", "Nizhny Novgorod", "Krasnodar", "Vladivostok", "Other regional centers"], contacts: { email: "olympiada@spbu.ru", phone: "+7 (812) 363-66-33", site: "olympiada.spbu.ru", address: "St. Petersburg, Universitetskaya Emb., 7/9" }, universities: ["SPbU", "MSU", "HSE", "MIPT", "BMSTU", "RANEPA", "FinUniv", "MGIMO", "Partner Universities"], schedule: [{ stage: "Registration & Qualifying Round (Online)", dates: "Oct 20 - Dec 1, 2026" }, { stage: "Results of Qualifying Round", dates: "Dec 25, 2026" }, { stage: "Final Round (Offline)", dates: "Jan - Feb 2027" }] },
+                ru: { name: "Олимпиада школьников СПбГУ", level: "1-3 уровень (в зависимости от профиля)", organizer: "СПбГУ", description: "Комплексное соревнование, охватывающее гуманитарные, естественные науки и инженерию. Победители и призеры получают БВИ или 100 баллов за ЕГЭ в СПбГУ и вузах-партнерах. Порог подтверждения: 75 баллов ЕГЭ.", subjects: ["Биология (1 ур.)", "Химия (1 ур.)", "Математика (1 ур.)", "Физика (1 ур.)", "Информатика (2 ур.)", "История (2 ур.)", "Обществознание (2 ур.)", "Право (2 ур.)", "Экономика (2 ур.)", "География (2 ур.)", "Журналистика (2 ур.)", "Медицина (2 ур.)", "Филология (2 ур.)", "Политология (2 ур.)", "Испанский язык (2 ур.)", "Английский язык (2 ур.)", "Инженерные системы (3 ур.)"], benefits: ["Поступление без вступительных испытаний (БВИ) для 11 класса", "100 баллов за соответствующий предмет ЕГЭ", "Преимущество при равенстве баллов"], regions: ["Онлайн (Отборочный)", "Санкт-Петербург", "Москва", "Казань", "Новосибирск", "Екатеринбург", "Ростов-на-Дону", "Самара", "Нижний Новгород", "Краснодар", "Владивосток", "Другие региональные центры"], contacts: { email: "olympiada@spbu.ru", phone: "+7 (812) 363-66-33", site: "olympiada.spbu.ru", address: "г. Санкт-Петербург, Университетская наб., 7/9" }, universities: ["СПбГУ", "МГУ", "ВШЭ", "МФТИ", "МГТУ им. Баумана", "РАНХиГС", "Финуниверситет", "МГИМО", "Вузы-партнеры"], schedule: [{ stage: "Регистрация и Отборочный этап (онлайн)", dates: "20 октября – 1 декабря 2026" }, { stage: "Результаты отборочного этапа", dates: "25 декабря 2026" }, { stage: "Заключительный этап (очно)", dates: "Январь – Февраль 2027" }] }
+            },
+            {
+                id: "phystech",
+                en: { name: "Phystech International Olympiad", level: "Level 1-3 (depending on profile)", organizer: "MIPT", description: "Elite physics and math competition by MIPT. High difficulty, high rewards. Winners get BVI or 100 points for MIPT and partner universities. Confirmation thresholds: 75-85 EGE points depending on the school.", subjects: ["Mathematics (Lvl 2)", "Physics (Lvl 2)", "Informatics (Lvl 3)", "Chemistry (Lvl 2)", "Biology (Lvl 2)", "Russian Language (Lvl 2)", "Economics (Lvl 3)"], benefits: ["Admission without entrance exams (BVI) for 11th grade", "100 points for corresponding EGE subject", "Additional points for individual achievements"], regions: ["Online (Qualifying)", "Moscow (Dolgoprudny)", "St. Petersburg", "Kazan", "Novosibirsk", "Yekaterinburg", "Rostov-on-Don", "Samara", "Nizhny Novgorod", "Krasnodar", "Vladivostok", "Other regional centers"], contacts: { email: "olympiad@mipt.ru", phone: "+7 (495) 408-58-88", site: "olymp-online.mipt.ru", address: "Moscow Region, Dolgoprudny, Institutsky Lane, 9" }, universities: ["MIPT", "MSU", "HSE", "SPbU", "BMSTU", "RANEPA", "FinUniv", "MGIMO", "Partner Universities"], schedule: [{ stage: "Registration & Qualifying Round (Online)", dates: "Oct - Nov 2026" }, { stage: "Final Round: Physics (9-10 grades)", dates: "Feb 14-15, 2027" }, { stage: "Final Round: Mathematics (9-10 grades)", dates: "Feb 15-16, 2027" }, { stage: "Final Round: Other subjects", dates: "Feb - Mar 2027" }] },
+                ru: { name: "Олимпиада «Физтех»", level: "1-3 уровень (в зависимости от профиля)", organizer: "МФТИ", description: "Элитная олимпиада по физике и математике от МФТИ. Высокая сложность, высокие награды. Победители получают БВИ или 100 баллов за ЕГЭ в МФТИ и вузах-партнерах. Пороги подтверждения: 75-85 баллов ЕГЭ в зависимости от школы.", subjects: ["Математика (2 ур.)", "Физика (2 ур.)", "Информатика (3 ур.)", "Химия (2 ур.)", "Биология (2 ур.)", "Русский язык (2 ур.)", "Экономика (3 ур.)"], benefits: ["Поступление без вступительных испытаний (БВИ) для 11 класса", "100 баллов за соответствующий предмет ЕГЭ", "Дополнительные баллы за индивидуальные достижения"], regions: ["Онлайн (Отборочный)", "Москва (Долгопрудный)", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург", "Ростов-на-Дону", "Самара", "Нижний Новгород", "Краснодар", "Владивосток", "Другие региональные центры"], contacts: { email: "olympiad@mipt.ru", phone: "+7 (495) 408-58-88", site: "olymp-online.mipt.ru", address: "Московская обл., г. Долгопрудный, Институтский пер., 9" }, universities: ["МФТИ", "МГУ", "ВШЭ", "СПбГУ", "МГТУ им. Баумана", "РАНХиГС", "Финуниверситет", "МГИМО", "Вузы-партнеры"], schedule: [{ stage: "Регистрация и Отборочный этап (онлайн)", dates: "Окт - Ноя 2026" }, { stage: "Заключительный этап: Физика (9-10 классы)", dates: "14-15 февраля 2027" }, { stage: "Заключительный этап: Математика (9-10 классы)", dates: "15-16 февраля 2027" }, { stage: "Заключительный этап: Остальные предметы", dates: "Фев - Мар 2027" }] }
+            },
+            {
+                id: "lomonosov",
+                en: { name: "Lomonosov Olympiad", level: "Level 1-2 (depending on profile)", organizer: "MSU", description: "Multidisciplinary olympiad by MSU. Winners get BVI or 100 points for MSU and other top universities. Confirmation threshold: 75 EGE points.", subjects: ["Mathematics (Lvl 1)", "Physics (Lvl 1)", "Chemistry (Lvl 1)", "Biology (Lvl 1)", "Geography (Lvl 1)", "Informatics (Lvl 1)", "History (Lvl 1)", "Social Studies (Lvl 1)", "Russian Language (Lvl 1)", "Literature (Lvl 1)", "Foreign Languages (Lvl 1)", "Philosophy (Lvl 2)", "Journalism (Lvl 2)", "Law (Lvl 2)", "Economics (Lvl 2)", "Political Science (Lvl 2)", "Psychology (Lvl 2)", "Sociology (Lvl 2)", "Art History (Lvl 2)"], benefits: ["Admission without entrance exams (BVI) for 11th grade", "100 points for corresponding EGE subject", "Priority in tie-breaking situations"], regions: ["Online (Qualifying)", "Moscow (MSU)", "St. Petersburg", "Kazan", "Novosibirsk", "Yekaterinburg", "Rostov-on-Don", "Samara", "Nizhny Novgorod", "Krasnodar", "Vladivostok", "Other regional centers"], contacts: { email: "olymp@msu.ru", phone: "+7 (495) 939-10-00", site: "olymp.msu.ru", address: "Moscow, Leninskie Gory, 1 (MSU)" }, universities: ["MSU", "HSE", "SPbU", "MIPT", "BMSTU", "RANEPA", "FinUniv", "MGIMO", "Partner Universities"], schedule: [{ stage: "Registration & Qualifying Round (Online)", dates: "Oct 24 - Dec 2026" }, { stage: "Results of Qualifying Round", dates: "Jan 2027" }, { stage: "Final Round (Offline at MSU & regions)", dates: "Feb - Mar 2027" }] },
+                ru: { name: "Олимпиада «Ломоносов»", level: "1-2 уровень (в зависимости от профиля)", organizer: "МГУ им. М.В. Ломоносова", description: "Многопрофильная олимпиада МГУ. Победители и призеры получают БВИ или 100 баллов за ЕГЭ в МГУ и других ведущих вузах. Порог подтверждения: 75 баллов ЕГЭ.", subjects: ["Математика (1 ур.)", "Физика (1 ур.)", "Химия (1 ур.)", "Биология (1 ур.)", "География (1 ур.)", "Информатика (1 ур.)", "История (1 ур.)", "Обществознание (1 ур.)", "Русский язык (1 ур.)", "Литература (1 ур.)", "Иностранные языки (1 ур.)", "Философия (2 ур.)", "Журналистика (2 ур.)", "Право (2 ур.)", "Экономика (2 ур.)", "Политология (2 ур.)", "Психология (2 ур.)", "Социология (2 ур.)", "История искусств (2 ур.)"], benefits: ["Поступление без вступительных испытаний (БВИ) для 11 класса", "100 баллов за соответствующий предмет ЕГЭ", "Преимущество при равенстве баллов"], regions: ["Онлайн (Отборочный)", "Москва (МГУ)", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург", "Ростов-на-Дону", "Самара", "Нижний Новгород", "Краснодар", "Владивосток", "Другие региональные центры"], contacts: { email: "olymp@msu.ru", phone: "+7 (495) 939-10-00", site: "olymp.msu.ru", address: "г. Москва, Ленинские горы, 1 (МГУ)" }, universities: ["МГУ", "ВШЭ", "СПбГУ", "МФТИ", "МГТУ им. Баумана", "РАНХиГС", "Финуниверситет", "МГИМО", "Вузы-партнеры"], schedule: [{ stage: "Регистрация и Отборочный этап (онлайн)", dates: "24 октября – Декабрь 2026" }, { stage: "Результаты отборочного этапа", dates: "Январь 2027" }, { stage: "Заключительный этап (очно в МГУ и регионах)", dates: "Февраль – Март 2027" }] }
+            },
+            {
+                id: "pvg",
+                en: { name: "Conquer the Sparrow Hills!", level: "Level 1-2 (depending on profile)", organizer: "MSU & BMSTU", description: "Unique format combining academic tasks with an adventurous final stage at MSU. Joint olympiad by MSU and BMSTU. Winners get BVI or 100 points for MSU, BMSTU, and partner universities.", subjects: ["Mathematics (Lvl 1)", "Physics (Lvl 1)", "Journalism (Lvl 1)", "Foreign Languages (Lvl 1)", "Literature (Lvl 2)", "History (Lvl 2)", "Social Studies (Lvl 2)", "Geography (Lvl 2)", "Informatics (Lvl 2)"], benefits: ["Admission without entrance exams (BVI) for 11th grade", "100 points for corresponding EGE subject", "Additional points for individual achievements"], regions: ["Online (Qualifying)", "Moscow (MSU & BMSTU)", "St. Petersburg", "Kazan", "Novosibirsk", "Yekaterinburg", "Rostov-on-Don", "Samara", "Nizhny Novgorod", "Krasnodar", "Vladivostok", "Other regional centers"], contacts: { email: "pvg@msu.ru", phone: "+7 (495) 939-10-00", site: "pvg.mk.ru", address: "Moscow, Leninskie Gory, 1 (MSU)" }, universities: ["MSU", "BMSTU", "HSE", "SPbU", "MIPT", "RANEPA", "FinUniv", "MGIMO", "Partner Universities"], schedule: [{ stage: "Registration & Qualifying Round (Online)", dates: "Dec 1, 2026 - Jan 2027" }, { stage: "Results of Qualifying Round", dates: "Feb 13, 2027" }, { stage: "Final Round (Offline at MSU/BMSTU)", dates: "Mar 2027" }] },
+                ru: { name: "Покори Воробьёвы горы!", level: "1-2 уровень (в зависимости от профиля)", organizer: "МГУ и МГТУ им. Баумана", description: "Уникальный формат, сочетающий академические задачи с приключенческим финальным этапом в МГУ. Совместная олимпиада МГУ и МГТУ. Победители получают БВИ или 100 баллов за ЕГЭ в МГУ, МГТУ и вузах-партнерах.", subjects: ["Математика (1 ур.)", "Физика (1 ур.)", "Журналистика (1 ур.)", "Иностранные языки (1 ур.)", "Литература (2 ур.)", "История (2 ур.)", "Обществознание (2 ур.)", "География (2 ур.)", "Информатика (2 ур.)"], benefits: ["Поступление без вступительных испытаний (БВИ) для 11 класса", "100 баллов за соответствующий предмет ЕГЭ", "Дополнительные баллы за индивидуальные достижения"], regions: ["Онлайн (Отборочный)", "Москва (МГУ и МГТУ)", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург", "Ростов-на-Дону", "Самара", "Нижний Новгород", "Краснодар", "Владивосток", "Другие региональные центры"], contacts: { email: "pvg@msu.ru", phone: "+7 (495) 939-10-00", site: "pvg.mk.ru", address: "г. Москва, Ленинские горы, 1 (МГУ)" }, universities: ["МГУ", "МГТУ им. Баумана", "ВШЭ", "СПбГУ", "МФТИ", "РАНХиГС", "Финуниверситет", "МГИМО", "Вузы-партнеры"], schedule: [{ stage: "Регистрация и Отборочный этап (онлайн)", dates: "1 декабря 2026 – Январь 2027" }, { stage: "Результаты отборочного этапа", dates: "13 февраля 2027" }, { stage: "Заключительный этап (очно в МГУ/МГТУ)", dates: "Март 2027" }] }
+            },
+            {
+                id: "zvezda",
+                en: { name: "Engineering Olympiad for School Students (Zvezda)", level: "Level 1-2 (depending on profile)", organizer: "Union of Engineering Universities of Russia", description: "Focus on technical creativity, robotics, and applied engineering problems. Winners get BVI or 100 points for partner engineering universities (BMSTU, SPbPU, etc.).", subjects: ["Natural Sciences (Lvl 2)", "Technology and Engineering (Lvl 1)", "Mathematics (Lvl 2)", "Physics (Lvl 2)", "Informatics (Lvl 2)", "Chemistry (Lvl 2)", "Economics (Lvl 2)", "Law (Lvl 2)", "History (Lvl 2)", "Social Studies (Lvl 2)", "Russian Language (Lvl 2)", "Foreign Languages (Lvl 2)"], benefits: ["Admission without entrance exams (BVI) for 11th grade", "100 points for corresponding EGE subject", "Additional points for individual achievements"], regions: ["Online (Qualifying)", "Moscow", "St. Petersburg", "Kazan", "Novosibirsk", "Yekaterinburg", "Rostov-on-Don", "Samara", "Nizhny Novgorod", "Krasnodar", "Vladivostok", "Chelyabinsk", "Tomsk", "Other regional centers"], contacts: { email: "zvezda@susu.ru", phone: "+7 (351) 267-97-77", site: "zv.susu.ru", address: "Chelyabinsk, Lenin Ave., 76 (South Ural State University)" }, universities: ["BMSTU", "SPbPU", "MIPT", "MSU", "HSE", "RANEPA", "FinUniv", "MGIMO", "Partner Universities"], schedule: [{ stage: "Registration & Qualifying Round (Online/Offline)", dates: "Oct 20 - Dec 2026" }, { stage: "Results of Qualifying Round", dates: "Jan 2027" }, { stage: "Final Round (Offline)", dates: "Feb - Mar 2027" }] },
+                ru: { name: "Инженерная олимпиада школьников «Звезда»", level: "1-2 уровень (в зависимости от профиля)", organizer: "Союз инженерных вузов России", description: "Фокус на техническом творчестве, робототехнике и прикладных инженерных задачах. Победители получают БВИ или 100 баллов за ЕГЭ в вузах-партнерах (МГТУ, СПбПУ и др.).", subjects: ["Естественные науки (2 ур.)", "Техника и технологии (1 ур.)", "Математика (2 ур.)", "Физика (2 ур.)", "Информатика (2 ур.)", "Химия (2 ур.)", "Экономика (2 ур.)", "Право (2 ур.)", "История (2 ур.)", "Обществознание (2 ур.)", "Русский язык (2 ур.)", "Иностранные языки (2 ур.)"], benefits: ["Поступление без вступительных испытаний (БВИ) для 11 класса", "100 баллов за соответствующий предмет ЕГЭ", "Дополнительные баллы за индивидуальные достижения"], regions: ["Онлайн (Отборочный)", "Москва", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург", "Ростов-на-Дону", "Самара", "Нижний Новгород", "Краснодар", "Владивосток", "Челябинск", "Томск", "Другие региональные центры"], contacts: { email: "zvezda@susu.ru", phone: "+7 (351) 267-97-77", site: "zv.susu.ru", address: "г. Челябинск, пр. Ленина, 76 (ЮУрГУ)" }, universities: ["МГТУ им. Баумана", "СПбПУ", "МФТИ", "МГУ", "ВШЭ", "РАНХиГС", "Финуниверситет", "МГИМО", "Вузы-партнеры"], schedule: [{ stage: "Регистрация и Отборочный этап (онлайн/очно)", dates: "20 октября – Декабрь 2026" }, { stage: "Результаты отборочного этапа", dates: "Январь 2027" }, { stage: "Заключительный этап (очно)", dates: "Февраль – Март 2027" }] }
+            },
+            {
+                id: "turgor",
+                en: { name: "Tournament of Towns", level: "International (Non-Perечень)", organizer: "International Committee", description: "International math competition known for non-standard, creative problem-solving tasks. Not in the official Russian Perечень, but highly respected. Results can be used for individual achievements (up to 10 points) at many universities.", subjects: ["Mathematics (Basic & Advanced variants)"], benefits: ["Up to 10 points for individual achievements", "International recognition", "Development of creative problem-solving skills"], regions: ["Moscow", "St. Petersburg", "Novosibirsk", "Yekaterinburg", "Kazan", "Rostov-on-Don", "Samara", "Nizhny Novgorod", "Krasnodar", "Vladivostok", "Chelyabinsk", "Tomsk", "Other participating cities"], contacts: { email: "turgor@mccme.ru", phone: "+7 (495) 939-10-00", site: "turgor.ru", address: "Moscow, Bolshoy Vlasievskiy Lane, 11 (MCCME)" }, universities: ["MSU", "HSE", "MIPT", "SPbU", "BMSTU", "RANEPA", "FinUniv", "MGIMO", "Partner Universities"], schedule: [{ stage: "Autumn Round (Basic)", dates: "Oct 4, 2026" }, { stage: "Autumn Round (Advanced)", dates: "Oct 18, 2026" }, { stage: "Spring Round (Basic)", dates: "Mar 2027" }, { stage: "Spring Round (Advanced)", dates: "Apr 2027" }, { stage: "Summer Conference (Final)", dates: "Jul - Aug 2027" }] },
+                ru: { name: "Турнир городов", level: "Международная (вне Перечня)", organizer: "Международный комитет", description: "Международная математическая олимпиада, известная нестандартными задачами на креативное мышление. Не входит в официальный Перечень Минобрнауки, но высоко ценится. Результаты могут учитываться как индивидуальные достижения (до 10 баллов) во многих вузах.", subjects: ["Математика (Базовый и Сложный варианты)"], benefits: ["До 10 баллов за индивидуальные достижения", "Международное признание", "Развитие навыков креативного решения задач"], regions: ["Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Казань", "Ростов-на-Дону", "Самара", "Нижний Новгород", "Краснодар", "Владивосток", "Челябинск", "Томск", "Другие города-участники"], contacts: { email: "turgor@mccme.ru", phone: "+7 (495) 939-10-00", site: "turgor.ru", address: "г. Москва, Большой Власьевский пер., 11 (МЦНМО)" }, universities: ["МГУ", "ВШЭ", "МФТИ", "СПбГУ", "МГТУ им. Баумана", "РАНХиГС", "Финуниверситет", "МГИМО", "Вузы-партнеры"], schedule: [{ stage: "Осенний тур (Базовый)", dates: "4 октября 2026" }, { stage: "Осенний тур (Сложный)", dates: "18 октября 2026" }, { stage: "Весенний тур (Базовый)", dates: "Март 2027" }, { stage: "Весенний тур (Сложный)", dates: "Апрель 2027" }, { stage: "Летняя конференция (Финал)", dates: "Июль – Август 2027" }] }
+            },
+            {
+                id: "rosatom",
+                en: { name: "Rosatom Olympiad", level: "Level 1-2 (depending on profile)", organizer: "Rosatom & MEPhI", description: "Specialized physics and nuclear science olympiad supported by the Rosatom corporation. Winners get BVI or 100 points for MEPhI, MIPT, and other technical universities. Confirmation threshold: 75-80 EGE points.", subjects: ["Mathematics (Lvl 2)", "Physics (Lvl 2)", "Informatics (Lvl 2)", "Chemistry (Lvl 2)", "Biology (Lvl 2)", "Geography (Lvl 2)", "History (Lvl 2)", "Social Studies (Lvl 2)", "Russian Language (Lvl 2)", "Foreign Languages (Lvl 2)", "Economics (Lvl 2)", "Law (Lvl 2)", "Ecology (Lvl 2)"], benefits: ["Admission without entrance exams (BVI) for 11th grade", "100 points for corresponding EGE subject", "Additional points for individual achievements"], regions: ["Online (Qualifying)", "Moscow (MEPhI)", "St. Petersburg", "Kazan", "Novosibirsk", "Yekaterinburg", "Rostov-on-Don", "Samara", "Nizhny Novgorod", "Krasnodar", "Vladivostok", "Sarov", "Obninsk", "Other Rosatom cities"], contacts: { email: "olympiad@mephi.ru", phone: "+7 (495) 788-56-99", site: "olymp.mephi.ru/rosatom", address: "Moscow, Kashirskoye Hwy, 31 (MEPhI)" }, universities: ["MEPhI", "MIPT", "MSU", "HSE", "SPbU", "BMSTU", "RANEPA", "FinUniv", "MGIMO", "Partner Universities"], schedule: [{ stage: "Registration & Qualifying Round (Online/Offline)", dates: "Sep 27 - Dec 21, 2026" }, { stage: "Results of Qualifying Round", dates: "Jan 2027" }, { stage: "Final Round (Offline)", dates: "Feb - Mar 2027" }] },
+                ru: { name: "Олимпиада «Росатом»", level: "1-2 уровень (в зависимости от профиля)", organizer: "Росатом и НИЯУ МИФИ", description: "Специализированная олимпиада по физике и ядерным наукам при поддержке госкорпорации Росатом. Победители получают БВИ или 100 баллов за ЕГЭ в НИЯУ МИФИ, МФТИ и других технических вузах. Порог подтверждения: 75-80 баллов ЕГЭ.", subjects: ["Математика (2 ур.)", "Физика (2 ур.)", "Информатика (2 ур.)", "Химия (2 ур.)", "Биология (2 ур.)", "География (2 ур.)", "История (2 ур.)", "Обществознание (2 ур.)", "Русский язык (2 ур.)", "Иностранные языки (2 ур.)", "Экономика (2 ур.)", "Право (2 ур.)", "Экология (2 ур.)"], benefits: ["Поступление без вступительных испытаний (БВИ) для 11 класса", "100 баллов за соответствующий предмет ЕГЭ", "Дополнительные баллы за индивидуальные достижения"], regions: ["Онлайн (Отборочный)", "Москва (НИЯУ МИФИ)", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург", "Ростов-на-Дону", "Самара", "Нижний Новгород", "Краснодар", "Владивосток", "Саров", "Обнинск", "Другие города Росатома"], contacts: { email: "olympiad@mephi.ru", phone: "+7 (495) 788-56-99", site: "olymp.mephi.ru/rosatom", address: "г. Москва, Каширское ш., 31 (НИЯУ МИФИ)" }, universities: ["НИЯУ МИФИ", "МФТИ", "МГУ", "ВШЭ", "СПбГУ", "МГТУ им. Баумана", "РАНХиГС", "Финуниверситет", "МГИМО", "Вузы-партнеры"], schedule: [{ stage: "Регистрация и Отборочный этап (онлайн/очно)", dates: "27 сентября – 21 декабря 2026" }, { stage: "Результаты отборочного этапа", dates: "Январь 2027" }, { stage: "Заключительный этап (очно)", dates: "Февраль – Март 2027" }] }
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderOlympiad(lang) {
+            const olympId = getQueryParam('id');
+            const olymp = olympiadsData.find(o => o.id === olympId);
+            const container = document.getElementById('olympiad-content');
+            
+            if (!olymp) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'Olympiad not found' : 'Олимпиада не найдена'}</h2><a href="olympiads.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to Olympiads' : 'Вернуться к списку олимпиад'}</a></div>`;
+                return;
+            }
+
+            // Dynamic theme color based on olympiad
+            let themeColor = 'var(--primary-color)';
+            let themeBgStart = '#eef2ff';
+            let themeBgEnd = '#e0e7ff';
+            let cardBg = 'var(--card-bg)';
+            let tagBorder = '#e0e7ff';
+
+            if (olympId === 'vysshaya-proba') {
+                themeColor = 'var(--hse-blue)';
+                themeBgStart = '#eef2ff';
+                themeBgEnd = '#dce4f5';
+                cardBg = '#f0f4f8';
+                tagBorder = '#dce4f5';
+            } else if (olympId === 'mosh') {
+                themeColor = 'var(--mos-red)';
+                themeBgStart = '#fef2f2';
+                themeBgEnd = '#fee2e2';
+                cardBg = '#fff5f5';
+                tagBorder = '#fee2e2';
+            } else if (olympId === 'phystech') {
+                themeColor = 'var(--mipt-blue)';
+                themeBgStart = '#eef2ff';
+                themeBgEnd = '#dbeafe';
+                cardBg = '#f0f4f8';
+                tagBorder = '#dbeafe';
+            } else if (olympId === 'spbu') {
+                themeColor = 'var(--spbu-blue)';
+                themeBgStart = '#eef2ff';
+                themeBgEnd = '#dbeafe';
+                cardBg = '#f0f4f8';
+                tagBorder = '#dbeafe';
+            } else if (olympId === 'lomonosov') {
+                themeColor = 'var(--msu-red)';
+                themeBgStart = '#fef2f2';
+                themeBgEnd = '#fee2e2';
+                cardBg = '#fff5f5';
+                tagBorder = '#fee2e2';
+            } else if (olympId === 'rosatom') {
+                themeColor = 'var(--rosatom-green)';
+                themeBgStart = '#ecfdf5';
+                themeBgEnd = '#d1fae5';
+                cardBg = '#f0fdf4';
+                tagBorder = '#d1fae5';
+            } else if (olympId === 'zvezda') {
+                themeColor = 'var(--star-orange)';
+                themeBgStart = '#fff7ed';
+                themeBgEnd = '#ffedd5';
+                cardBg = '#fffbeb';
+                tagBorder = '#ffedd5';
+            } else if (olympId === 'pvg') {
+                themeColor = 'var(--pvg-gold)';
+                themeBgStart = '#fefce8';
+                themeBgEnd = '#fef9c3';
+                cardBg = '#fefce8';
+                tagBorder = '#fef9c3';
+            } else if (olympId === 'turgor') {
+                themeColor = 'var(--turgor-purple)';
+                themeBgStart = '#f3e8ff';
+                themeBgEnd = '#e9d5ff';
+                cardBg = '#faf5ff';
+                tagBorder = '#e9d5ff';
+            }
+            
+            const title = olymp[lang].name;
+            const info = olymp[lang];
+            
+            const subjectsHtml = info.subjects.map(s => `<span class="subject-tag" style="color: ${themeColor}; border-color: ${tagBorder}">${s}</span>`).join('');
+            const benefitsHtml = info.benefits.map(b => `<span class="benefit-badge" style="color: ${themeColor}; border-color: ${tagBorder}"><i class="fa-solid fa-check-circle"></i> ${b}</span>`).join('');
+            const regionsHtml = info.regions.map(r => `<li><i class="fa-solid fa-map-location-dot" style="color: ${themeColor}"></i> <span>${r}</span></li>`).join('');
+            const unisHtml = info.universities.map(u => `<span class="uni-tag">${u}</span>`).join('');
+            
+            const scheduleRows = info.schedule.map(item => `
+                <tr>
+                    <td><strong>${item.stage}</strong></td>
+                    <td>${item.dates}</td>
+                </tr>
+            `).join('');
+
+            const navLinksHtml = olympiadsData
+                .filter(o => o.id !== olympId)
+                .map(o => `<a href="?id=${o.id}" class="nav-link" style="--primary-color: ${themeColor}">${o[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header" style="background: linear-gradient(135deg, ${themeBgStart} 0%, ${themeBgEnd} 100%);">
+                    <div class="container olympiad-title">
+                        <h1 style="color: ${themeColor}">${title}</h1>
+                        <div class="olympiad-meta">
+                            <span><i class="fa-solid fa-layer-group"></i> ${info.level}</span>
+                            <span><i class="fa-solid fa-building-columns"></i> ${info.organizer}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container">
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h3 style="color: ${themeColor}"><i class="fa-solid fa-circle-info"></i> ${lang === 'en' ? 'About Olympiad' : 'Об олимпиаде'}</h3>
+                            <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-dark); margin-bottom: 1.5rem;">${info.description}</p>
+                            
+                            <h3 style="margin-top: 2rem; color: ${themeColor}"><i class="fa-solid fa-book-open"></i> ${lang === 'en' ? 'Subjects (Profiles)' : 'Предметы (Профили)'}</h3>
+                            <div style="margin-top: 1rem;">${subjectsHtml}</div>
+
+                            <h3 style="margin-top: 2rem; color: ${themeColor}"><i class="fa-solid fa-trophy"></i> ${lang === 'en' ? 'Benefits & Privileges' : 'Льготы и преимущества'}</h3>
+                            <div style="margin-top: 1rem;">${benefitsHtml}</div>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3 style="color: ${themeColor}"><i class="fa-solid fa-calendar-days"></i> ${lang === 'en' ? 'Schedule 2026/2027' : 'Расписание 2026/2027'}</h3>
+                            <div class="schedule-table-wrapper">
+                                <table class="schedule-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="color: ${themeColor}">${lang === 'en' ? 'Stage' : 'Этап'}</th>
+                                            <th style="color: ${themeColor}">${lang === 'en' ? 'Dates' : 'Даты'}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>${scheduleRows}</tbody>
+                                </table>
+                            </div>
+
+                            <h3 style="margin-top: 2rem; color: ${themeColor}"><i class="fa-solid fa-map-pin"></i> ${lang === 'en' ? 'Regions / Cities' : 'Регионы / Города проведения'}</h3>
+                            <ul class="info-list" style="margin-top: 1rem; max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">${regionsHtml}</ul>
+
+                            <h3 style="margin-top: 2rem; color: ${themeColor}"><i class="fa-solid fa-address-card"></i> ${lang === 'en' ? 'Contacts' : 'Контакты оргкомитета'}</h3>
+                            <ul class="info-list" style="margin-top: 1rem;">
+                                ${info.contacts.address ? `<li><i class="fa-solid fa-building" style="color: ${themeColor}"></i> <span>${info.contacts.address}</span></li>` : ''}
+                                <li><i class="fa-solid fa-envelope" style="color: ${themeColor}"></i> <span><a href="mailto:${info.contacts.email}" style="color: ${themeColor};">${info.contacts.email}</a></span></li>
+                                <li><i class="fa-solid fa-phone" style="color: ${themeColor}"></i> <span>${info.contacts.phone}</span></li>
+                                <li><i class="fa-solid fa-globe" style="color: ${themeColor}"></i> <span><a href="https://${info.contacts.site}" target="_blank" style="color: ${themeColor};">${info.contacts.site}</a></span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="detail-card" style="border-left-color: ${themeColor}; background: ${cardBg};">
+                        <h3 style="color: ${themeColor}"><i class="fa-solid fa-graduation-cap"></i> ${lang === 'en' ? 'Universities granting BVI / 100 points' : 'Вузы, предоставляющие БВИ / 100 баллов'}</h3>
+                        <p style="margin-bottom: 1rem; color: var(--text-gray);">${lang === 'en' ? 'Winners and prize-winners can use their results for admission to the following universities:' : 'Победители и призеры могут использовать свои результаты для поступления в следующие вузы:'}</p>
+                        <div class="uni-list">${unisHtml}</div>
+                    </div>
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Olympiads' : 'Другие олимпиады'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_olymp: "Olympiads", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_olymp: "Олимпиады", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderOlympiad(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

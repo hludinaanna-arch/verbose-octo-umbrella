@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Отзывы об онлайн-школах</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #5a5ce6; 
+            --primary-hover: #4a4cd6; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+            text-align: center;
+        }
+        .page-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; color: var(--primary-color); }
+        .page-title p { font-size: 1.2rem; color: var(--text-gray); margin-top: 1rem; }
+
+        /* Tabs */
+        .tabs-container { display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
+        .tab-btn { 
+            padding: 1rem 2rem; 
+            border-radius: 50px; 
+            border: 2px solid #e5e7eb; 
+            background: #fff; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        .tab-btn.active { 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(90, 92, 230, 0.3);
+        }
+        .tab-btn:hover:not(.active) { border-color: var(--primary-color); color: var(--primary-color); }
+
+        /* Grid */
+        .schools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 5rem; }
+        .school-card { 
+            background: #fff; 
+            padding: 2rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            transition: transform 0.3s, box-shadow 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+        .school-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(90, 92, 230, 0.1); border-color: var(--primary-color); }
+        .school-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+        .school-name { font-size: 1.4rem; font-weight: 700; color: var(--text-dark); }
+        .school-rating { display: flex; align-items: center; gap: 0.3rem; color: #f59e0b; font-weight: 700; font-size: 1.1rem; }
+        .school-subjects { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 1.5rem; line-height: 1.5; }
+        .school-stats { margin-top: auto; padding-top: 1rem; border-top: 1px solid #f3f4f6; }
+        .stat-label { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 0.3rem; display: block; }
+        .stat-value { font-size: 0.95rem; font-weight: 600; color: var(--text-dark); line-height: 1.4; }
+
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .page-title h1 { font-size: 2.2rem; } 
+            .tabs-container { flex-direction: column; align-items: center; }
+            .tab-btn { width: 100%; max-width: 300px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <a href="olympiads.html" data-key="nav_olymp">Olympiads</a>
+                <a href="volunteering.html" data-key="nav_vol">Volonteering</a>
+                <a href="calendar.html" data-key="nav_cal">Calendar</a>
+                <a href="reviews.html" data-key="nav_rew">Online Schools</a>
+                <!-- Добавляем ссылку на рекомендации -->
+                <a href="recommendations.html" style="color: var(--primary-color); font-weight: 700;">Recommendations</a> 
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login">Войти</a>
+                <a href="#" class="btn btn-signup">Регистрация</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="page-header">
+            <div class="container page-title">
+                <h1>Онлайн-школы для подготовки</h1>
+                <p>Независимые отзывы, статистика баллов и особенности обучения</p>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="oge">🎓 ОГЭ / Средняя школа</button>
+                <button class="tab-btn" data-tab="ege">🔥 ЕГЭ / 11 класс</button>
+            </div>
+            
+            <div class="schools-grid" id="schools-container">
+                <!-- Cards injected by JS -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- DATA FROM EXCEL FILES (InternetUrok, DomZnanij, TutorOnline removed) ---
+        const ogeSchools = [
+            { id: "foxford", name: "Фоксфорд", subjects: "Все предметы (5–11 кл), ОГЭ", score: "~4.5–5.0 за ОГЭ (по отзывам)", rating: 4 },
+            { id: "umskul", name: "Умскул", subjects: "Все предметы ОГЭ, олимпиады", score: "85% учеников сдают ОГЭ на 4 и 5", rating: 4 },
+            { id: "tetrika", name: "Тетрика", subjects: "Индивидуально любые предметы", score: "Рост на 1–2 балла за курс (отзывы)", rating: 5 },
+            { id: "skysmart", name: "Skysmart", subjects: "Англ., мат., рус., информ., ОГЭ", score: "+1.5 балла к текущей оценке в среднем", rating: 5 },
+            { id: "sotka", name: "Сотка", subjects: "Пакеты: рус, мат, общ, +1 на выбор", score: "80% сдающих получают «4» и «5»", rating: 4 },
+            { id: "lancman", name: "Lancman School", subjects: "Индивидуально все предметы", score: "Персональный рост, смешанные отзывы", rating: 3 }
+        ];
+
+        const egeSchools = [
+            { id: "godograf", name: "Годограф", subjects: "Проф. мат, физ, рус, общ, инф", score: "Математика: 82+ | Физика: 78+", rating: 5 },
+            { id: "umskul-ege", name: "Умскул", subjects: "Все предметы ЕГЭ", score: "Средний балл по школе: 83.1 | Русский: 85+", rating: 4 },
+            { id: "insperia", name: "Insperia", subjects: "Все предметы ЕГЭ", score: "Средний балл: 76–80 | История: 82+", rating: 5 },
+            { id: "shkolkovo", name: "Школково", subjects: "Мат, физ, инф, рус", score: "Профильная математика: 80+ | Информатика: 85+", rating: 4 },
+            { id: "sotka-ege", name: "Сотка", subjects: "Пакеты из 4 предметов", score: "Средний балл пакета: 75–78 | Обществознание: 80+", rating: 4 },
+            { id: "foxford-ege", name: "Фоксфорд", subjects: "Все предметы ЕГЭ", score: "Средний балл: 78–80", rating: 4 },
+            { id: "99ballov", name: "99 Баллов", subjects: "Все основные предметы", score: "Средний балл: 75–78 | Химия/Биология: 76+", rating: 4 },
+            { id: "egeland", name: "ЕГЭLand", subjects: "10 предметов ЕГЭ", score: "Средний балл: 74–77 | Литература: 80+", rating: 4 },
+            { id: "turbo", name: "Турбо ЕГЭ", subjects: "Все предметы ЕГЭ", score: "Средний балл: 76–79 | Английский: 82+", rating: 4 },
+            { id: "webium", name: "Вебиум", subjects: "Все предметы ЕГЭ", score: "Средний балл: 75–78 | Русский язык: 80+", rating: 4 }
+        ];
+
+        let currentTab = 'oge';
+
+        function renderStars(rating) {
+            return '⭐'.repeat(rating);
+        }
+
+        function renderSchools() {
+            const container = document.getElementById('schools-container');
+            const data = currentTab === 'oge' ? ogeSchools : egeSchools;
+            
+            container.innerHTML = data.map(school => `
+                <a href="review-detail.html?id=${school.id}&type=${currentTab}" class="school-card">
+                    <div class="school-header">
+                        <div class="school-name">${school.name}</div>
+                        <div class="school-rating">${renderStars(school.rating)}</div>
+                    </div>
+                    <div class="school-subjects"><strong>Предметы:</strong> ${school.subjects}</div>
+                    <div class="school-stats">
+                        <span class="stat-label">Средние баллы / Успеваемость:</span>
+                        <div class="stat-value">${school.score}</div>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        // Tab Switching Logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTab = btn.dataset.tab;
+                renderSchools();
+            });
+        });
+
+        // Initial Render
+        renderSchools();
+    </script>
+</body>
+</html>

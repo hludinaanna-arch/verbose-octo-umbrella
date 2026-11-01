@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Волонтерство</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #10b981; /* Emerald Green for Volunteering */
+            --primary-hover: #059669; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: #5A5CE6; }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: #5A5CE6; color: #5A5CE6; }
+        .btn-login:hover { background-color: #5A5CE6; color: #fff; }
+        .btn-signup { background-color: #5A5CE6; color: #fff; }
+        .btn-signup:hover { background-color: #4a4cd6; }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .page-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; color: var(--primary-hover); }
+        .page-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-section { margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 2rem; }
+        .info-card h2 { font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary-hover); display: flex; align-items: center; gap: 0.8rem; }
+        .info-card p { font-size: 1.05rem; color: var(--text-gray); margin-bottom: 1rem; }
+        .info-list { list-style: none; margin-top: 1.5rem; }
+        .info-list li { padding: 0.8rem 0; border-bottom: 1px solid #f3f4f6; display: flex; align-items: flex-start; gap: 1rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; font-size: 1.2rem; }
+
+        .programs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
+        .program-card { 
+            background: #fff; 
+            padding: 2rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            transition: transform 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+            border-top: 5px solid var(--primary-color);
+        }
+        .program-card:hover { transform: translateY(-5px); border-color: var(--primary-color); box-shadow: 0 15px 30px rgba(16, 185, 129, 0.1); }
+        .program-card h3 { font-size: 1.4rem; margin-bottom: 0.8rem; color: var(--text-dark); }
+        .program-card p { font-size: 0.95rem; color: var(--text-gray); margin-bottom: 1.5rem; flex-grow: 1; }
+        .program-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: auto; }
+        .tag { background: #ecfdf5; color: var(--primary-hover); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .page-title h1 { font-size: 2.2rem; } 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <a href="olympiads.html" data-key="nav_olymp">Olympiads</a>
+                <a href="volunteering.html" data-key="nav_vol">Volonteering</a>
+                <a href="calendar.html" data-key="nav_cal">Calendar</a>
+                <a href="reviews.html" data-key="nav_rew">Online Schools</a>
+                <!-- Добавляем ссылку на рекомендации -->
+                <a href="recommendations.html" style="color: var(--primary-color); font-weight: 700;">Recommendations</a> 
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login">Войти</a>
+                <a href="#" class="btn btn-signup">Регистрация</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="page-header">
+            <div class="container page-title">
+                <h1>Волонтерство для абитуриента</h1>
+                <div class="page-meta">
+                    <span><i class="fa-solid fa-hand-holding-heart"></i> Помощь обществу</span>
+                    <span><i class="fa-solid fa-star"></i> Дополнительные баллы</span>
+                    <span><i class="fa-solid fa-book-open"></i> Портфолио</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="container info-section">
+            <div class="info-card">
+                <h2><i class="fa-solid fa-circle-info"></i> Как волонтерство помогает при поступлении?</h2>
+                <p>Важно сразу уточнить: <strong>волонтерство НЕ дает дополнительные баллы к результатам ЕГЭ</strong>. Однако многие ведущие вузы России учитывают волонтерский опыт как часть портфолио или начисляют дополнительные баллы за индивидуальные достижения (обычно от 1 до 3 баллов, в редких случаях до 10 баллов).</p>
+                
+                <h3 style="margin-top: 2rem; font-size: 1.3rem; color: var(--text-dark);">Что дает волонтерская книжка?</h3>
+                <ul class="info-list">
+                    <li><i class="fa-solid fa-check-circle"></i> <div><strong>Дополнительные баллы:</strong> МГУ, ВШЭ, МГИМО, СПбГУ, МФТИ и МИФИ начисляют от 1 до 3 баллов за наличие подтвержденного волонтерского опыта (обычно от 50-100 часов).</div></li>
+                    <li><i class="fa-solid fa-check-circle"></i> <div><strong>Преимущество при равенстве баллов:</strong> Если вы набрали одинаковое количество баллов с другим абитуриентом, вуз может отдать предпочтение вам благодаря волонтерской активности.</div></li>
+                    <li><i class="fa-solid fa-check-circle"></i> <div><strong>Развитие soft skills:</strong> Коммуникация, работа в команде, ответственность и эмпатия — качества, которые ценятся на собеседованиях и творческих испытаниях.</div></li>
+                    <li><i class="fa-solid fa-check-circle"></i> <div><strong>Сильное портфолио:</strong> Для творческих и гуманитарных направлений (журналистика, социология, психология) волонтерство является весомым аргументом.</div></li>
+                </ul>
+
+                <h3 style="margin-top: 2rem; font-size: 1.3rem; color: var(--text-dark);">Сколько часов нужно набрать?</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem;">
+                    <div style="background: #f9fafb; padding: 1.5rem; border-radius: 1rem;">
+                        <h4 style="color: var(--primary-hover); margin-bottom: 0.5rem;">10 класс</h4>
+                        <p style="font-size: 0.95rem; color: var(--text-gray);">Минимум: 40-50 часов<br>Оптимально: 80-100 часов<br>Отлично: 150+ часов</p>
+                    </div>
+                    <div style="background: #f9fafb; padding: 1.5rem; border-radius: 1rem;">
+                        <h4 style="color: var(--primary-hover); margin-bottom: 0.5rem;">11 класс</h4>
+                        <p style="font-size: 0.95rem; color: var(--text-gray);">Минимум: 50-60 часов<br>Оптимально: 100-120 часов<br><em>Важно: часы должны быть набраны до подачи документов (июнь)</em></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" style="margin-bottom: 5rem;">
+            <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 2rem; color: var(--text-dark);">Популярные волонтерские программы</h2>
+            <div class="programs-grid" id="programs-container">
+                <!-- Cards injected by JS -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const programsData = [
+    { id: "dobro", name: "Добро.рф (Федеральная платформа)", desc: "Главная платформа учета волонтерских часов в России. Все мероприятия здесь автоматически попадают в Личную книжку волонтера (ЛКВ), которую принимают все вузы.", tags: ["20+ часов", "Все вузы РФ", "Официальный учет"] },
+    { id: "mosvolonter", name: "Мосволонтёр", desc: "Ресурсный центр добровольчества Москвы. Официальная платформа для столичных школьников с гарантированным учетом часов во всех московских вузах.", tags: ["50+ часов", "Вузы Москвы", "Гибкий график"] },
+    { id: "volontery-pobedy", name: "Волонтёры Победы", desc: "Сохранение исторической памяти, помощь ветеранам, благоустройство мемориалов и организация парадов к 9 мая.", tags: ["50-100 часов", "Гуманитарные вузы", "Весенний пик"] },
+    { id: "volontery-mediki", name: "Волонтёры-медики", desc: "Помощь в медицинских учреждениях, просвещение населения, сопровождение массовых спортивных событий.", tags: ["60+ часов", "Медвузы", "Обучение"] },
+    { id: "eka", name: "ЭКА (Экологическое движение)", desc: "Экопросвещение, посадка деревьев, раздельный сбор отходов и защита окружающей среды.", tags: ["40+ часов", "Био/Эко факультеты", "Природа"] },
+    { id: "starost-v-radost", name: "Старость в радость", desc: "Помощь пожилым людям в домах престарелых и пансионатах: общение, концерты, бытовая поддержка.", tags: ["30-40 часов", "Соц/Псих факультеты", "16+"] },
+    { id: "podari-zhizn", name: "Подари жизнь (Донорство)", desc: "Агитация за донорство крови, помощь в центрах переливания, поддержка детей с онкозаболеваниями.", tags: ["40+ часов", "Медвузы", "18+ для сдачи крови"] },
+    { id: "nochlezhka", name: "Ночлежка", desc: "Помощь людям без определенного места жительства: еда, одежда, социальная адаптация и документы.", tags: ["40+ часов", "Соцфаки", "16+"] },
+    { id: "lizaalert", name: "ЛизаАлерт", desc: "Поисково-спасательный отряд. Поиск пропавших людей, распространение ориентировок, работа в штабе.", tags: ["30+ часов", "МЧС/Спорт", "Физподготовка"] },
+    { id: "rso", name: "Студенческие отряды (РСО)", desc: "Сезонная трудовая деятельность: педагогические, строительные, сервисные и медицинские отряды.", tags: ["100+ часов", "Все вузы", "Летний сезон"] }
+];
+
+        function renderPrograms() {
+            const container = document.getElementById('programs-container');
+            container.innerHTML = programsData.map(p => `
+                <a href="volunteer-detail.html?id=${p.id}" class="program-card">
+                    <h3>${p.name}</h3>
+                    <p>${p.desc}</p>
+                    <div class="program-tags">
+                        ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        renderPrograms();
+    </script>
+</body>
+</html>

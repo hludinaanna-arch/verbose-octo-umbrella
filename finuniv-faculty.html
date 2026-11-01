@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - FinUniv Faculty</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #1a237e; /* FinUniv Deep Blue */
+            --primary-hover: #0d155e; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #e8eaf6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .faculty-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .faculty-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        .programs-section { margin-bottom: 4rem; }
+        .program-card { 
+            background: var(--card-bg);
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .program-card:hover { transform: translateY(-2px); }
+        
+        .program-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .program-code { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .program-name { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); width: 100%; }
+        
+        .scores-box { 
+            background: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .score-item { display: flex; flex-direction: column; }
+        .score-label { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
+        .score-value { font-size: 1.2rem; font-weight: 800; color: var(--primary-color); }
+        .score-value.paid { color: var(--text-gray); }
+
+        .exam-list { list-style: none; margin-bottom: 1.5rem; }
+        .exam-item { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 1rem; 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid rgba(26, 35, 126, 0.1); 
+            font-size: 1.05rem;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-priority { 
+            min-width: 28px; 
+            height: 28px; 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .exam-details { flex-grow: 1; }
+        .exam-type { font-weight: 600; color: var(--text-dark); }
+        .exam-format { color: var(--text-gray); font-size: 0.9rem; margin-left: 0.5rem; }
+        
+        .min-score-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #c5cae9;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .faculty-title h1 { font-size: 2.2rem; } 
+            .faculty-meta { flex-direction: column; gap: 0.5rem; }
+            .exam-item { flex-direction: column; gap: 0.3rem; }
+            .program-header { flex-direction: column; }
+            .scores-box { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="85" cy="65" r="8" fill="#1a237e"/>
+                    <path d="M75 55L85 65" stroke="#1a237e" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="faculty-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- DATA BASED ON Prikaz_Minobrnauki_Rossii_ot_27.11.2024_N_821-_2_.pdf & Pravila_priema_bac_spec_2026.pdf ---
+        const facultiesData = [
+            {
+                id: "hsu",
+                en: { 
+                    name: "Faculty of Public Administration", 
+                    location: "Leningradsky Prospekt, 49, bldg. 1", 
+                    profile: "Public administration, digital government, innovation management",
+                    contacts: "+7 (495) 943-90-00 | hsu@fa.ru"
+                },
+                ru: { 
+                    name: "Факультет «Высшая школа управления»", 
+                    location: "Ленинградский проспект, 49, корп. 1", 
+                    profile: "Государственное управление, цифровое государство, управление инновациями",
+                    contacts: "+7 (495) 943-90-00 | hsu@fa.ru"
+                },
+                budget_spots: 120, paid_spots: 180, tuition: "595,000–620,000 ₽",
+                programs: [
+                    { 
+                        code: "27.03.05", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Innovation (Digital Innovation Management)", exams: ["Math (EGE)(I)", "Physics OR Informatics OR Chemistry (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, phys_inf_chem: 60, rus: 60 } }, 
+                        ru: { name: "Инноватика (Управление цифровыми инновациями)", exams: ["Математика (ЕГЭ)(I)", "Физика ИЛИ Информатика ИЛИ Химия (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, phys_inf_chem: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "275-295", est_paid_score: "205-225",
+                        en: { name: "Management (Financial Management)", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "Foreign Lang OR Informatics OR History (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Менеджмент (Финансовый менеджмент)", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Management (Marketing)", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "Foreign Lang OR Informatics OR History (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Менеджмент (Маркетинг)", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Management (Business Management)", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "Foreign Lang OR Informatics OR History (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Менеджмент (Управление бизнесом)", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    },
+                    { 
+                        code: "38.03.04", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Public Administration", exams: ["Social Studies (EGE)(I)", "Math OR History (EGE)(II)", "Russian (EGE)(III)"], min_scores: { soc: 60, math_hist: 60, rus: 60 } }, 
+                        ru: { name: "Государственное и муниципальное управление", exams: ["Обществознание (ЕГЭ)(I)", "Математика ИЛИ История (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { soc: 60, math_hist: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    },
+                    { 
+                        code: "38.03.04", 
+                        est_budget_score: "275-295", est_paid_score: "205-225",
+                        en: { name: "Public Administration (Digital State and Economy)", exams: ["Social Studies (EGE)(I)", "Math OR History (EGE)(II)", "Russian (EGE)(III)"], min_scores: { soc: 60, math_hist: 60, rus: 60 } }, 
+                        ru: { name: "Государственное и муниципальное управление (Цифровое государство и экономика)", exams: ["Обществознание (ЕГЭ)(I)", "Математика ИЛИ История (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { soc: 60, math_hist: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    }
+                ]
+            },
+            {
+                id: "feb",
+                en: { 
+                    name: "Faculty of Economics and Business", 
+                    location: "Leningradsky Prospekt, 49, bldg. 2", 
+                    profile: "Economics, management, tourism, hotel business",
+                    contacts: "+7 (495) 943-90-00 | feb@fa.ru"
+                },
+                ru: { 
+                    name: "Факультет экономики и бизнеса", 
+                    location: "Ленинградский проспект, 49, корп. 2", 
+                    profile: "Экономика, менеджмент, туризм, гостиничный бизнес",
+                    contacts: "+7 (495) 943-90-00 | feb@fa.ru"
+                },
+                budget_spots: 150, paid_spots: 220, tuition: "400,000–750,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Economics (Corporate Economics, ESG and Corporate Law)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Экономика корпорации, ESG и корпоративное право)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Economics (Economics and Business)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Экономика и бизнес)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "220-240",
+                        en: { name: "Economics (Corporate Finance)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Корпоративные финансы)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Economics (Financial Intelligence and Business Risk Management)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Финансовая разведка и управление рисками бизнеса)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "275-295", est_paid_score: "205-225",
+                        en: { name: "Management (Logistics)", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "Foreign Lang OR Informatics OR History (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Менеджмент (Логистика)", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, soc: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "43.03.02", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Tourism (Tourism Business and Experience Economy)", exams: ["Social Studies (EGE)(I)", "Math OR History OR Foreign Lang (EGE)(II)", "Russian (EGE)(III)"], min_scores: { soc: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Туризм (Туристический бизнес и экономика впечатлений)", exams: ["Обществознание (ЕГЭ)(I)", "Математика ИЛИ История ИЛИ Иностранный язык (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { soc: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "43.03.03", 
+                        est_budget_score: "260-280", est_paid_score: "190-210",
+                        en: { name: "Hotel Business", exams: ["Social Studies (EGE)(I)", "Math OR History OR Foreign Lang (EGE)(II)", "Russian (EGE)(III)"], min_scores: { soc: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Гостиничное дело", exams: ["Обществознание (ЕГЭ)(I)", "Математика ИЛИ История ИЛИ Иностранный язык (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { soc: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    }
+                ]
+            },
+            {
+                id: "ff",
+                en: { 
+                    name: "Finance Faculty", 
+                    location: "Leningradsky Prospekt, 49, bldg. 3", 
+                    profile: "Finance, financial instruments, state financial technologies",
+                    contacts: "+7 (495) 943-90-00 | ff@fa.ru"
+                },
+                ru: { 
+                    name: "Финансовый факультет", 
+                    location: "Ленинградский проспект, 49, корп. 3", 
+                    profile: "Финансы, финансовые инструменты, государственные финтехнологии",
+                    contacts: "+7 (495) 943-90-00 | ff@fa.ru"
+                },
+                budget_spots: 180, paid_spots: 150, tuition: "650,000–900,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "220-240",
+                        en: { name: "Economics (Economics and Finance)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Экономика и финансы)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "220-240",
+                        en: { name: "Economics (Financial Instruments and Digital Analysis Technologies)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Финансовые инструменты и цифровые технологии анализа)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "290-310", est_paid_score: "220-240",
+                        en: { name: "Economics (State Financial Technologies)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Государственные финансовые технологии)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "295-315", est_paid_score: "225-245",
+                        en: { name: "Economics (Digitalization of Financial Products and Services)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Цифровизация финансовых продуктов и услуг)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    }
+                ]
+            },
+            {
+                id: "fmir",
+                en: { 
+                    name: "Faculty of International Economic Relations", 
+                    location: "Leningradsky Prospekt, 49, bldg. 4", 
+                    profile: "World economy, international finance, economic linguistics",
+                    contacts: "+7 (495) 943-90-00 | fmir@fa.ru"
+                },
+                ru: { 
+                    name: "Факультет международных экономических отношений", 
+                    location: "Ленинградский проспект, 49, корп. 4", 
+                    profile: "Мировая экономика, международные финансы, экономическая лингвистика",
+                    contacts: "+7 (495) 943-90-00 | fmir@fa.ru"
+                },
+                budget_spots: 100, paid_spots: 120, tuition: "530,000–790,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "295-315", est_paid_score: "225-245",
+                        en: { name: "Economics (World Economy, World Finance and International Business)", exams: ["Math (EGE)(I)", "Foreign Lang (EGE)(II)", "Social Studies OR Informatics OR History OR Geography (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, for: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Мировая экономика, мировые финансы и международный бизнес)", exams: ["Математика (ЕГЭ)(I)", "Иностранный язык (ЕГЭ)(II)", "Обществознание ИЛИ Информатика ИЛИ История ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, for: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "295-315", est_paid_score: "225-245",
+                        en: { name: "Economics (Economics and Business of Eastern Countries)", exams: ["Math (EGE)(I)", "Foreign Lang (EGE)(II)", "Social Studies OR Informatics OR History OR Geography (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, for: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Экономика и бизнес стран Востока)", exams: ["Математика (ЕГЭ)(I)", "Иностранный язык (ЕГЭ)(II)", "Обществознание ИЛИ Информатика ИЛИ История ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, for: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "300-320", est_paid_score: "230-250",
+                        en: { name: "Economics (International Finance)", exams: ["Math (EGE)(I)", "Foreign Lang (EGE)(II)", "Social Studies OR Informatics OR History OR Geography (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, for: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Международные финансы)", exams: ["Математика (ЕГЭ)(I)", "Иностранный язык (ЕГЭ)(II)", "Обществознание ИЛИ Информатика ИЛИ История ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, for: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "305-325", est_paid_score: "235-255",
+                        en: { name: "Economics (International Economics and Trade)", exams: ["Math (EGE)(I)", "Foreign Lang (EGE)(II)", "Social Studies OR Informatics OR History OR Geography (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, for: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Международная экономика и торговля)", exams: ["Математика (ЕГЭ)(I)", "Иностранный язык (ЕГЭ)(II)", "Обществознание ИЛИ Информатика ИЛИ История ИЛИ География (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, for: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "45.03.02", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Linguistics (Economic Linguistics and Intercultural Communication)", exams: ["Foreign Lang (EGE)(I)", "Literature (EGE)(II)", "History OR Social Studies (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { for: 60, lit: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Лингвистика (Экономическая лингвистика и межкультурная коммуникация)", exams: ["Иностранный язык (ЕГЭ)(I)", "Литература (ЕГЭ)(II)", "История ИЛИ Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { for: 60, lit: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    }
+                ]
+            },
+            {
+                id: "law",
+                en: { 
+                    name: "Law Faculty", 
+                    location: "Leningradsky Prospekt, 49, bldg. 5", 
+                    profile: "Jurisprudence, legal support of digital economy",
+                    contacts: "+7 (495) 943-90-00 | law@fa.ru"
+                },
+                ru: { 
+                    name: "Юридический факультет", 
+                    location: "Ленинградский проспект, 49, корп. 5", 
+                    profile: "Юриспруденция, правовое обеспечение цифровой экономики",
+                    contacts: "+7 (495) 943-90-00 | law@fa.ru"
+                },
+                budget_spots: 160, paid_spots: 140, tuition: "590,000 ₽",
+                programs: [
+                    { 
+                        code: "40.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Jurisprudence", exams: ["Social Studies (EGE)(I)", "History (EGE)(II)", "Foreign Lang OR Informatics OR Math (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc: 60, hist: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Юриспруденция", exams: ["Обществознание (ЕГЭ)(I)", "История (ЕГЭ)(II)", "Иностранный язык ИЛИ Информатика ИЛИ Математика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc: 60, hist: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 16", "Отдельная квота: 16"] 
+                    }
+                ]
+            },
+            {
+                id: "itbd",
+                en: { 
+                    name: "Faculty of Information Technologies and Big Data Analysis", 
+                    location: "Leningradsky Prospekt, 49, bldg. 6", 
+                    profile: "Applied math, computer science, software engineering, info security",
+                    contacts: "+7 (495) 943-90-00 | itbd@fa.ru"
+                },
+                ru: { 
+                    name: "Факультет информационных технологий и анализа больших данных", 
+                    location: "Ленинградский проспект, 49, корп. 6", 
+                    profile: "Прикладная математика, компьютерные науки, программная инженерия, инфобезопасность",
+                    contacts: "+7 (495) 943-90-00 | itbd@fa.ru"
+                },
+                budget_spots: 220, paid_spots: 180, tuition: "415,000–520,000 ₽",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Applied Mathematics and Informatics (Applied Machine Learning)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Прикладная математика и информатика (Прикладное машинное обучение)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "02.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Mathematics and Computer Science (Digital Analytics and Mathematical Risk Assessment)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Математика и компьютерные науки (Цифровая аналитика и математическая оценка рисков)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "02.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Mathematics and Computer Science (Mathematical and Computational Modeling)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Математика и компьютерные науки (Математическое и компьютерное моделирование)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "09.03.03", 
+                        est_budget_score: "275-295", est_paid_score: "205-225",
+                        en: { name: "Applied Informatics (Applied Information Systems in Economics and Finance)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Прикладная информатика (Прикладные информационные системы в экономике и финансах)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "09.03.04", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Software Engineering (Development and Implementation of Information-Analytical Systems)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Программная инженерия (Разработка и внедрение информационно-аналитических систем)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "09.03.04", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Software Engineering (Software Development Engineer)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Программная инженерия (Инженер-разработчик программного обеспечения)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "10.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Information Security (Security of Automated Systems in Credit and Financial Sphere)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Physics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        ru: { name: "Информационная безопасность (Безопасность автоматизированных систем в кредитно-финансовой сфере)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Физика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, phys: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "38.03.05", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Business Informatics (Digital Transformation of Business Management)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Social Studies OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Бизнес-информатика (Цифровая трансформация управления бизнесом)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Обществознание ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "38.03.05", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Business Informatics (Digital Technologies in Land Resource and Real Estate Management)", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Social Studies OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, inf: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Бизнес-информатика (Цифровые технологии в управлении земельными ресурсами и объектами недвижимости)", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Обществознание ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, inf: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    }
+                ]
+            },
+            {
+                id: "ftaba",
+                en: { 
+                    name: "Faculty of Taxes, Audit and Business Analysis", 
+                    location: "Leningradsky Prospekt, 49, bldg. 7", 
+                    profile: "Business analysis, taxes, audit, e-commerce, int. business",
+                    contacts: "+7 (495) 943-90-00 | ftaba@fa.ru"
+                },
+                ru: { 
+                    name: "Факультет налогов, аудита и бизнес-анализа", 
+                    location: "Ленинградский проспект, 49, корп. 7", 
+                    profile: "Бизнес-анализ, налоги, аудит, электронная коммерция, международный бизнес",
+                    contacts: "+7 (495) 943-90-00 | ftaba@fa.ru"
+                },
+                budget_spots: 140, paid_spots: 160, tuition: "490,000–620,000 ₽",
+                programs: [
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Economics (Business Analysis, Taxes and Audit)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Бизнес-анализ, налоги и аудит)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 14", "Отдельная квота: 14"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Economics (International Business: Taxes and Analytics)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Международный бизнес: налоги и аналитика)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 14", "Отдельная квота: 14"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Economics (Business Audit and Law)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Бизнес-аудит и право)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 14", "Отдельная квота: 14"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Economics (Business Architecture and Analytics)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Экономика (Бизнес-архитектура и аналитика)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 14", "Отдельная квота: 14"] 
+                    },
+                    { 
+                        code: "38.03.06", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Commerce (E-commerce)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang OR History OR Geography (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Торговое дело (Электронная коммерция)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык ИЛИ История ИЛИ География (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 14", "Отдельная квота: 14"] 
+                    }
+                ]
+            },
+            {
+                id: "fsnmc",
+                en: { 
+                    name: "Faculty of Social Sciences and Mass Communications", 
+                    location: "Leningradsky Prospekt, 49, bldg. 8", 
+                    profile: "Psychology, HR management, sociology, political science, advertising",
+                    contacts: "+7 (495) 943-90-00 | fsnmc@fa.ru"
+                },
+                ru: { 
+                    name: "Факультет социальных наук и массовых коммуникаций", 
+                    location: "Ленинградский проспект, 49, корп. 8", 
+                    profile: "Психология, управление персоналом, социология, политология, реклама",
+                    contacts: "+7 (495) 943-90-00 | fsnmc@fa.ru"
+                },
+                budget_spots: 180, paid_spots: 200, tuition: "440,000–700,000 ₽",
+                programs: [
+                    { 
+                        code: "37.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Psychology", exams: ["Biology (EGE)(I)", "Math (EGE)(II)", "Social Studies OR Chemistry (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { bio: 60, math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Психология", exams: ["Биология (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Обществознание ИЛИ Химия (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { bio: 60, math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "38.03.03", 
+                        est_budget_score: "275-295", est_paid_score: "205-225",
+                        en: { name: "Human Resource Management", exams: ["Social Studies (EGE)(I)", "Math (EGE)(II)", "Foreign Lang OR History OR Informatics (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc: 60, math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Управление персоналом", exams: ["Обществознание (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ Информатика (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc: 60, math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "39.03.01", 
+                        est_budget_score: "265-285", est_paid_score: "195-215",
+                        en: { name: "Sociology (Economic Sociology)", exams: ["Social Studies (EGE)(I)", "Math (EGE)(II)", "History OR Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc: 60, math: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Социология (Экономическая социология)", exams: ["Обществознание (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "История ИЛИ Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc: 60, math: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "41.03.04", 
+                        est_budget_score: "270-290", est_paid_score: "200-220",
+                        en: { name: "Political Science (Modern Political Technologies, Expertise and GR)", exams: ["History (EGE)(I)", "Social Studies OR Geography OR Foreign Lang OR Math OR Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { hist: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Политология (Современные политические технологии, экспертиза и GR)", exams: ["История (ЕГЭ)(I)", "Обществознание ИЛИ География ИЛИ Иностранный язык ИЛИ Математика ИЛИ Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { hist: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "41.03.04", 
+                        est_budget_score: "275-295", est_paid_score: "205-225",
+                        en: { name: "Political Science (Global Politics)", exams: ["History (EGE)(I)", "Social Studies OR Geography OR Foreign Lang OR Math OR Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { hist: 60, choice: 60, rus: 60 } }, 
+                        ru: { name: "Политология (Мировая политика)", exams: ["История (ЕГЭ)(I)", "Обществознание ИЛИ География ИЛИ Иностранный язык ИЛИ Математика ИЛИ Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { hist: 60, choice: 60, rus: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "42.03.01", 
+                        est_budget_score: "280-300", est_paid_score: "210-230",
+                        en: { name: "Advertising and PR", exams: ["Social Studies (EGE)(I)", "Russian (EGE)(II)", "Informatics OR Foreign Lang OR History (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc: 60, rus: 60, choice: 60, rus2: 60 } }, 
+                        ru: { name: "Реклама и связи с общественностью", exams: ["Обществознание (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Информатика ИЛИ Иностранный язык ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc: 60, rus: 60, choice: 60, rus2: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "42.03.01", 
+                        est_budget_score: "285-305", est_paid_score: "215-235",
+                        en: { name: "Advertising and PR (PR in Politics and Business)", exams: ["Social Studies (EGE)(I)", "Russian (EGE)(II)", "Informatics OR Foreign Lang OR History (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { soc: 60, rus: 60, choice: 60, rus2: 60 } }, 
+                        ru: { name: "Реклама и связи с общественностью (Связи с общественностью в политике и бизнесе)", exams: ["Обществознание (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Информатика ИЛИ Иностранный язык ИЛИ История (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { soc: 60, rus: 60, choice: 60, rus2: 60 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    }
+                ]
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderFaculty(lang) {
+            const facId = getQueryParam('id');
+            const fac = facultiesData.find(f => f.id === facId);
+            const container = document.getElementById('faculty-content');
+            
+            if (!fac) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'Faculty not found' : 'Факультет не найден'}</h2><a href="finuniv.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to FinUniv' : 'Вернуться в Финуниверситет'}</a></div>`;
+                return;
+            }
+
+            const title = fac[lang].name;
+            const info = fac[lang];
+            
+            const programsHtml = fac.programs.map(prog => `
+                <div class="program-card">
+                    <div class="program-header">
+                        <div>
+                            <div class="program-code">${prog.code}</div>
+                            <div class="program-name">${prog[lang].name}</div>
+                        </div>
+                        <div class="scores-box">
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Budget Score' : 'Бюджет'}</span>
+                                <span class="score-value">${prog.est_budget_score}</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Paid Score' : 'Платное'}</span>
+                                <span class="score-value paid">${prog.est_paid_score}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="exam-list">
+                        ${prog[lang].exams.map((exam, idx) => `
+                            <li class="exam-item">
+                                <span class="exam-priority">${idx + 1}</span>
+                                <div class="exam-details">
+                                    <span class="exam-type">${exam.split('(')[0].trim()}</span>
+                                    <span class="exam-format">(${exam.match(/\(([^)]+)\)/)?.[1] || ''})</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 1rem; color: var(--primary-color);">${lang === 'en' ? 'Minimum Scores (EGE)' : 'Минимальные баллы (ЕГЭ)'}</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        ${Object.entries(prog[lang].min_scores).map(([key, val]) => `
+                            <span class="min-score-badge">${key.toUpperCase()}: ${val}</span>
+                        `).join('')}
+                    </div>
+
+                    ${prog.quotas.length > 0 ? `
+                        <div style="margin-top: 1rem;">
+                            ${prog.quotas.map(q => `<span class="min-score-badge" style="background: #fff; border-color: #c5cae9;">${q}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            const infoBlock = `
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-circle-info"></i> ${lang === 'en' ? 'Faculty Information' : 'Информация о факультете'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-location-dot"></i> <span>${info.location}</span></li>
+                            <li><i class="fa-solid fa-graduation-cap"></i> <span><strong>${lang === 'en' ? 'Profile:' : 'Профиль:'}</strong> ${info.profile}</span></li>
+                            <li><i class="fa-solid fa-phone"></i> <span>${info.contacts}</span></li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-chart-pie"></i> ${lang === 'en' ? 'Admission Stats' : 'Статистика приема'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-users"></i> <span><strong>${lang === 'en' ? 'Budget spots:' : 'Бюджет:'}</strong> ${fac.budget_spots}</span></li>
+                            <li><i class="fa-solid fa-wallet"></i> <span><strong>${lang === 'en' ? 'Paid spots:' : 'Платное:'}</strong> ${fac.paid_spots}</span></li>
+                            <li><i class="fa-solid fa-ruble-sign"></i> <span><strong>${lang === 'en' ? 'Tuition:' : 'Стоимость:'}</strong> ${fac.tuition} / year</span></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            const navLinksHtml = facultiesData
+                .filter(f => f.id !== facId)
+                .map(f => `<a href="?id=${f.id}" class="nav-link">${f[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header">
+                    <div class="container faculty-title">
+                        <h1>${title}</h1>
+                        <div class="faculty-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${fac.programs.length} ${lang === 'en' ? 'programs' : 'направлений'}</span>
+                            <span><i class="fa-solid fa-calendar-check"></i> ${lang === 'en' ? 'Admission Rules 2026' : 'Правила приема 2026'}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container">
+                    ${infoBlock}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">${lang === 'en' ? 'Programs & Requirements' : 'Направления и требования'}</h2>
+                    ${programsHtml}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Faculties' : 'Другие факультеты'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_uni: "Universities", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_uni: "Вузы", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderFaculty(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

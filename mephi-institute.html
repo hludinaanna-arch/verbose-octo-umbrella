@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - MEPhI Institute</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #d32f2f; /* MEPhI Red */
+            --primary-hover: #b71c1c; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #ffebee;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .institute-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .institute-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        .programs-section { margin-bottom: 4rem; }
+        .program-card { 
+            background: var(--card-bg);
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .program-card:hover { transform: translateY(-2px); }
+        
+        .program-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .program-code { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .program-name { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); width: 100%; }
+        
+        .scores-box { 
+            background: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .score-item { display: flex; flex-direction: column; }
+        .score-label { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
+        .score-value { font-size: 1.2rem; font-weight: 800; color: var(--primary-color); }
+        .score-value.paid { color: var(--text-gray); }
+
+        .exam-list { list-style: none; margin-bottom: 1.5rem; }
+        .exam-item { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 1rem; 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid rgba(211, 47, 47, 0.1); 
+            font-size: 1.05rem;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-priority { 
+            min-width: 28px; 
+            height: 28px; 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .exam-details { flex-grow: 1; }
+        .exam-type { font-weight: 600; color: var(--text-dark); }
+        .exam-format { color: var(--text-gray); font-size: 0.9rem; margin-left: 0.5rem; }
+        
+        .min-score-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #ffcdd2;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .institute-title h1 { font-size: 2.2rem; } 
+            .institute-meta { flex-direction: column; gap: 0.5rem; }
+            .exam-item { flex-direction: column; gap: 0.3rem; }
+            .program-header { flex-direction: column; }
+            .scores-box { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="10" fill="#d32f2f"/>
+                    <ellipse cx="50" cy="50" rx="40" ry="15" stroke="#1F2937" stroke-width="4" transform="rotate(0 50 50)"/>
+                    <ellipse cx="50" cy="50" rx="40" ry="15" stroke="#1F2937" stroke-width="4" transform="rotate(60 50 50)"/>
+                    <ellipse cx="50" cy="50" rx="40" ry="15" stroke="#1F2937" stroke-width="4" transform="rotate(120 50 50)"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="institute-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- DATA BASED ON pravila_priema_vo_bak_spec_2026.pdf & Appendix 1 ---
+        const institutesData = [
+            {
+                id: "iyafit",
+                en: { 
+                    name: "Institute of Nuclear Physics and Technologies (INPhyT)", 
+                    location: "Kashirskoye Hwy, 31, bldg. 1", 
+                    profile: "Nuclear physics, reactor tech, materials science",
+                    contacts: "+7 (495) 788-56-99 ext. 8400 | iyafit@mephi.ru"
+                },
+                ru: { 
+                    name: "Институт ядерной физики и технологий (ИЯФиТ)", 
+                    location: "Каширское ш., 31, корп. 1", 
+                    profile: "Ядерная физика, технологии реакторов, материаловедение",
+                    contacts: "+7 (495) 788-56-99 доб. 8400 | iyafit@mephi.ru"
+                },
+                budget_spots: 450, paid_spots: 120, tuition: "600,000 ₽",
+                programs: [
+                    { 
+                        code: "14.05.01", 
+                        est_budget_score: "260-280", est_paid_score: "180-200",
+                        en: { name: "Nuclear Physics and Technologies", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Ядерные физика и технологии", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 45", "Отдельная квота: 45"] 
+                    },
+                    { 
+                        code: "22.03.01", 
+                        est_budget_score: "250-270", est_paid_score: "170-190",
+                        en: { name: "Materials Science and Technology", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Материаловедение и технологии материалов", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 20", "Отдельная квота: 20"] 
+                    },
+                    { 
+                        code: "14.03.01", 
+                        est_budget_score: "255-275", est_paid_score: "175-195",
+                        en: { name: "Nuclear Energy and Thermophysics", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Ядерная энергетика и теплофизика", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 25", "Отдельная квота: 25"] 
+                    }
+                ]
+            },
+            {
+                id: "laplaz",
+                en: { 
+                    name: "Institute of Laser and Plasma Technologies (LaPlaz)", 
+                    location: "Kashirskoye Hwy, 31, bldg. 2", 
+                    profile: "Lasers, plasma physics, photonics, applied math",
+                    contacts: "+7 (495) 788-56-99 ext. 8500 | laplaz@mephi.ru"
+                },
+                ru: { 
+                    name: "Институт лазерных и плазменных технологий (ЛаПлаз)", 
+                    location: "Каширское ш., 31, корп. 2", 
+                    profile: "Лазеры, физика плазмы, фотоника, прикладная математика",
+                    contacts: "+7 (495) 788-56-99 доб. 8500 | laplaz@mephi.ru"
+                },
+                budget_spots: 320, paid_spots: 80, tuition: "510,000 ₽",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "270-290", est_paid_score: "190-210",
+                        en: { name: "Applied Math and Informatics", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 46, inf: 46, rus: 46 } }, 
+                        ru: { name: "Прикладная математика и информатика", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 46, inf: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 32", "Отдельная квота: 32"] 
+                    },
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "260-280", est_paid_score: "180-200",
+                        en: { name: "Applied Math and Physics", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Прикладные математика и физика", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 32", "Отдельная квота: 32"] 
+                    },
+                    { 
+                        code: "12.03.03", 
+                        est_budget_score: "255-275", est_paid_score: "175-195",
+                        en: { name: "Photonics and Optoinformatics", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Фотоника и оптоинформатика", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    }
+                ]
+            },
+            {
+                id: "ifib",
+                en: { 
+                    name: "Engineering and Physical Institute of Biomedicine (IEPhB)", 
+                    location: "Kashirskoye Hwy, 31, bldg. 3", 
+                    profile: "Medical physics, biotech systems, chemical tech",
+                    contacts: "+7 (495) 788-56-99 ext. 8600 | ifib@mephi.ru"
+                },
+                ru: { 
+                    name: "Инженерно-физический институт биомедицины (ИФИБ)", 
+                    location: "Каширское ш., 31, корп. 3", 
+                    profile: "Медицинская физика, биотехсистемы, химтехнологии",
+                    contacts: "+7 (495) 788-56-99 доб. 8600 | ifib@mephi.ru"
+                },
+                budget_spots: 180, paid_spots: 60, tuition: "600,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.02", 
+                        est_budget_score: "265-285", est_paid_score: "185-205",
+                        en: { name: "Physics", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Физика", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 18", "Отдельная квота: 18"] 
+                    },
+                    { 
+                        code: "12.03.04", 
+                        est_budget_score: "250-270", est_paid_score: "170-190",
+                        en: { name: "Biotechnical Systems and Technologies", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Biology OR Chemistry (EGE, choice)(III)", "Russian (EGE)(IV)"], min_scores: { phys: 46, math: 46, bio_chem: 46, rus: 46 } }, 
+                        ru: { name: "Биотехнические системы и технологии", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Биология ИЛИ Химия (ЕГЭ, по выбору)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { phys: 46, math: 46, bio_chem: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 12", "Отдельная квота: 12"] 
+                    }
+                ]
+            },
+            {
+                id: "intel",
+                en: { 
+                    name: "Institute of Nanotechnologies in Electronics (INTEL)", 
+                    location: "Kashirskoye Hwy, 31, bldg. 4", 
+                    profile: "Spintronics, nanoelectronics, info security",
+                    contacts: "+7 (495) 788-56-99 ext. 8700 | intel@mephi.ru"
+                },
+                ru: { 
+                    name: "Институт нанотехнологий в электронике (ИНТЭЛ)", 
+                    location: "Каширское ш., 31, корп. 4", 
+                    profile: "Спинтроника, наноэлектроника, информационная безопасность",
+                    contacts: "+7 (495) 788-56-99 доб. 8700 | intel@mephi.ru"
+                },
+                budget_spots: 220, paid_spots: 70, tuition: "530,000 ₽",
+                programs: [
+                    { 
+                        code: "03.03.01", 
+                        est_budget_score: "260-280", est_paid_score: "180-200",
+                        en: { name: "Applied Math and Physics", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Прикладные математика и физика", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "10.05.01", 
+                        est_budget_score: "270-290", est_paid_score: "190-210",
+                        en: { name: "Information Security", exams: ["Informatics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Компьютерная безопасность", exams: ["Информатика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 22", "Отдельная квота: 22"] 
+                    },
+                    { 
+                        code: "11.03.04", 
+                        est_budget_score: "255-275", est_paid_score: "175-195",
+                        en: { name: "Electronics and Nanoelectronics", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Электроника и наноэлектроника", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 20", "Отдельная квота: 20"] 
+                    }
+                ]
+            },
+            {
+                id: "iiks",
+                en: { 
+                    name: "Institute of Intelligent Cybernetic Systems (IICS)", 
+                    location: "Kashirskoye Hwy, 31, bldg. 5", 
+                    profile: "AI, software engineering, cybernetics, info sec",
+                    contacts: "+7 (495) 788-56-99 ext. 8800 | iiks@mephi.ru"
+                },
+                ru: { 
+                    name: "Институт интеллектуальных кибернетических систем (ИИКС)", 
+                    location: "Каширское ш., 31, корп. 5", 
+                    profile: "ИИ, программная инженерия, кибернетика, инфобезопасность",
+                    contacts: "+7 (495) 788-56-99 доб. 8800 | iiks@mephi.ru"
+                },
+                budget_spots: 280, paid_spots: 90, tuition: "530,000 ₽",
+                programs: [
+                    { 
+                        code: "01.03.02", 
+                        est_budget_score: "275-295", est_paid_score: "195-215",
+                        en: { name: "Applied Math and Informatics", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 46, inf: 46, rus: 46 } }, 
+                        ru: { name: "Прикладная математика и информатика", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 46, inf: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 28", "Отдельная квота: 28"] 
+                    },
+                    { 
+                        code: "09.03.01", 
+                        est_budget_score: "270-290", est_paid_score: "190-210",
+                        en: { name: "Informatics and Computer Engineering", exams: ["Informatics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Информатика и вычислительная техника", exams: ["Информатика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 28", "Отдельная квота: 28"] 
+                    },
+                    { 
+                        code: "09.03.04", 
+                        est_budget_score: "270-290", est_paid_score: "190-210",
+                        en: { name: "Software Engineering", exams: ["Informatics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Программная инженерия", exams: ["Информатика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 28", "Отдельная квота: 28"] 
+                    }
+                ]
+            },
+            {
+                id: "ifteb",
+                en: { 
+                    name: "Institute of Financial Tech & Economic Security (IFTEB)", 
+                    location: "Kashirskoye Hwy, 31, bldg. 6", 
+                    profile: "FinTech, economic security, business informatics",
+                    contacts: "+7 (495) 788-56-99 ext. 8900 | ifteb@mephi.ru"
+                },
+                ru: { 
+                    name: "Институт финтехов и экономической безопасности (ИФТЭБ)", 
+                    location: "Каширское ш., 31, корп. 6", 
+                    profile: "Финтех, экономическая безопасность, бизнес-информатика",
+                    contacts: "+7 (495) 788-56-99 доб. 8900 | ifteb@mephi.ru"
+                },
+                budget_spots: 150, paid_spots: 100, tuition: "490,000 ₽",
+                programs: [
+                    { 
+                        code: "09.03.03", 
+                        est_budget_score: "250-270", est_paid_score: "170-190",
+                        en: { name: "Applied Informatics", exams: ["Informatics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Прикладная информатика", exams: ["Информатика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "38.03.01", 
+                        est_budget_score: "245-265", est_paid_score: "165-185",
+                        en: { name: "Economics", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 46, soc: 46, rus: 46 } }, 
+                        ru: { name: "Экономика", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 46, soc: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    },
+                    { 
+                        code: "38.03.05", 
+                        est_budget_score: "245-265", est_paid_score: "165-185",
+                        en: { name: "Business Informatics", exams: ["Informatics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Бизнес-информатика", exams: ["Информатика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 15", "Отдельная квота: 15"] 
+                    }
+                ]
+            },
+            {
+                id: "imo",
+                en: { 
+                    name: "Institute of International Relations (IIR)", 
+                    location: "Kashirskoye Hwy, 31, bldg. 7", 
+                    profile: "International relations, global politics, diplomacy",
+                    contacts: "+7 (495) 788-56-99 ext. 9000 | imo@mephi.ru"
+                },
+                ru: { 
+                    name: "Институт международных отношений (ИМО)", 
+                    location: "Каширское ш., 31, корп. 7", 
+                    profile: "Международные отношения, глобальная политика, дипломатия",
+                    contacts: "+7 (495) 788-56-99 доб. 9000 | imo@mephi.ru"
+                },
+                budget_spots: 40, paid_spots: 30, tuition: "500,000 ₽",
+                programs: [
+                    { 
+                        code: "41.03.05", 
+                        est_budget_score: "260-280", est_paid_score: "180-200",
+                        en: { name: "International Relations", exams: ["History (EGE)(I)", "Foreign Lang (EGE)(II)", "Social Studies (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { hist: 46, for: 46, soc: 46, rus: 46 } }, 
+                        ru: { name: "Международные отношения", exams: ["История (ЕГЭ)(I)", "Иностранный язык (ЕГЭ)(II)", "Обществознание (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist: 46, for: 46, soc: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 4", "Отдельная квота: 4"] 
+                    }
+                ]
+            },
+            {
+                id: "iftis",
+                en: { 
+                    name: "Institute of Physico-Technical Intelligent Systems (IPhTIS)", 
+                    location: "Kashirskoye Hwy, 31, bldg. 8", 
+                    profile: "Instrumentation, robotics, automation, system analysis",
+                    contacts: "+7 (495) 788-56-99 ext. 9100 | iftis@mephi.ru"
+                },
+                ru: { 
+                    name: "Институт физико-технических интеллектуальных систем (ИФТИС)", 
+                    location: "Каширское ш., 31, корп. 8", 
+                    profile: "Приборостроение, робототехника, автоматизация, системный анализ",
+                    contacts: "+7 (495) 788-56-99 доб. 9100 | iftis@mephi.ru"
+                },
+                budget_spots: 260, paid_spots: 80, tuition: "560,000 ₽",
+                programs: [
+                    { 
+                        code: "12.03.01", 
+                        est_budget_score: "250-270", est_paid_score: "170-190",
+                        en: { name: "Instrument Making", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Приборостроение", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 26", "Отдельная квота: 26"] 
+                    },
+                    { 
+                        code: "15.03.04", 
+                        est_budget_score: "245-265", est_paid_score: "165-185",
+                        en: { name: "Automation of Technological Processes", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Автоматизация технологических процессов", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 20", "Отдельная квота: 20"] 
+                    },
+                    { 
+                        code: "15.03.06", 
+                        est_budget_score: "255-275", est_paid_score: "175-195",
+                        en: { name: "Mechatronics and Robotics", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Мехатроника и робототехника", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 20", "Отдельная квота: 20"] 
+                    }
+                ]
+            },
+            {
+                id: "fbiuks",
+                en: { 
+                    name: "Faculty of Business Informatics & Complex Systems (FBICS)", 
+                    location: "Kashirskoye Hwy, 31, bldg. 9", 
+                    profile: "Management, business analytics, complex systems control",
+                    contacts: "+7 (495) 788-56-99 ext. 9200 | fbiuks@mephi.ru"
+                },
+                ru: { 
+                    name: "Факультет бизнес-информатики и управления комплексными системами (ФБИУКС)", 
+                    location: "Каширское ш., 31, корп. 9", 
+                    profile: "Менеджмент, бизнес-аналитика, управление сложными системами",
+                    contacts: "+7 (495) 788-56-99 доб. 9200 | fbiuks@mephi.ru"
+                },
+                budget_spots: 100, paid_spots: 70, tuition: "510,000 ₽",
+                programs: [
+                    { 
+                        code: "27.03.03", 
+                        est_budget_score: "250-270", est_paid_score: "170-190",
+                        en: { name: "System Analysis and Control", exams: ["Math (EGE)(I)", "Physics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 46, phys: 46, rus: 46 } }, 
+                        ru: { name: "Системный анализ и управление", exams: ["Математика (ЕГЭ)(I)", "Физика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 46, phys: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "38.03.02", 
+                        est_budget_score: "245-265", est_paid_score: "165-185",
+                        en: { name: "Management", exams: ["Math (EGE)(I)", "Social Studies (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 46, soc: 46, rus: 46 } }, 
+                        ru: { name: "Менеджмент", exams: ["Математика (ЕГЭ)(I)", "Обществознание (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 46, soc: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    },
+                    { 
+                        code: "38.03.05", 
+                        est_budget_score: "245-265", est_paid_score: "165-185",
+                        en: { name: "Business Informatics", exams: ["Informatics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        ru: { name: "Бизнес-информатика", exams: ["Информатика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { inf: 46, math: 46, rus: 46 } }, 
+                        quotas: ["Особая квота: 10", "Отдельная квота: 10"] 
+                    }
+                ]
+            }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderInstitute(lang) {
+            const instId = getQueryParam('id');
+            const inst = institutesData.find(f => f.id === instId);
+            const container = document.getElementById('institute-content');
+            
+            if (!inst) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'Institute not found' : 'Институт не найден'}</h2><a href="mephi.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to MEPhI' : 'Вернуться в МИФИ'}</a></div>`;
+                return;
+            }
+
+            const title = inst[lang].name;
+            const info = inst[lang];
+            
+            const programsHtml = inst.programs.map(prog => `
+                <div class="program-card">
+                    <div class="program-header">
+                        <div>
+                            <div class="program-code">${prog.code}</div>
+                            <div class="program-name">${prog[lang].name}</div>
+                        </div>
+                        <div class="scores-box">
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Budget Score' : 'Бюджет'}</span>
+                                <span class="score-value">${prog.est_budget_score}</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">${lang === 'en' ? 'Paid Score' : 'Платное'}</span>
+                                <span class="score-value paid">${prog.est_paid_score}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="exam-list">
+                        ${prog[lang].exams.map((exam, idx) => `
+                            <li class="exam-item">
+                                <span class="exam-priority">${idx + 1}</span>
+                                <div class="exam-details">
+                                    <span class="exam-type">${exam.split('(')[0].trim()}</span>
+                                    <span class="exam-format">(${exam.match(/\(([^)]+)\)/)?.[1] || ''})</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 1rem; color: var(--primary-color);">${lang === 'en' ? 'Minimum Scores (EGE)' : 'Минимальные баллы (ЕГЭ)'}</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        ${Object.entries(prog[lang].min_scores).map(([key, val]) => `
+                            <span class="min-score-badge">${key.toUpperCase()}: ${val}</span>
+                        `).join('')}
+                    </div>
+
+                    ${prog.quotas.length > 0 ? `
+                        <div style="margin-top: 1rem;">
+                            ${prog.quotas.map(q => `<span class="min-score-badge" style="background: #fff; border-color: #ffcdd2;">${q}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            const infoBlock = `
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-circle-info"></i> ${lang === 'en' ? 'Institute Information' : 'Информация об институте'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-location-dot"></i> <span>${info.location}</span></li>
+                            <li><i class="fa-solid fa-graduation-cap"></i> <span><strong>${lang === 'en' ? 'Profile:' : 'Профиль:'}</strong> ${info.profile}</span></li>
+                            <li><i class="fa-solid fa-phone"></i> <span>${info.contacts}</span></li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fa-solid fa-chart-pie"></i> ${lang === 'en' ? 'Admission Stats' : 'Статистика приема'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fa-solid fa-users"></i> <span><strong>${lang === 'en' ? 'Budget spots:' : 'Бюджет:'}</strong> ${inst.budget_spots}</span></li>
+                            <li><i class="fa-solid fa-wallet"></i> <span><strong>${lang === 'en' ? 'Paid spots:' : 'Платное:'}</strong> ${inst.paid_spots}</span></li>
+                            <li><i class="fa-solid fa-ruble-sign"></i> <span><strong>${lang === 'en' ? 'Tuition:' : 'Стоимость:'}</strong> ${inst.tuition} / year</span></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            const navLinksHtml = institutesData
+                .filter(f => f.id !== instId)
+                .map(f => `<a href="?id=${f.id}" class="nav-link">${f[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header">
+                    <div class="container institute-title">
+                        <h1>${title}</h1>
+                        <div class="institute-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${inst.programs.length} ${lang === 'en' ? 'programs' : 'направлений'}</span>
+                            <span><i class="fa-solid fa-calendar-check"></i> ${lang === 'en' ? 'Admission Rules 2026' : 'Правила приема 2026'}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container">
+                    ${infoBlock}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">${lang === 'en' ? 'Programs & Requirements' : 'Направления и требования'}</h2>
+                    ${programsHtml}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Institutes' : 'Другие институты'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_uni: "Universities", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_uni: "Вузы", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderInstitute(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

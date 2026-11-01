@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Olympiads</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-color: #5a5ce6; --primary-hover: #4a4cd6; --text-dark: #111; --text-gray: #6b7280; --bg-light: #f9fafb; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header Styles */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: #5A5CE6; }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Specific Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); 
+            padding: 5rem 0 3rem; 
+            text-align: center; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .page-header h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em; }
+        .page-header p { font-size: 1.2rem; color: var(--text-gray); max-width: 600px; margin: 0 auto 2rem; }
+        
+        /* Search Bar */
+        .search-container { max-width: 600px; margin: 0 auto; position: relative; }
+        .search-input { 
+            width: 100%; 
+            padding: 1rem 1.5rem 1rem 3.5rem; 
+            border-radius: 50px; 
+            border: 2px solid #e5e7eb; 
+            font-size: 1.1rem; 
+            font-family: inherit; 
+            outline: none; 
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .search-input:focus { border-color: var(--primary-color); box-shadow: 0 4px 20px rgba(90, 92, 230, 0.15); }
+        .search-icon { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 1.2rem; }
+        
+        .olymp-list { display: flex; flex-direction: column; gap: 1.5rem; padding-bottom: 6rem; max-width: 800px; margin: 0 auto; }
+        .olymp-card { 
+            background: #fff; 
+            padding: 2rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-left: 6px solid var(--primary-color); 
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .olymp-card:hover { 
+            transform: translateX(10px); 
+            box-shadow: 0 8px 25px rgba(90, 92, 230, 0.15);
+        }
+        .olymp-info h3 { font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .olymp-info p { color: var(--text-gray); font-size: 1rem; line-height: 1.5; }
+        .olymp-date { 
+            color: var(--primary-color); 
+            font-weight: 700; 
+            background: #eef2ff; 
+            padding: 0.8rem 1.5rem; 
+            border-radius: 12px; 
+            white-space: nowrap; 
+            font-size: 0.95rem;
+        }
+        
+        /* Стили для тегов */
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+        .tag { 
+            background: #f3f4f6; 
+            color: var(--text-gray); 
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+        }
+        
+        .no-results { text-align: center; padding: 3rem; color: var(--text-gray); font-size: 1.2rem; display: none; }
+
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .page-header h1 { font-size: 2.5rem; } 
+            .olymp-card { flex-direction: column; align-items: flex-start; gap: 1rem; } 
+            .olymp-date { align-self: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <a href="olympiads.html" data-key="nav_olymp">Olympiads</a>
+                <a href="volunteering.html" data-key="nav_vol">Volonteering</a>
+                <a href="calendar.html" data-key="nav_cal">Calendar</a>
+                <a href="reviews.html" data-key="nav_rew">Online Schools</a>
+                <!-- Добавляем ссылку на рекомендации -->
+                <a href="recommendations.html" style="color: var(--primary-color); font-weight: 700;">Recommendations</a> 
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 data-key="olymp_page_title">Upcoming Olympiads</h1>
+                <p data-key="olymp_page_subtitle">Boost your chances with academic competitions</p>
+                
+                <!-- SEARCH BAR -->
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="olymp-search" class="search-input" data-placeholder-key="olymp_search_placeholder" placeholder="Search by subject (e.g., Physics, Math)...">
+                </div>
+            </div>
+        </section>
+        
+        <section class="container">
+            <div class="olymp-list" id="olymp-container">
+                <!-- Cards will be injected here by JS -->
+            </div>
+            <div class="no-results" id="no-results" data-key="olymp_no_results">No olympiads found for this subject.</div>
+        </section>
+    </main>
+
+    <script>
+        // --- OLYMPIADS DATA WITH SUBJECTS FOR SEARCH ---
+        const olympiadsData = [
+            { id: "vsosh", subjects: ["math", "physics", "chemistry", "biology", "geography", "informatics", "history", "social", "russian", "literature", "foreign", "ecology", "economics", "art", "математика", "физика", "химия", "биология", "география", "информатика", "история", "обществознание", "русский", "литература", "иностранный", "экология", "экономика", "искусство"] },
+            { id: "vysshaya-proba", subjects: ["data", "biology", "oriental", "design", "journalism", "engineering", "foreign", "informatics", "history", "art", "cultural", "math", "international", "social", "business", "law", "programming", "psychology", "russian", "sociology", "philology", "philosophy", "financial", "chemistry", "economics", "данные", "биология", "востоковедение", "дизайн", "журналистика", "инженерия", "иностранный", "информатика", "история", "искусство", "культурология", "математика", "международные", "обществознание", "бизнес", "право", "программирование", "психология", "русский", "социология", "филология", "философия", "финансовая", "химия", "экономика"] },
+            { id: "mosh", subjects: ["astronomy", "genetics", "biology", "informatics", "physics", "economics", "math", "history", "social", "law", "linguistics", "philology", "chemistry", "geography", "arabic", "bioeconomics", "art", "ecology", "statistics", "robotics", "financial", "engineering", "it", "research", "астрономия", "генетика", "биология", "информатика", "физика", "экономика", "математика", "история", "обществознание", "право", "лингвистика", "филология", "химия", "география", "арабский", "биоэкономика", "искусство", "экология", "статистика", "робототехника", "финансовая", "инженерия", "ит", "исследования"] },
+            { id: "spbu", subjects: ["biology", "chemistry", "math", "physics", "informatics", "history", "social", "law", "economics", "geography", "journalism", "medicine", "philology", "political", "spanish", "english", "engineering", "биология", "химия", "математика", "физика", "информатика", "история", "обществознание", "право", "экономика", "география", "журналистика", "медицина", "филология", "политология", "испанский", "английский", "инженерия"] },
+            { id: "phystech", subjects: ["math", "physics", "informatics", "chemistry", "biology", "russian", "economics", "математика", "физика", "информатика", "химия", "биология", "русский", "экономика"] },
+            { id: "lomonosov", subjects: ["math", "physics", "chemistry", "biology", "geography", "informatics", "history", "social", "russian", "literature", "foreign", "philosophy", "journalism", "law", "economics", "political", "psychology", "sociology", "art", "математика", "физика", "химия", "биология", "география", "информатика", "история", "обществознание", "русский", "литература", "иностранный", "философия", "журналистика", "право", "экономика", "политология", "психология", "социология", "искусство"] },
+            { id: "pvg", subjects: ["math", "physics", "journalism", "foreign", "literature", "history", "social", "geography", "informatics", "математика", "физика", "журналистика", "иностранный", "литература", "история", "обществознание", "география", "информатика"] },
+            { id: "zvezda", subjects: ["natural", "technology", "math", "physics", "informatics", "chemistry", "economics", "law", "history", "social", "russian", "foreign", "естественные", "технологии", "математика", "физика", "информатика", "химия", "экономика", "право", "история", "обществознание", "русский", "иностранный"] },
+            { id: "turgor", subjects: ["math", "logic", "математика", "логика"] },
+            { id: "rosatom", subjects: ["math", "physics", "informatics", "chemistry", "biology", "geography", "history", "social", "russian", "foreign", "economics", "law", "ecology", "математика", "физика", "информатика", "химия", "биология", "география", "история", "обществознание", "русский", "иностранный", "экономика", "право", "экология"] }
+        ];
+
+        const translations = {
+            en: {
+                nav_home: "Home", nav_uni: "Universities", nav_olymp: "Olympiads",
+                btn_login: "Log In", btn_signup: "Sign Up",
+                olymp_page_title: "Upcoming Olympiads",
+                olymp_page_subtitle: "Boost your chances with academic competitions",
+                olymp_search_placeholder: "Search by subject (e.g., Physics, Math)...",
+                olymp_no_results: "No olympiads found for this subject.",
+                
+                olymp_1_title: "All-Russian Olympiad of School Students",
+                olymp_1_desc: "The most prestigious national competition. Winners get direct admission to any university.",
+                olymp_2_title: "Vysshaya Proba Olympiad",
+                olymp_2_desc: "Organized by HSE University. Covers economics, law, journalism, and foreign languages.",
+                olymp_3_title: "Moscow Olympiad for School Students",
+                olymp_3_desc: "Major multidisciplinary olympiad supported by MSU. Strong in math, physics, and IT.",
+                olymp_4_title: "St. Petersburg State University Olympiad",
+                olymp_4_desc: "Comprehensive competition covering humanities, natural sciences, and engineering.",
+                olymp_5_title: "Phystech International Olympiad",
+                olymp_5_desc: "Elite physics and math competition by MIPT. High difficulty, high rewards.",
+                olymp_6_title: "Lomonosov Olympiad",
+                olymp_6_desc: "Multidisciplinary olympiad by MSU. Great for students interested in research careers.",
+                olymp_7_title: "Conquer the Sparrow Hills!",
+                olymp_7_desc: "Unique format combining academic tasks with an adventurous final stage at MSU.",
+                olymp_8_title: "Engineering Olympiad for School Students",
+                olymp_8_desc: "Focus on technical creativity, robotics, and applied engineering problems.",
+                olymp_9_title: "Tournament of Towns",
+                olymp_9_desc: "International math competition known for non-standard, creative problem-solving tasks.",
+                olymp_10_title: "Rosatom Olympiad",
+                olymp_10_desc: "Specialized physics and nuclear science olympiad supported by the Rosatom corporation.",
+
+                olymp_date_1: "Sep 2025 – Apr 2026", olymp_date_2: "Nov 2025 – Feb 2026", olymp_date_3: "Oct 2025 – Mar 2026",
+                olymp_date_4: "Nov 2025 – Feb 2026", olymp_date_5: "Dec 2025 – Feb 2026", olymp_date_6: "Oct 2025 – Mar 2026",
+                olymp_date_7: "Jan 2026 – Apr 2026", olymp_date_8: "Nov 2025 – Feb 2026", olymp_date_9: "Oct 2025 – Mar 2026",
+                olymp_date_10: "Nov 2025 – Feb 2026",
+
+                tag_all_subjects: "All Subjects", tag_prestige: "Prestige", tag_hse: "HSE", tag_social: "Social Sciences",
+                tag_msu: "MSU", tag_math: "Math & IT", tag_spbu: "SPbU", tag_humanities: "Humanities", tag_mipt: "MIPT",
+                tag_physics: "Physics", tag_research: "Research", tag_adventure: "Adventure", tag_multidisciplinary: "Multidisciplinary",
+                tag_engineering: "Engineering", tag_tech: "Tech", tag_logic: "Logic", tag_nuclear: "Nuclear"
+            },
+            ru: {
+                nav_home: "Главная", nav_uni: "Вузы", nav_olymp: "Олимпиады",
+                btn_login: "Войти", btn_signup: "Регистрация",
+                olymp_page_title: "Ближайшие олимпиады",
+                olymp_page_subtitle: "Повысь свои шансы на поступление с помощью академических соревнований",
+                olymp_search_placeholder: "Поиск по предмету (например, Физика, Математика)...",
+                olymp_no_results: "Олимпиады по этому предмету не найдены.",
+                
+                olymp_1_title: "Всероссийская олимпиада школьников",
+                olymp_1_desc: "Самое престижное национальное соревнование. Победители получают право поступления в любой вуз без экзаменов.",
+                olymp_2_title: "Олимпиада «Высшая проба»",
+                olymp_2_desc: "Проводится НИУ ВШЭ. Охватывает экономику, право, журналистику и иностранные языки.",
+                olymp_3_title: "Московская олимпиада школьников",
+                olymp_3_desc: "Крупная многопрофильная олимпиада при поддержке МГУ. Сильна в математике, физике и IT.",
+                olymp_4_title: "Олимпиада СПбГУ",
+                olymp_4_desc: "Комплексное соревнование, охватывающее гуманитарные, естественные науки и инженерию.",
+                olymp_5_title: "Олимпиада «Физтех»",
+                olymp_5_desc: "Элитная олимпиада по физике и математике от МФТИ. Высокая сложность, высокие награды.",
+                olymp_6_title: "Олимпиада «Ломоносов»",
+                olymp_6_desc: "Многопрофильная олимпиада МГУ. Отличный выбор для студентов, интересующихся научной карьерой.",
+                olymp_7_title: "Покори Воробьёвы горы!",
+                olymp_7_desc: "Уникальный формат, сочетающий академические задачи с приключенческим финальным этапом в МГУ.",
+                olymp_8_title: "Инженерная олимпиада школьников",
+                olymp_8_desc: "Фокус на техническом творчестве, робототехнике и прикладных инженерных задачах.",
+                olymp_9_title: "Турнир городов",
+                olymp_9_desc: "Международная математическая олимпиада, известная нестандартными задачами на креативное мышление.",
+                olymp_10_title: "Олимпиада «Росатом»",
+                olymp_10_desc: "Специализированная олимпиада по физике и ядерным наукам при поддержке госкорпорации Росатом.",
+
+                olymp_date_1: "Сен 2025 – Апр 2026", olymp_date_2: "Ноя 2025 – Фев 2026", olymp_date_3: "Окт 2025 – Мар 2026",
+                olymp_date_4: "Ноя 2025 – Фев 2026", olymp_date_5: "Дек 2025 – Фев 2026", olymp_date_6: "Окт 2025 – Мар 2026",
+                olymp_date_7: "Янв 2026 – Апр 2026", olymp_date_8: "Ноя 2025 – Фев 2026", olymp_date_9: "Окт 2025 – Мар 2026",
+                olymp_date_10: "Ноя 2025 – Фев 2026",
+
+                tag_all_subjects: "Все предметы", tag_prestige: "Престиж", tag_hse: "ВШЭ", tag_social: "Соц. науки",
+                tag_msu: "МГУ", tag_math: "Математика и IT", tag_spbu: "СПбГУ", tag_humanities: "Гуманитарные", tag_mipt: "МФТИ",
+                tag_physics: "Физика", tag_research: "Наука", tag_adventure: "Приключения", tag_multidisciplinary: "Многопрофильная",
+                tag_engineering: "Инженерия", tag_tech: "Технологии", tag_logic: "Логика", tag_nuclear: "Ядерная"
+            }
+        };
+
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            document.querySelectorAll('[data-placeholder-key]').forEach(el => {
+                const key = el.getAttribute('data-placeholder-key');
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+            renderOlympiads(document.getElementById('olymp-search').value, lang);
+            localStorage.setItem('site_lang', lang);
+        }
+
+        function renderOlympiads(query, lang) {
+            const container = document.getElementById('olymp-container');
+            const noResults = document.getElementById('no-results');
+            container.innerHTML = '';
+            
+            const lowerQuery = query.toLowerCase().trim();
+            
+            // Map IDs to translation keys for titles/descriptions/dates/tags
+            const idToKeyMap = {
+                "vsosh": "1", "vysshaya-proba": "2", "mosh": "3", "spbu": "4", 
+                "phystech": "5", "lomonosov": "6", "pvg": "7", "zvezda": "8", 
+                "turgor": "9", "rosatom": "10"
+            };
+
+            const filtered = olympiadsData.filter(o => {
+                if (!lowerQuery) return true;
+                // Check if query matches any subject in the array
+                return o.subjects.some(s => s.toLowerCase().includes(lowerQuery));
+            });
+
+            if (filtered.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                filtered.forEach(o => {
+                    const keyNum = idToKeyMap[o.id];
+                    const card = document.createElement('a');
+                    card.href = `olympiad-detail.html?id=${o.id}`;
+                    card.className = 'olymp-card';
+                    
+                    card.innerHTML = `
+                        <div class="olymp-info">
+                            <h3 data-key="olymp_${keyNum}_title">${translations[lang][`olymp_${keyNum}_title`]}</h3>
+                            <p data-key="olymp_${keyNum}_desc">${translations[lang][`olymp_${keyNum}_desc`]}</p>
+                            <div class="tags">
+                                ${getTagsForOlympiad(o.id, lang)}
+                            </div>
+                        </div>
+                        <div class="olymp-date" data-key="olymp_date_${keyNum}">${translations[lang][`olymp_date_${keyNum}`]}</div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        function getTagsForOlympiad(id, lang) {
+            const tagsMap = {
+                "vsosh": ["tag_all_subjects", "tag_prestige"],
+                "vysshaya-proba": ["tag_hse", "tag_social"],
+                "mosh": ["tag_msu", "tag_math"],
+                "spbu": ["tag_spbu", "tag_humanities"],
+                "phystech": ["tag_mipt", "tag_physics"],
+                "lomonosov": ["tag_msu", "tag_research"],
+                "pvg": ["tag_adventure", "tag_multidisciplinary"],
+                "zvezda": ["tag_engineering", "tag_tech"],
+                "turgor": ["tag_math", "tag_logic"],
+                "rosatom": ["tag_nuclear", "tag_physics"]
+            };
+            const tags = tagsMap[id] || [];
+            return tags.map(t => `<span class="tag" data-key="${t}">${translations[lang][t]}</span>`).join('');
+        }
+
+        document.getElementById('olymp-search').addEventListener('input', (e) => {
+            renderOlympiads(e.target.value, currentLang);
+        });
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

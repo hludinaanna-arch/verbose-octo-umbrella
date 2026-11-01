@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Колледжи</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #5a5ce6; 
+            --primary-hover: #4a4cd6; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: #5A5CE6; }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); 
+            padding: 4rem 0; 
+            text-align: center; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .page-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; color: var(--primary-color); }
+        .page-title p { font-size: 1.2rem; color: var(--text-gray); margin-top: 1rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        /* Search & Filters */
+        .search-container { max-width: 600px; margin: 0 auto 2rem; position: relative; }
+        .search-input { 
+            width: 100%; padding: 1rem 1.5rem; padding-right: 3rem; 
+            border-radius: 50px; border: 2px solid #e5e7eb; font-size: 1.1rem; 
+            outline: none; transition: all 0.3s; 
+        }
+        .search-input:focus { border-color: var(--primary-color); box-shadow: 0 4px 15px rgba(90, 92, 230, 0.1); }
+        .search-icon { position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); color: var(--primary-color); }
+
+        .filters { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 3rem; flex-wrap: wrap; }
+        .filter-btn { 
+            padding: 0.6rem 1.5rem; border-radius: 50px; border: 2px solid #e5e7eb; 
+            background: #fff; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 0.9rem;
+        }
+        .filter-btn.active, .filter-btn:hover { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+
+        /* Grid */
+        .colleges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 5rem; }
+        .college-card { 
+            background: #fff; padding: 2rem; border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: transform 0.3s, box-shadow 0.3s; 
+            display: flex; flex-direction: column; text-decoration: none; color: inherit;
+            border: 2px solid transparent; border-top: 5px solid var(--primary-color);
+        }
+        .college-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(90, 92, 230, 0.1); border-color: var(--primary-color); }
+        .college-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-dark); }
+        .college-location { color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .college-specs { font-size: 0.95rem; color: var(--text-gray); margin-bottom: 1.5rem; flex-grow: 1; line-height: 1.5; }
+        .college-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding-top: 1rem; border-top: 1px solid #f3f4f6; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--primary-color); }
+        .stat-label { font-size: 0.8rem; color: var(--text-gray); }
+        
+        .no-results { text-align: center; padding: 3rem; color: var(--text-gray); font-size: 1.2rem; display: none; grid-column: 1 / -1; }
+
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .page-title h1 { font-size: 2.2rem; } 
+            .filters { gap: 0.5rem; }
+            .filter-btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html">Главная</a>
+                <a href="universities.html">Вузы</a>
+                <a href="olympiads.html">Олимпиады</a>
+                <a href="volunteering.html">Волонтерство</a>
+                <a href="calendar.html">Календарь</a>
+                <a href="reviews.html">Отзывы</a>
+                <a href="colleges.html" style="color: var(--primary-color);">Колледжи</a>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login">Войти</a>
+                <a href="#" class="btn btn-signup">Регистрация</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="page-header">
+            <div class="container page-title">
+                <h1>Колледжи Москвы</h1>
+                <p>Лучшие учреждения среднего профессионального образования с актуальными ценами и проходными баллами на 2026 год</p>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Поиск по названию или специальности...">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            </div>
+
+            <div class="filters" id="filtersContainer">
+                <button class="filter-btn active" data-filter="all">Все направления</button>
+                <button class="filter-btn" data-filter="ir">Международные отношения</button>
+                <button class="filter-btn" data-filter="econ">Экономика</button>
+                <button class="filter-btn" data-filter="law">Юриспруденция</button>
+                <button class="filter-btn" data-filter="mgmt">Менеджмент</button>
+                <button class="filter-btn" data-filter="it">IT и ИИ</button>
+                <button class="filter-btn" data-filter="const">Строительство</button>
+                <button class="filter-btn" data-filter="tour">Туризм</button>
+            </div>
+            
+            <div class="colleges-grid" id="collegesContainer">
+                <!-- Cards injected by JS -->
+            </div>
+            <div class="no-results" id="noResults">Колледжи не найдены. Попробуйте изменить запрос.</div>
+        </section>
+    </main>
+
+    <script>
+        // --- COLLEGES DATA ---
+        const collegesData = [
+            {
+                id: "mid",
+                name: "Колледж МИД России",
+                category: "ir",
+                location: "Москва, Озерковская набережная",
+                specs: ["38.02.04 Таможенное дело", "46.02.01 Документационное обеспечение управления", "40.02.04 Юриспруденция"],
+                price: "275 000 ₽/год",
+                budget: 90,
+                paid: 420,
+                score: "Уточняется",
+                subjects: "Русский язык, математика",
+                site: "https://college-mid.ru/",
+                phone: "+7 (495) 953-08-32"
+            },
+            {
+                id: "mfk",
+                name: "Московский финансовый колледж Финансового университета",
+                category: "econ",
+                location: "Москва, ул. Олеко Дундича, д. 23",
+                specs: ["38.02.01 Экономика и бухгалтерский учет", "38.02.07 Банковское дело", "38.02.04 Таможенное дело"],
+                price: "от 218 900 ₽/год",
+                budget: 170,
+                paid: 225,
+                score: "от 4.3 (229 баллов)",
+                subjects: "Русский язык, математика + доп. предметы",
+                site: "https://www.fa.ru/mfc/",
+                phone: "+7 (495) 249-53-34"
+            },
+            {
+                id: "msal",
+                name: "Юридический колледж им. Н.С. Киселевой при МГЮА",
+                category: "law",
+                location: "Москва, ул. Знаменка, д. 23",
+                specs: ["40.02.01 Право и соц. обеспечение", "40.02.02 Правоохранительная деятельность", "40.02.03 Право и судебное администрирование"],
+                price: "от 188 000 ₽/год",
+                budget: null,
+                paid: null,
+                score: "Уточняется",
+                subjects: "Русский язык, математика, обществознание",
+                site: "https://msal.ru/structure/instituty/kolledzh-prava-imeni-n-s-kiselevoy/",
+                phone: "8 800 555-79-19"
+            },
+            {
+                id: "ranepa",
+                name: "Колледж многоуровневого проф. образования РАНХиГС",
+                category: "mgmt",
+                location: "Москва, проспект Вернадского, д. 82",
+                specs: ["38.02.01 Экономика и бух. учет", "38.02.04 Менеджмент", "09.02.11 Разработка ПО"],
+                price: "от 260 000 ₽/год",
+                budget: "Увеличены на 11.5%",
+                paid: null,
+                score: "4.0–4.5",
+                subjects: "Русский язык, математика, обществознание/информатика",
+                site: "https://kmpo.ranepa.ru/",
+                phone: "+7 (495) 434-99-33"
+            },
+            {
+                id: "ithub",
+                name: "IThub College",
+                category: "it",
+                location: "Москва и 200+ филиалов по РФ",
+                specs: ["09.02.07 Информационные системы и программирование", "09.02.11 Разработка ПО", "28+ IT-специализаций"],
+                price: "от 350 000 ₽/год",
+                budget: 0,
+                paid: 6566,
+                score: "Конкурсный отбор",
+                subjects: "Математика, информатика, русский язык",
+                site: "https://ithubcollege.ru/",
+                phone: "8 (800) 505-44-77"
+            },
+            {
+                id: "kadrs",
+                name: "Колледж архитектуры, дизайна и реинжиниринга № 26",
+                category: "const",
+                location: "Москва, ул. Вешняковская, д. 6",
+                specs: ["08.02.01 Строительство и эксплуатация зданий", "54.02.01 Дизайн (по отраслям)"],
+                price: "Уточняется",
+                budget: null,
+                paid: null,
+                score: "Ниже среднего",
+                subjects: "Русский язык, математика + рисунок/черчение",
+                site: "https://26kadr.ru/",
+                phone: "+7 (495) 375-26-26"
+            },
+            {
+                id: "tsaritsyno",
+                name: "Колледж «Царицыно»",
+                category: "tour",
+                location: "Москва, Пролетарский проспект, д. 78",
+                specs: ["43.02.10 Туризм", "43.02.11 Гостиничное дело"],
+                price: "Уточняется",
+                budget: null,
+                paid: null,
+                score: "Лидер отрасли",
+                subjects: "Русский язык, математика, иностранный язык",
+                site: "https://tsaritsyno.mskobr.ru/",
+                phone: "+7 (495) 355-22-22"
+            }
+        ];
+
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        function renderColleges() {
+            const container = document.getElementById('collegesContainer');
+            const noResults = document.getElementById('noResults');
+            
+            const filtered = collegesData.filter(c => {
+                const matchesFilter = currentFilter === 'all' || c.category === currentFilter;
+                const matchesSearch = c.name.toLowerCase().includes(searchQuery) || 
+                                      c.specs.some(s => s.toLowerCase().includes(searchQuery));
+                return matchesFilter && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                container.innerHTML = filtered.map(c => `
+                    <a href="college-detail.html?id=${c.id}" class="college-card">
+                        <div class="college-name">${c.name}</div>
+                        <div class="college-location"><i class="fa-solid fa-location-dot"></i> ${c.location}</div>
+                        <div class="college-specs">
+                            <strong>Специальности:</strong><br>
+                            ${c.specs.join('<br>')}
+                        </div>
+                        <div class="college-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${c.price.split(' ')[0]}</div>
+                                <div class="stat-label">Стоимость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${c.budget !== null ? c.budget : '-'}</div>
+                                <div class="stat-label">Бюджет</div>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+            }
+        }
+
+        // Filter Logic
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderColleges();
+            });
+        });
+
+        // Search Logic
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            renderColleges();
+        });
+
+        // Initial Render
+        renderColleges();
+    </script>
+</body>
+</html>

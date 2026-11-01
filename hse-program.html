@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - HSE Program</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #0e47a1; /* HSE Blue */
+            --primary-hover: #0b3a82; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+            --card-bg: #eef2ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #dce4f5 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .program-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .program-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-gray); font-size: 1.1rem; flex-wrap: wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        .info-card { background: #fff; padding: 2rem; border-radius: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .info-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.8rem; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-list i { color: var(--primary-color); margin-top: 0.3rem; width: 20px; text-align: center; }
+
+        .details-section { margin-bottom: 4rem; }
+        .detail-card { 
+            background: var(--card-bg);
+            padding: 2.5rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(14, 71, 161, 0.08); 
+            margin-bottom: 2rem; 
+            border-left: 6px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+        .detail-card:hover { transform: translateY(-2px); }
+        
+        .exam-list { list-style: none; margin-bottom: 1.5rem; }
+        .exam-item { 
+            display: flex; 
+            align-items: baseline; 
+            gap: 1rem; 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid rgba(14, 71, 161, 0.1); 
+            font-size: 1.05rem;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-priority { 
+            min-width: 28px; 
+            height: 28px; 
+            background: var(--primary-color); 
+            color: #fff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .exam-details { flex-grow: 1; }
+        .exam-type { font-weight: 600; color: var(--text-dark); }
+        .exam-format { color: var(--text-gray); font-size: 0.9rem; margin-left: 0.5rem; }
+        
+        .min-score-badge { 
+            display: inline-block; 
+            background: #fff; 
+            color: var(--primary-color); 
+            border: 1px solid #dce4f5;
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            margin-right: 0.5rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+        .nav-link { 
+            background: #fff; 
+            padding: 1.2rem; 
+            border-radius: 1rem; 
+            text-align: center; 
+            font-weight: 600; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+            transition: all 0.3s;
+        }
+        .nav-link:hover { background: var(--primary-color); color: #fff; transform: translateY(-3px); }
+
+        @media (max-width: 992px) { .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .program-title h1 { font-size: 2.2rem; } 
+            .program-meta { flex-direction: column; gap: 0.5rem; }
+            .exam-item { flex-direction: column; gap: 0.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#0e47a1"/><path d="M75 55L85 65" stroke="#0e47a1" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="program-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <script>
+        // --- DATA BASED ON Приложение 1 (1).pdf & Правила_приема_бак_2026_на сайт.pdf ---
+        const programsData = [
+            // Math & IT
+            { id: "math", en: { name: "Mathematics", exams: ["Math (EGE)(I)", "Physics OR Informatics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 75, phys_inf: 70, rus: 65 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Математика", exams: ["Математика (ЕГЭ)(I)", "Физика ИЛИ Информатика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 75, phys_inf: 70, rus: 65 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "cpm-math", en: { name: "Joint Bachelor's HSE & CPM", exams: ["Math (EGE)(I)", "Physics OR Informatics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 75, phys_inf: 65, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Совместный бакалавриат ВШЭ и ЦПМ", exams: ["Математика (ЕГЭ)(I)", "Физика ИЛИ Информатика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 75, phys_inf: 65, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "pmi", en: { name: "Applied Mathematics and Informatics", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 75, inf: 75, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Прикладная математика и информатика", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 75, inf: 75, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "pad", en: { name: "Applied Data Analysis (English)", exams: ["Math (EGE)(I)", "Informatics OR Physics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 70, inf_phys: 60, rus: 60 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Прикладной анализ данных", exams: ["Математика (ЕГЭ)(I)", "Информатика ИЛИ Физика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 70, inf_phys: 60, rus: 60 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "cs-online", en: { name: "Computer Science & Data Analysis (Online)", exams: ["Math (EGE)(I)", "Informatics OR Physics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 70, inf_phys: 65, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Компьютерные науки и анализ данных (онлайн)", exams: ["Математика (ЕГЭ)(I)", "Информатика ИЛИ Физика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 70, inf_phys: 65, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "applied-math", en: { name: "Applied Mathematics", exams: ["Physics OR Informatics (EGE, choice)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys_inf: 65, math: 65, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Прикладная математика", exams: ["Физика ИЛИ Информатика (ЕГЭ, по выбору)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys_inf: 65, math: 65, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "ict", en: { name: "Informatics and Computer Engineering", exams: ["Physics OR Informatics (EGE, choice)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys_inf: 60, math: 65, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Информатика и вычислительная техника", exams: ["Физика ИЛИ Информатика (ЕГЭ, по выбору)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys_inf: 60, math: 65, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "se", en: { name: "Software Engineering", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 70, inf: 70, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Программная инженерия", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 70, inf: 70, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "design-it", en: { name: "Design & Development of IT Products", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 70, inf: 70, rus: 60 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Дизайн и разработка информационных продуктов", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 70, inf: 70, rus: 60 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "game-dev", en: { name: "Game Development & Digital Products", exams: ["Math (EGE)(I)", "Informatics OR Physics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 65, inf_phys: 60, rus: 60 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Разработка игр и цифровых продуктов", exams: ["Математика (ЕГЭ)(I)", "Информатика ИЛИ Физика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 65, inf_phys: 60, rus: 60 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "robotics", en: { name: "Intelligent Robotic Systems Design", exams: ["Math (EGE)(I)", "Informatics OR Physics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 70, inf_phys: 70, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Проектирование интеллектуальных робототехнических систем", exams: ["Математика (ЕГЭ)(I)", "Информатика ИЛИ Физика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 70, inf_phys: 70, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "infosec", en: { name: "Information Security", exams: ["Physics OR Informatics (EGE, choice)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys_inf: 65, math: 65, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Информационная безопасность", exams: ["Физика ИЛИ Информатика (ЕГЭ, по выбору)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys_inf: 65, math: 65, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "comp-sec", en: { name: "Computer Security", exams: ["Physics OR Informatics (EGE, choice)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys_inf: 65, math: 65, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Компьютерная безопасность", exams: ["Физика ИЛИ Информатика (ЕГЭ, по выбору)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys_inf: 65, math: 65, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "telecom", en: { name: "Digital Technologies & Telecommunications", exams: ["Physics OR Informatics (EGE, choice)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys_inf: 60, math: 65, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Цифровые технологии и телекоммуникации", exams: ["Физика ИЛИ Информатика (ЕГЭ, по выбору)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys_inf: 60, math: 65, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "tech-innov-online", en: { name: "Tech Innovation Management (Online)", exams: ["Math (EGE)(I)", "Informatics OR Physics OR Chemistry (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, inf_phys_chem: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Управление технологическими инновациями (онлайн)", exams: ["Математика (ЕГЭ)(I)", "Информатика ИЛИ Физика ИЛИ Химия (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, inf_phys_chem: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+
+            // Physics, Chem & Nat Sci
+            { id: "physics", en: { name: "Physics", exams: ["Physics (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { phys: 70, math: 70, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Физика", exams: ["Физика (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { phys: 70, math: 70, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "chemistry", en: { name: "Chemistry", exams: ["Chemistry (EGE)(I)", "Math OR Physics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { chem: 70, math_phys: 70, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Химия", exams: ["Химия (ЕГЭ)(I)", "Математика ИЛИ Физика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { chem: 70, math_phys: 70, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "new-mat", en: { name: "Chemistry of New Materials", exams: ["Chemistry (EGE)(I)", "Math OR Physics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { chem: 70, math_phys: 70, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Химия новых материалов", exams: ["Химия (ЕГЭ)(I)", "Математика ИЛИ Физика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { chem: 70, math_phys: 70, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "geo-global", en: { name: "Geography of Global Changes & GIS", exams: ["Geography (EGE)(I)", "Math OR Informatics OR Physics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { geo: 60, math_inf_phys: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "География глобальных изменений и ГИС", exams: ["География (ЕГЭ)(I)", "Математика ИЛИ Информатика ИЛИ Физика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { geo: 60, math_inf_phys: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "cell-bio", en: { name: "Cellular & Molecular Biotechnology", exams: ["Biology (EGE)(I)", "Math OR Chemistry (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { bio: 70, math_chem: 70, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Клеточная и молекулярная биотехнология", exams: ["Биология (ЕГЭ)(I)", "Математика ИЛИ Химия (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { bio: 70, math_chem: 70, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "cog-neuro", en: { name: "Cognitive Neuroscience", exams: ["Biology (EGE)(I)", "Math OR Chemistry (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { bio: 70, math_chem: 70, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Когнитивная нейробиология", exams: ["Биология (ЕГЭ)(I)", "Математика ИЛИ Химия (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { bio: 70, math_chem: 70, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "urban-dev", en: { name: "Development & Urban Planning", exams: ["Math (EGE)(I)", "Russian (EGE)(II)", "Physics OR History OR Informatics OR Geography (EGE, choice)(III)"], min_scores: { math: 60, rus: 65, phys_hist_inf_geo: 65 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Девелопмент и городское планирование", exams: ["Математика (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Физика ИЛИ История ИЛИ Информатика ИЛИ География (ЕГЭ, по выбору)(III)"], min_scores: { math: 60, rus: 65, phys_hist_inf_geo: 65 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+
+            // Economics & Business
+            { id: "econ", en: { name: "Economics", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 65, soc_inf_for: 65, rus: 65 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Экономика", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 65, soc_inf_for: 65, rus: 65 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "hse-resh", en: { name: "Joint HSE & NES Economics", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 65, soc_inf_for: 65, rus: 65 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Совместная программа ВШЭ и РЭШ по экономике", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 65, soc_inf_for: 65, rus: 65 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "econ-data", en: { name: "Economics & Data Analysis", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 70, soc_inf_for: 65, rus: 65 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Экономика и анализ данных", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 70, soc_inf_for: 65, rus: 65 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "econ-stat", en: { name: "Economics & Statistics", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, soc_inf_for: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Экономика и статистика", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, soc_inf_for: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "world-econ", en: { name: "World Economy", exams: ["Math (EGE)(I)", "Social Studies OR Geography OR Informatics (EGE, choice)(II)", "Foreign Lang (EGE)(III)", "Russian (EGE)(IV)"], min_scores: { math: 60, soc_geo_inf: 65, for: 70, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Мировая экономика", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ География ИЛИ Информатика (ЕГЭ, по выбору)(II)", "Иностранный язык (ЕГЭ)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { math: 60, soc_geo_inf: 65, for: 70, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "int-fin", en: { name: "International Economics & Finance (English)", exams: ["Math (EGE)(I)", "Foreign Lang (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, for: 70, rus: 60 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Международная программа по экономике и финансам", exams: ["Математика (ЕГЭ)(I)", "Иностранный язык (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, for: 70, rus: 60 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "econ-anal-online", en: { name: "Economic Analysis (Online)", exams: ["Math (EGE)(I)", "Social Studies OR Informatics OR Foreign Lang (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, soc_inf_for: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Экономический анализ (онлайн)", exams: ["Математика (ЕГЭ)(I)", "Обществознание ИЛИ Информатика ИЛИ Иностранный язык (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, soc_inf_for: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "mgmt", en: { name: "Business Management", exams: ["Math (EGE)(I)", "Russian (EGE)(II)", "Foreign Lang (EGE)(III)"], min_scores: { math: 60, rus: 65, for: 70 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Управление бизнесом", exams: ["Математика (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Иностранный язык (ЕГЭ)(III)"], min_scores: { math: 60, rus: 65, for: 70 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "marketing", en: { name: "Marketing & Market Analytics", exams: ["Math (EGE)(I)", "Russian (EGE)(II)", "Foreign Lang (EGE)(III)"], min_scores: { math: 60, rus: 65, for: 70 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Маркетинг и рыночная аналитика", exams: ["Математика (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Иностранный язык (ЕГЭ)(III)"], min_scores: { math: 60, rus: 65, for: 70 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "int-biz", en: { name: "International Business (English)", exams: ["Math (EGE)(I)", "Russian (EGE)(II)", "Foreign Lang (EGE)(III)"], min_scores: { math: 60, rus: 65, for: 75 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Международный бизнес", exams: ["Математика (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Иностранный язык (ЕГЭ)(III)"], min_scores: { math: 60, rus: 65, for: 75 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "public-admin", en: { name: "Public Administration", exams: ["Social Studies (EGE)(I)", "History OR Math (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { soc: 60, hist_math: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Государственное и муниципальное управление", exams: ["Обществознание (ЕГЭ)(I)", "История ИЛИ Математика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { soc: 60, hist_math: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "biz-inf", en: { name: "Business Informatics", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 70, inf: 75, rus: 65 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Бизнес-информатика", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 70, inf: 75, rus: 65 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "dig-prod", en: { name: "Digital Product Management", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 60, inf: 65, rus: 65 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Управление цифровым продуктом", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 60, inf: 65, rus: 65 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "biz-data", en: { name: "Data Analysis in Business", exams: ["Math (EGE)(I)", "Informatics (EGE)(II)", "Russian (EGE)(III)"], min_scores: { math: 70, inf: 75, rus: 65 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Технологии анализа данных в бизнесе", exams: ["Математика (ЕГЭ)(I)", "Информатика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { math: 70, inf: 75, rus: 65 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+
+            // Psychology, Society & Law
+            { id: "psych", en: { name: "Psychology", exams: ["Biology (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { bio: 60, math: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Психология", exams: ["Биология (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { bio: 60, math: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "soc", en: { name: "Sociology", exams: ["Social Studies (EGE)(I)", "Math (EGE)(II)", "Russian (EGE)(III)"], min_scores: { soc: 60, math: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Социология", exams: ["Обществознание (ЕГЭ)(I)", "Математика (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { soc: 60, math: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "law", en: { name: "Jurisprudence", exams: ["Social Studies (EGE)(I)", "History OR Foreign Lang (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { soc: 60, hist_for: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Юриспруденция", exams: ["Обществознание (ЕГЭ)(I)", "История ИЛИ Иностранный язык (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { soc: 60, hist_for: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "dig-law", en: { name: "Jurisprudence: Digital Lawyer", exams: ["Social Studies (EGE)(I)", "History OR Informatics OR Foreign Lang (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { soc: 60, hist_inf_for: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Юриспруденция: цифровой юрист", exams: ["Обществознание (ЕГЭ)(I)", "История ИЛИ Информатика ИЛИ Иностранный язык (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { soc: 60, hist_inf_for: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "biz-law-pt", en: { name: "Legal Regulation of Business (Part-time)", exams: ["Professional Exam (HSE)(I)", "Russian (EGE)(II)"], min_scores: { prof_exam: 40, rus: 50 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Правовое регулирование бизнеса (очно-заочно)", exams: ["Профессиональный экзамен (ВШЭ)(I)", "Русский язык (ЕГЭ)(II)"], min_scores: { prof_exam: 40, rus: 50 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "polsci", en: { name: "Political Science", exams: ["History (EGE)(I)", "Social Studies OR Geography OR Foreign Lang OR Math OR Informatics (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { hist: 60, soc_geo_for_math_inf: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Политология", exams: ["История (ЕГЭ)(I)", "Обществознание ИЛИ География ИЛИ Иностранный язык ИЛИ Математика ИЛИ Информатика (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { hist: 60, soc_geo_for_math_inf: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+
+            // International Relations & Oriental Studies
+            { id: "ir", en: { name: "International Relations", exams: ["History (EGE)(I)", "Foreign Lang (EGE)(II)", "Social Studies OR Geography (EGE, choice)(III)", "Russian (EGE)(IV)"], min_scores: { hist: 65, for: 65, soc_geo: 65, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Международные отношения", exams: ["История (ЕГЭ)(I)", "Иностранный язык (ЕГЭ)(II)", "Обществознание ИЛИ География (ЕГЭ, по выбору)(III)", "Русский язык (ЕГЭ)(IV)"], min_scores: { hist: 65, for: 65, soc_geo: 65, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "ir-global", en: { name: "IR & Global Studies (English)", exams: ["History (EGE)(I)", "Foreign Lang (EGE)(II)", "Russian (EGE)(III)"], min_scores: { hist: 60, for: 75, rus: 60 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Международные отношения и глобальные исследования", exams: ["История (ЕГЭ)(I)", "Иностранный язык (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { hist: 60, for: 75, rus: 60 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "asia-pol", en: { name: "Economics & Politics in Asia (Double Degree)", exams: ["History (EGE)(I)", "Foreign Lang (EGE)(II)", "Russian (EGE)(III)"], min_scores: { hist: 60, for: 70, rus: 60 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Экономика и политика в Азии (два диплома)", exams: ["История (ЕГЭ)(I)", "Иностранный язык (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { hist: 60, for: 70, rus: 60 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "orient", en: { name: "Oriental Studies & African Studies", exams: ["History (EGE)(I)", "Foreign Lang OR Social Studies OR Geography (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { hist: 60, for_soc_geo: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Востоковедение и африканистика", exams: ["История (ЕГЭ)(I)", "Иностранный язык ИЛИ Обществознание ИЛИ География (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { hist: 60, for_soc_geo: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "arab-christ", en: { name: "Arab World & Christian East", exams: ["Foreign Lang (EGE)(I)", "History (EGE)(II)", "Russian (EGE)(III)"], min_scores: { for: 60, hist: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Арабский мир и Христианский Восток", exams: ["Иностранный язык (ЕГЭ)(I)", "История (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { for: 60, hist: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "iran-ca", en: { name: "Iran & Central Asia", exams: ["Foreign Lang (EGE)(I)", "History (EGE)(II)", "Russian (EGE)(III)"], min_scores: { for: 60, hist: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Иран и Центральная Азия", exams: ["Иностранный язык (ЕГЭ)(I)", "История (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { for: 60, hist: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "china", en: { name: "China: Language, Culture, Society", exams: ["Foreign Lang (EGE)(I)", "History (EGE)(II)", "Russian (EGE)(III)"], min_scores: { for: 60, hist: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Китай: язык, культура, общество", exams: ["Иностранный язык (ЕГЭ)(I)", "История (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { for: 60, hist: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+
+            // Journalism, Advertising & Media
+            { id: "pr", en: { name: "Advertising & Public Relations", exams: ["Social Studies (EGE)(I)", "Russian (EGE)(II)", "Informatics OR Foreign Lang OR History (EGE, choice)(III)"], min_scores: { soc: 60, rus: 60, inf_for_hist: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Реклама и связи с общественностью", exams: ["Обществознание (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Информатика ИЛИ Иностранный язык ИЛИ История (ЕГЭ, по выбору)(III)"], min_scores: { soc: 60, rus: 60, inf_for_hist: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "strat-comm", en: { name: "Strategy & Producing in Communications", exams: ["Social Studies (EGE)(I)", "Russian (EGE)(II)", "Informatics OR Foreign Lang OR History (EGE, choice)(III)"], min_scores: { soc: 60, rus: 60, inf_for_hist: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Стратегия и продюсирование в коммуникациях", exams: ["Обществознание (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Информатика ИЛИ Иностранный язык ИЛИ История (ЕГЭ, по выбору)(III)"], min_scores: { soc: 60, rus: 60, inf_for_hist: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "glob-dig-comm-online", en: { name: "Global Digital Communications (Online)", exams: ["Social Studies (EGE)(I)", "Russian (EGE)(II)", "Informatics OR Foreign Lang OR History (EGE, choice)(III)"], min_scores: { soc: 60, rus: 60, inf_for_hist: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Глобальные цифровые коммуникации (онлайн)", exams: ["Обществознание (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Информатика ИЛИ Иностранный язык ИЛИ История (ЕГЭ, по выбору)(III)"], min_scores: { soc: 60, rus: 60, inf_for_hist: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "journalism", en: { name: "Journalism", exams: ["Creative Exam (HSE)(I)", "Literature (EGE)(II)", "Russian (EGE)(III)"], min_scores: { creative: 60, lit: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 14", paid: "Jun 20 - Aug 3", contract: "Aug 17" } }, ru: { name: "Журналистика", exams: ["Творческое испытание (ВШЭ)(I)", "Литература (ЕГЭ)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { creative: 60, lit: 60, rus: 60 }, deadlines: { budget: "20 июня – 14 июля", paid: "20 июня – 3 августа", contract: "17 августа" } } },
+            { id: "media-comm", en: { name: "Media Communications", exams: ["Literature (EGE)(I)", "Russian (EGE)(II)", "Foreign Lang OR History OR Social Studies (EGE, choice)(III)"], min_scores: { lit: 60, rus: 60, for_hist_soc: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Медиакоммуникации", exams: ["Литература (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ Обществознание (ЕГЭ, по выбору)(III)"], min_scores: { lit: 60, rus: 60, for_hist_soc: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "creative-ind", en: { name: "Management in Creative Industries", exams: ["Russian (EGE)(I)", "Literature (EGE)(II)", "Foreign Lang OR Social Studies OR History (EGE, choice)(III)"], min_scores: { rus: 60, lit: 60, for_soc_hist: 60 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Управление в креативных индустриях", exams: ["Русский язык (ЕГЭ)(I)", "Литература (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание ИЛИ История (ЕГЭ, по выбору)(III)"], min_scores: { rus: 60, lit: 60, for_soc_hist: 60 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "film", en: { name: "Film Production", exams: ["Interview (HSE)(I)", "Creative Exam (HSE)(II)", "Russian (EGE)(III)", "Literature (EGE)(IV)"], min_scores: { interview: 60, creative: 60, rus: 60, lit: 60 }, deadlines: { paid: "Jun 20 - Aug 3", contract: "Aug 17" } }, ru: { name: "Кинопроизводство", exams: ["Собеседование (ВШЭ)(I)", "Творческое испытание (ВШЭ)(II)", "Русский язык (ЕГЭ)(III)", "Литература (ЕГЭ)(IV)"], min_scores: { interview: 60, creative: 60, rus: 60, lit: 60 }, deadlines: { paid: "20 июня – 3 августа", contract: "17 августа" } } },
+
+            // Languages & Philology
+            { id: "mod-phil", en: { name: "Modern Philology", exams: ["Literature (EGE)(I)", "Russian (EGE)(II)", "Foreign Lang OR History OR Social Studies (EGE, choice)(III)"], min_scores: { lit: 70, rus: 60, for_hist_soc: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Современная филология", exams: ["Литература (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ Обществознание (ЕГЭ, по выбору)(III)"], min_scores: { lit: 70, rus: 60, for_hist_soc: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "class-phil", en: { name: "Classical Philology", exams: ["Literature (EGE)(I)", "Russian (EGE)(II)", "Foreign Lang OR History OR Social Studies (EGE, choice)(III)"], min_scores: { lit: 60, rus: 60, for_hist_soc: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Классическая филология", exams: ["Литература (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Иностранный язык ИЛИ История ИЛИ Обществознание (ЕГЭ, по выбору)(III)"], min_scores: { lit: 60, rus: 60, for_hist_soc: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "intercult-comm", en: { name: "Foreign Languages & Intercultural Comm.", exams: ["Foreign Lang (EGE)(I)", "Russian (EGE)(II)", "Social Studies OR History (EGE, choice)(III)"], min_scores: { for: 70, rus: 60, soc_hist: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Иностранные языки и межкультурная коммуникация", exams: ["Иностранный язык (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "Обществознание ИЛИ История (ЕГЭ, по выбору)(III)"], min_scores: { for: 70, rus: 60, soc_hist: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "fund-comp-ling", en: { name: "Fundamental & Computational Linguistics", exams: ["Math OR Informatics (EGE, choice)(I)", "Russian (EGE)(II)", "Foreign Lang (EGE)(III)"], min_scores: { math_inf: 70, rus: 65, for: 65 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Фундаментальная и компьютерная лингвистика", exams: ["Математика ИЛИ Информатика (ЕГЭ, по выбору)(I)", "Русский язык (ЕГЭ)(II)", "Иностранный язык (ЕГЭ)(III)"], min_scores: { math_inf: 70, rus: 65, for: 65 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+
+            // Humanities
+            { id: "history", en: { name: "History", exams: ["History (EGE)(I)", "Foreign Lang OR Social Studies OR Literature (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { hist: 65, for_soc_lit: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "История", exams: ["История (ЕГЭ)(I)", "Иностранный язык ИЛИ Обществознание ИЛИ Литература (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { hist: 65, for_soc_lit: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "pract-phil", en: { name: "Practical Philosophy", exams: ["Social Studies (EGE)(I)", "Russian (EGE)(II)", "History OR Foreign Lang OR Literature (EGE, choice)(III)"], min_scores: { soc: 60, rus: 60, hist_for_lit: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Практическая философия", exams: ["Обществознание (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "История ИЛИ Иностранный язык ИЛИ Литература (ЕГЭ, по выбору)(III)"], min_scores: { soc: 60, rus: 60, hist_for_lit: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "art-hist", en: { name: "Art History", exams: ["History (EGE)(I)", "Foreign Lang OR Literature (EGE, choice)(II)", "Russian (EGE)(III)"], min_scores: { hist: 60, for_lit: 60, rus: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "История искусств", exams: ["История (ЕГЭ)(I)", "Иностранный язык ИЛИ Литература (ЕГЭ, по выбору)(II)", "Русский язык (ЕГЭ)(III)"], min_scores: { hist: 60, for_lit: 60, rus: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "culturology", en: { name: "Culturology", exams: ["Social Studies (EGE)(I)", "Russian (EGE)(II)", "History OR Foreign Lang OR Literature (EGE, choice)(III)"], min_scores: { soc: 60, rus: 60, hist_for_lit: 60 }, deadlines: { budget: "Jun 20 - Jul 25", paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Культурология", exams: ["Обществознание (ЕГЭ)(I)", "Русский язык (ЕГЭ)(II)", "История ИЛИ Иностранный язык ИЛИ Литература (ЕГЭ, по выбору)(III)"], min_scores: { soc: 60, rus: 60, hist_for_lit: 60 }, deadlines: { budget: "20 июня – 25 июля", paid: "20 июня – 12 августа", contract: "17 августа" } } },
+
+            // Art & Design
+            { id: "cont-art", en: { name: "Contemporary Art", exams: ["Russian (EGE)(I)", "Literature (EGE)(II)", "Foreign Lang OR Social Studies OR History (EGE, choice)(III)"], min_scores: { rus: 60, lit: 60, for_soc_hist: 60 }, deadlines: { paid: "Jun 20 - Aug 12", contract: "Aug 17" } }, ru: { name: "Современное искусство", exams: ["Русский язык (ЕГЭ)(I)", "Литература (ЕГЭ)(II)", "Иностранный язык ИЛИ Обществознание ИЛИ История (ЕГЭ, по выбору)(III)"], min_scores: { rus: 60, lit: 60, for_soc_hist: 60 }, deadlines: { paid: "20 июня – 12 августа", contract: "17 августа" } } },
+            { id: "acting", en: { name: "Acting", exams: ["Interview (HSE)(I)", "Creative Exam (HSE)(II)", "Russian (EGE)(III)", "Literature (EGE)(IV)"], min_scores: { interview: 60, creative: 60, rus: 50, lit: 50 }, deadlines: { paid: "Jun 20 - Aug 3", contract: "Aug 17" } }, ru: { name: "Актёр", exams: ["Собеседование (ВШЭ)(I)", "Творческое испытание (ВШЭ)(II)", "Русский язык (ЕГЭ)(III)", "Литература (ЕГЭ)(IV)"], min_scores: { interview: 60, creative: 60, rus: 50, lit: 50 }, deadlines: { paid: "20 июня – 3 августа", contract: "17 августа" } } },
+            { id: "design", en: { name: "Design", exams: ["Creative Exam (HSE)(I)", "Russian (EGE)(II)", "Literature (EGE)(III)"], min_scores: { creative: 60, rus: 60, lit: 60 }, deadlines: { budget: "Jun 20 - Jul 14", paid: "Jun 20 - Aug 3", contract: "Aug 17" } }, ru: { name: "Дизайн", exams: ["Творческое испытание (ВШЭ)(I)", "Русский язык (ЕГЭ)(II)", "Литература (ЕГЭ)(III)"], min_scores: { creative: 60, rus: 60, lit: 60 }, deadlines: { budget: "20 июня – 14 июля", paid: "20 июня – 3 августа", contract: "17 августа" } } },
+            { id: "fashion", en: { name: "Fashion", exams: ["Creative Exam (HSE)(I)", "Russian (EGE)(II)", "Literature (EGE)(III)"], min_scores: { creative: 60, rus: 60, lit: 60 }, deadlines: { paid: "Jun 20 - Aug 3", contract: "Aug 17" } }, ru: { name: "Мода", exams: ["Творческое испытание (ВШЭ)(I)", "Русский язык (ЕГЭ)(II)", "Литература (ЕГЭ)(III)"], min_scores: { creative: 60, rus: 60, lit: 60 }, deadlines: { paid: "20 июня – 3 августа", contract: "17 августа" } } }
+        ];
+
+        // --- LANGUAGE SWITCHER & RENDER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function renderProgram(lang) {
+            const progId = getQueryParam('id');
+            const prog = programsData.find(p => p.id === progId);
+            const container = document.getElementById('program-content');
+            
+            if (!prog) {
+                container.innerHTML = `<div class="container" style="padding: 4rem 0; text-align: center;"><h2>${lang === 'en' ? 'Program not found' : 'Программа не найдена'}</h2><a href="hse.html" style="color: var(--primary-color); margin-top: 1rem; display: inline-block;">${lang === 'en' ? 'Back to HSE' : 'Вернуться в ВШЭ'}</a></div>`;
+                return;
+            }
+
+            const title = prog[lang].name;
+            
+            const detailsHtml = `
+                <div class="detail-card">
+                    <h2 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem;">${lang === 'en' ? 'Admission Requirements' : 'Вступительные испытания'}</h2>
+                    <ul class="exam-list">
+                        ${prog[lang].exams.map((exam, idx) => `
+                            <li class="exam-item">
+                                <span class="exam-priority">${idx + 1}</span>
+                                <div class="exam-details">
+                                    <span class="exam-type">${exam.split('(')[0].trim()}</span>
+                                    <span class="exam-format">(${exam.match(/\(([^)]+)\)/)?.[1] || ''})</span>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--primary-color);">${lang === 'en' ? 'Minimum Scores' : 'Минимальные баллы'}</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem;">
+                        ${Object.entries(prog[lang].min_scores).map(([key, val]) => `
+                            <span class="min-score-badge">${key.replace('_', ' ').toUpperCase()}: ${val}</span>
+                        `).join('')}
+                    </div>
+
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--primary-color);">${lang === 'en' ? 'Deadlines' : 'Сроки приема'}</h3>
+                    <ul class="info-list">
+                        ${prog[lang].deadlines.budget ? `<li><i class="fa-solid fa-calendar-check"></i> <span><strong>${lang === 'en' ? 'Budget:' : 'Бюджет:'}</strong> ${prog[lang].deadlines.budget}</span></li>` : ''}
+                        ${prog[lang].deadlines.paid ? `<li><i class="fa-solid fa-calendar-check"></i> <span><strong>${lang === 'en' ? 'Paid:' : 'Платное:'}</strong> ${prog[lang].deadlines.paid}</span></li>` : ''}
+                        ${prog[lang].deadlines.contract ? `<li><i class="fa-solid fa-file-contract"></i> <span><strong>${lang === 'en' ? 'Contract deadline:' : 'Заключение договора:'}</strong> ${prog[lang].deadlines.contract}</span></li>` : ''}
+                    </ul>
+                </div>
+            `;
+
+            const navLinksHtml = programsData
+                .filter(p => p.id !== progId)
+                .map(p => `<a href="?id=${p.id}" class="nav-link">${p[lang].name}</a>`)
+                .join('');
+
+            container.innerHTML = `
+                <section class="page-header">
+                    <div class="container program-title">
+                        <h1>${title}</h1>
+                        <div class="program-meta">
+                            <span><i class="fa-solid fa-book-open"></i> ${lang === 'en' ? 'Bachelor\'s Program' : 'Программа бакалавриата'}</span>
+                            <span><i class="fa-solid fa-calendar-check"></i> ${lang === 'en' ? 'Admission 2026' : 'Прием 2026'}</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="container details-section">
+                    ${detailsHtml}
+                    
+                    <h2 style="font-size: 2rem; font-weight: 700; margin: 4rem 0 2rem;">${lang === 'en' ? 'Other Programs' : 'Другие программы'}</h2>
+                    <div class="nav-grid">${navLinksHtml}</div>
+                </section>
+            `;
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translations = {
+                    en: { nav_home: "Home", nav_uni: "Universities", btn_login: "Log In", btn_signup: "Sign Up" },
+                    ru: { nav_home: "Главная", nav_uni: "Вузы", btn_login: "Войти", btn_signup: "Регистрация" }
+                };
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            localStorage.setItem('site_lang', lang);
+            renderProgram(lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

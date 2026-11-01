@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - HSE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #0e47a1; /* HSE Blue */
+            --primary-hover: #0b3a82; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header Styles */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: var(--primary-color); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        #lang-toggle { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-dark); display: flex; align-items: center; transition: transform 0.3s; padding: 0.5rem; border-radius: 50%; }
+        #lang-toggle:hover { background-color: #f3f4f6; transform: rotate(15deg); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Specific Styles */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #dce4f5 100%); 
+            padding: 4rem 0; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .uni-info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
+        .uni-title h1 { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+        .uni-location { display: flex; align-items: center; gap: 0.5rem; color: var(--text-gray); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .campuses-box { background: #fff; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .campuses-box h3 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary-color); }
+        .campuses-list { list-style: none; }
+        .campuses-list li { padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; font-size: 0.95rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+        .campuses-list li:last-child { border-bottom: none; }
+        .campuses-list i { color: var(--primary-color); margin-top: 0.3rem; }
+
+        /* Stats Grid */
+        .stats-section { margin-bottom: 4rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .stat-card { background: #fff; padding: 2rem; border-radius: 1.5rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 4px solid var(--primary-color); }
+        .stat-value { font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.5rem; }
+        .stat-label { font-size: 1rem; color: var(--text-gray); font-weight: 500; }
+
+        /* Search & Programs */
+        .search-section { margin-bottom: 4rem; }
+        .search-bar { position: relative; max-width: 600px; margin: 0 auto 3rem; }
+        .search-bar input { width: 100%; padding: 1.2rem 1.5rem 1.2rem 3.5rem; border-radius: 50px; border: 2px solid #e5e7eb; font-size: 1.1rem; font-family: inherit; outline: none; transition: border-color 0.3s; }
+        .search-bar input:focus { border-color: var(--primary-color); }
+        .search-bar i { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 1.2rem; }
+        
+        .programs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
+        .program-card { 
+            background: #fff; 
+            padding: 2rem; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            transition: transform 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+        .program-card:hover { transform: translateY(-3px); border-color: var(--primary-color); }
+        .program-card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-dark); }
+        .program-desc { font-size: 0.95rem; color: var(--text-gray); margin-bottom: 1.5rem; line-height: 1.5; flex-grow: 1; }
+        .subjects-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .subject-tag { background: #eef2ff; color: var(--primary-color); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .tuition-info { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: var(--text-gray); border-top: 1px solid #f3f4f6; padding-top: 1rem; margin-top: auto;}
+        .tuition-info strong { color: var(--text-dark); }
+        .no-results { text-align: center; padding: 3rem; color: var(--text-gray); font-size: 1.2rem; display: none; }
+
+        @media (max-width: 992px) { .uni-info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .uni-title h1 { font-size: 2.2rem; } 
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#0e47a1"/><path d="M75 55L85 65" stroke="#0e47a1" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html" data-key="nav_home">Home</a>
+                <a href="universities.html" data-key="nav_uni">Universities</a>
+                <button id="lang-toggle" title="Switch Language"><i class="fa-solid fa-globe"></i></button>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login" data-key="btn_login">Log In</a>
+                <a href="#" class="btn btn-signup" data-key="btn_signup">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Header Info -->
+        <section class="page-header">
+            <div class="container uni-info-grid">
+                <div class="uni-title">
+                    <h1 data-key="hse_title">National Research University Higher School of Economics</h1>
+                    <div class="uni-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span data-key="hse_location">Myasnitskaya St., 20, Moscow</span>
+                    </div>
+                    <p data-key="hse_desc" style="font-size: 1.1rem; color: var(--text-gray); max-width: 700px;">Leading research university in Russia with strong programs in economics, social sciences, humanities, and IT.</p>
+                </div>
+                <div class="campuses-box">
+                    <h3 data-key="hse_campuses_title">Main Campuses</h3>
+                    <ul class="campuses-list">
+                        <li><i class="fa-solid fa-building"></i> <span data-key="hse_main_bldg">Moscow (Main)</span></li>
+                        <li><i class="fa-solid fa-building"></i> <span data-key="hse_spb">Saint Petersburg</span></li>
+                        <li><i class="fa-solid fa-building"></i> <span data-key="hse_nizhny">Nizhny Novgorod</span></li>
+                        <li><i class="fa-solid fa-building"></i> <span data-key="hse_perm">Perm</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admission Stats -->
+        <section class="container stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" data-key="hse_budget_spots">3,500+</div>
+                    <div class="stat-label" data-key="hse_budget_label">Budget Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="hse_paid_spots">8,000+</div>
+                    <div class="stat-label" data-key="hse_paid_label">Paid Spots (2026)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="hse_budget_score">280</div>
+                    <div class="stat-label" data-key="hse_budget_score_label">Avg. Budget Score (EGE)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-key="hse_paid_score">210</div>
+                    <div class="stat-label" data-key="hse_paid_score_label">Avg. Paid Score (EGE)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Program Search -->
+        <section class="container search-section">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="program-search" data-placeholder-key="hse_search_placeholder" placeholder="Search by program or subject...">
+            </div>
+            
+            <div class="programs-grid" id="programs-container">
+                <!-- Cards will be injected here by JS -->
+            </div>
+            <div class="no-results" id="no-results" data-key="hse_no_results">No programs found.</div>
+        </section>
+    </main>
+
+    <script>
+        // --- TRANSLATIONS ---
+        const translations = {
+            en: {
+                nav_home: "Home", nav_uni: "Universities",
+                btn_login: "Log In", btn_signup: "Sign Up",
+                
+                hse_title: "National Research University Higher School of Economics",
+                hse_location: "Myasnitskaya St., 20, Moscow",
+                hse_desc: "Leading research university in Russia with strong programs in economics, social sciences, humanities, and IT.",
+                hse_campuses_title: "Main Campuses",
+                hse_main_bldg: "Moscow (Main)",
+                hse_spb: "Saint Petersburg",
+                hse_nizhny: "Nizhny Novgorod",
+                hse_perm: "Perm",
+                
+                hse_budget_spots: "3,500+", hse_budget_label: "Budget Spots (2026)",
+                hse_paid_spots: "8,000+", hse_paid_label: "Paid Spots (2026)",
+                hse_budget_score: "280", hse_budget_score_label: "Avg. Budget Score (EGE)",
+                hse_paid_score: "210", hse_paid_score_label: "Avg. Paid Score (EGE)",
+                
+                hse_search_placeholder: "Search by program or subject...",
+                hse_no_results: "No programs found.",
+                hse_tuition_label: "Tuition fee"
+            },
+            ru: {
+                nav_home: "Главная", nav_uni: "Вузы",
+                btn_login: "Войти", btn_signup: "Регистрация",
+                
+                hse_title: "Национальный исследовательский университет «Высшая школа экономики»",
+                hse_location: "ул. Мясницкая, 20, Москва",
+                hse_desc: "Ведущий исследовательский университет России с сильными программами в области экономики, социальных наук, гуманитарных дисциплин и IT.",
+                hse_campuses_title: "Основные кампусы",
+                hse_main_bldg: "Москва (основной)",
+                hse_spb: "Санкт-Петербург",
+                hse_nizhny: "Нижний Новгород",
+                hse_perm: "Пермь",
+                
+                hse_budget_spots: "3 500+", hse_budget_label: "Бюджетных мест (2026)",
+                hse_paid_spots: "8 000+", hse_paid_label: "Платных мест (2026)",
+                hse_budget_score: "280", hse_budget_score_label: "Ср. балл на бюджет (ЕГЭ)",
+                hse_paid_score: "210", hse_paid_score_label: "Ср. балл на платное (ЕГЭ)",
+                
+                hse_search_placeholder: "Поиск по программе или предмету...",
+                hse_no_results: "Программы не найдены.",
+                hse_tuition_label: "Стоимость обучения"
+            }
+        };
+
+        // --- PROGRAMS DATA FOR HSE (Based on provided prices & rules) ---
+        const programsData = [
+            // 1. Math & IT
+            { id: "math", en: { name: "Mathematics", subjects: ["Math", "Physics"], tuition: "560,000 ₽", desc: "Fundamental mathematics, algebra, analysis." }, ru: { name: "Математика", subjects: ["Математика", "Физика"], tuition: "560 000 ₽", desc: "Фундаментальная математика, алгебра, анализ." } },
+            { id: "cpm-math", en: { name: "Joint Bachelor's HSE & CPM", subjects: ["Math", "Physics"], tuition: "560,000 ₽", desc: "Mathematics for future teachers and researchers." }, ru: { name: "Совместный бакалавриат ВШЭ и ЦПМ", subjects: ["Математика", "Физика"], tuition: "560 000 ₽", desc: "Математика для будущих учителей и исследователей." } },
+            { id: "pmi", en: { name: "Applied Mathematics and Informatics", subjects: ["Math", "Informatics"], tuition: "1,000,000 ₽", desc: "AI, machine learning, software development." }, ru: { name: "Прикладная математика и информатика", subjects: ["Математика", "Информатика"], tuition: "1 000 000 ₽", desc: "ИИ, машинное обучение, разработка ПО." } },
+            { id: "pad", en: { name: "Applied Data Analysis", subjects: ["Math", "Informatics"], tuition: "1,000,000 ₽", desc: "Big data, statistics, business analytics." }, ru: { name: "Прикладной анализ данных", subjects: ["Математика", "Информатика"], tuition: "1 000 000 ₽", desc: "Большие данные, статистика, бизнес-аналитика." } },
+            { id: "cs-online", en: { name: "Computer Science & Data Analysis (Online)", subjects: ["Math", "Informatics"], tuition: "640,000 ₽", desc: "Remote CS education with practical projects." }, ru: { name: "Компьютерные науки и анализ данных (онлайн)", subjects: ["Математика", "Информатика"], tuition: "640 000 ₽", desc: "Дистанционное образование в сфере CS." } },
+            { id: "applied-math", en: { name: "Applied Mathematics", subjects: ["Math", "Physics"], tuition: "700,000 ₽", desc: "Mathematical modeling, optimization." }, ru: { name: "Прикладная математика", subjects: ["Математика", "Физика"], tuition: "700 000 ₽", desc: "Математическое моделирование, оптимизация." } },
+            { id: "ict", en: { name: "Informatics and Computer Engineering", subjects: ["Math", "Informatics", "Physics"], tuition: "750,000 ₽", desc: "Hardware, networks, low-level programming." }, ru: { name: "Информатика и вычислительная техника", subjects: ["Математика", "Информатика", "Физика"], tuition: "750 000 ₽", desc: "Аппаратное обеспечение, сети, системное программирование." } },
+            { id: "se", en: { name: "Software Engineering", subjects: ["Math", "Informatics"], tuition: "980,000 ₽", desc: "Industrial software development, architecture." }, ru: { name: "Программная инженерия", subjects: ["Математика", "Информатика"], tuition: "980 000 ₽", desc: "Промышленная разработка ПО, архитектура." } },
+            { id: "design-it", en: { name: "Design & Development of IT Products", subjects: ["Math", "Informatics"], tuition: "950,000 ₽", desc: "UX/UI design combined with frontend dev." }, ru: { name: "Дизайн и разработка информационных продуктов", subjects: ["Математика", "Информатика"], tuition: "950 000 ₽", desc: "UX/UI дизайн и фронтенд-разработка." } },
+            { id: "game-dev", en: { name: "Game Development & Digital Products", subjects: ["Math", "Informatics"], tuition: "900,000 ₽", desc: "Game engines, 3D graphics, interactive media." }, ru: { name: "Разработка игр и цифровых продуктов", subjects: ["Математика", "Информатика"], tuition: "900 000 ₽", desc: "Игровые движки, 3D-графика, интерактивные медиа." } },
+            { id: "robotics", en: { name: "Intelligent Robotic Systems Design", subjects: ["Math", "Informatics", "Physics"], tuition: "950,000 ₽", desc: "Robotics, mechatronics, AI control systems." }, ru: { name: "Проектирование интеллектуальных робототехнических систем", subjects: ["Математика", "Информатика", "Физика"], tuition: "950 000 ₽", desc: "Робототехника, мехатроника, ИИ-управление." } },
+            { id: "infosec", en: { name: "Information Security", subjects: ["Math", "Informatics", "Physics"], tuition: "800,000 ₽", desc: "Cybersecurity, cryptography, network defense." }, ru: { name: "Информационная безопасность", subjects: ["Математика", "Информатика", "Физика"], tuition: "800 000 ₽", desc: "Кибербезопасность, криптография, защита сетей." } },
+            { id: "comp-sec", en: { name: "Computer Security", subjects: ["Math", "Informatics", "Physics"], tuition: "700,000 ₽", desc: "System security, malware analysis." }, ru: { name: "Компьютерная безопасность", subjects: ["Математика", "Информатика", "Физика"], tuition: "700 000 ₽", desc: "Системная безопасность, анализ вредоносного ПО." } },
+            { id: "telecom", en: { name: "Digital Technologies & Telecommunications", subjects: ["Math", "Informatics", "Physics"], tuition: "700,000 ₽", desc: "5G/6G, IoT, digital signal processing." }, ru: { name: "Цифровые технологии и телекоммуникации", subjects: ["Математика", "Информатика", "Физика"], tuition: "700 000 ₽", desc: "5G/6G, IoT, цифровая обработка сигналов." } },
+            { id: "tech-innov-online", en: { name: "Tech Innovation Management (Online)", subjects: ["Math", "Physics", "Social Studies"], tuition: "580,000 ₽", desc: "Managing R&D and tech startups remotely." }, ru: { name: "Управление технологическими инновациями (онлайн)", subjects: ["Математика", "Физика", "Обществознание"], tuition: "580 000 ₽", desc: "Управление R&D и техстартапами дистанционно." } },
+
+            // 2. Physics, Chemistry & Natural Sciences
+            { id: "physics", en: { name: "Physics", subjects: ["Math", "Physics"], tuition: "610,000 ₽", desc: "Theoretical and experimental physics." }, ru: { name: "Физика", subjects: ["Математика", "Физика"], tuition: "610 000 ₽", desc: "Теоретическая и экспериментальная физика." } },
+            { id: "chemistry", en: { name: "Chemistry", subjects: ["Math", "Chemistry"], tuition: "660,000 ₽", desc: "Organic, inorganic, analytical chemistry." }, ru: { name: "Химия", subjects: ["Математика", "Химия"], tuition: "660 000 ₽", desc: "Органическая, неорганическая, аналитическая химия." } },
+            { id: "new-mat", en: { name: "Chemistry of New Materials", subjects: ["Math", "Chemistry", "Physics"], tuition: "610,000 ₽", desc: "Nanomaterials, polymers, functional materials." }, ru: { name: "Химия новых материалов", subjects: ["Математика", "Химия", "Физика"], tuition: "610 000 ₽", desc: "Наноматериалы, полимеры, функциональные материалы." } },
+            { id: "geo-global", en: { name: "Geography of Global Changes & GIS", subjects: ["Math", "Geography", "Informatics"], tuition: "580,000 ₽", desc: "GIS technologies, environmental monitoring." }, ru: { name: "География глобальных изменений и ГИС", subjects: ["Математика", "География", "Информатика"], tuition: "580 000 ₽", desc: "ГИС-технологии, мониторинг окружающей среды." } },
+            { id: "cell-bio", en: { name: "Cellular & Molecular Biotechnology", subjects: ["Biology", "Math", "Chemistry"], tuition: "700,000 ₽", desc: "Genetics, cell biology, biotech methods." }, ru: { name: "Клеточная и молекулярная биотехнология", subjects: ["Биология", "Математика", "Химия"], tuition: "700 000 ₽", desc: "Генетика, клеточная биология, методы биотеха." } },
+            { id: "cog-neuro", en: { name: "Cognitive Neuroscience", subjects: ["Biology", "Math"], tuition: "700,000 ₽", desc: "Brain research, cognitive psychology, neurotech." }, ru: { name: "Когнитивная нейробиология", subjects: ["Биология", "Математика"], tuition: "700 000 ₽", desc: "Исследования мозга, когнитивная психология, нейротех." } },
+            { id: "urban-dev", en: { name: "Development & Urban Planning", subjects: ["Math", "Physics", "History", "Informatics", "Geography"], tuition: "750,000 ₽", desc: "Urbanism, smart cities, spatial planning." }, ru: { name: "Девелопмент и городское планирование", subjects: ["Математика", "Физика", "История", "Информатика", "География"], tuition: "750 000 ₽", desc: "Урбанистика, умные города, пространственное планирование." } },
+
+            // 3. Economics & Business
+            { id: "econ", en: { name: "Economics", subjects: ["Math", "Social Studies", "Informatics", "Foreign Lang", "Geography", "History"], tuition: "1,000,000 ₽", desc: "Micro/macro economics, econometrics." }, ru: { name: "Экономика", subjects: ["Математика", "Обществознание", "Информатика", "Иностранный язык", "География", "История"], tuition: "1 000 000 ₽", desc: "Микро/макроэкономика, эконометрика." } },
+            { id: "hse-resh", en: { name: "Joint HSE & NES Economics", subjects: ["Math", "Social Studies", "Informatics", "Foreign Lang", "Geography", "History"], tuition: "1,100,000 ₽", desc: "Elite joint program with New Economic School." }, ru: { name: "Совместная программа ВШЭ и РЭШ по экономике", subjects: ["Математика", "Обществознание", "Информатика", "Иностранный язык", "География", "История"], tuition: "1 100 000 ₽", desc: "Элитная совместная программа с РЭШ." } },
+            { id: "econ-data", en: { name: "Economics & Data Analysis", subjects: ["Math", "Social Studies", "Informatics", "Foreign Lang", "Geography", "History"], tuition: "1,000,000 ₽", desc: "Economics combined with big data skills." }, ru: { name: "Экономика и анализ данных", subjects: ["Математика", "Обществознание", "Информатика", "Иностранный язык", "География", "История"], tuition: "1 000 000 ₽", desc: "Экономика в сочетании с навыками работы с большими данными." } },
+            { id: "econ-stat", en: { name: "Economics & Statistics", subjects: ["Math", "Social Studies", "Informatics", "Foreign Lang", "Geography", "History"], tuition: "890,000 ₽", desc: "Statistical methods in economic research." }, ru: { name: "Экономика и статистика", subjects: ["Математика", "Обществознание", "Информатика", "Иностранный язык", "География", "История"], tuition: "890 000 ₽", desc: "Статистические методы в экономических исследованиях." } },
+            { id: "world-econ", en: { name: "World Economy", subjects: ["Math", "Social Studies", "Geography", "Informatics", "Foreign Lang", "History"], tuition: "1,020,000 ₽", desc: "International trade, global finance." }, ru: { name: "Мировая экономика", subjects: ["Математика", "Обществознание", "География", "Информатика", "Иностранный язык", "История"], tuition: "1 020 000 ₽", desc: "Международная торговля, глобальные финансы." } },
+            { id: "int-fin", en: { name: "International Economics & Finance (English)", subjects: ["Math", "Social Studies", "Geography", "Informatics", "Foreign Lang", "History"], tuition: "1,170,000 ₽", desc: "Taught entirely in English, global focus." }, ru: { name: "Международная программа по экономике и финансам", subjects: ["Математика", "Обществознание", "География", "Информатика", "Иностранный язык", "История"], tuition: "1 170 000 ₽", desc: "Обучение полностью на английском языке." } },
+            { id: "econ-anal-online", en: { name: "Economic Analysis (Online)", subjects: ["Math", "Social Studies", "Informatics", "Foreign Lang", "Geography", "History"], tuition: "590,000 ₽", desc: "Remote economics degree with practical focus." }, ru: { name: "Экономический анализ (онлайн)", subjects: ["Математика", "Обществознание", "Информатика", "Иностранный язык", "География", "История"], tuition: "590 000 ₽", desc: "Дистанционная степень по экономике." } },
+            { id: "mgmt", en: { name: "Business Management", subjects: ["Math", "Social Studies", "Informatics", "Foreign Lang", "History"], tuition: "1,100,000 ₽", desc: "General management, leadership." }, ru: { name: "Управление бизнесом", subjects: ["Математика", "Обществознание", "Информатика", "Иностранный язык", "История"], tuition: "1 100 000 ₽", desc: "Общий менеджмент, лидерство." } },
+            { id: "marketing", en: { name: "Marketing & Market Analytics", subjects: ["Math", "Social Studies", "Informatics", "Foreign Lang", "History"], tuition: "1,100,000 ₽", desc: "Digital marketing, consumer behavior." }, ru: { name: "Маркетинг и рыночная аналитика", subjects: ["Математика", "Обществознание", "Информатика", "Иностранный язык", "История"], tuition: "1 100 000 ₽", desc: "Цифровой маркетинг, поведение потребителей." } },
+            { id: "int-biz", en: { name: "International Business (English)", subjects: ["Math", "Social Studies", "Informatics", "Foreign Lang", "History"], tuition: "1,300,000 ₽", desc: "Global business strategy, cross-cultural mgmt." }, ru: { name: "Международный бизнес", subjects: ["Математика", "Обществознание", "Информатика", "Иностранный язык", "История"], tuition: "1 300 000 ₽", desc: "Глобальная бизнес-стратегия." } },
+            { id: "public-admin", en: { name: "Public Administration", subjects: ["Social Studies", "Math", "History", "Informatics", "Foreign Lang"], tuition: "720,000 ₽", desc: "Government policy, public sector mgmt." }, ru: { name: "Государственное и муниципальное управление", subjects: ["Обществознание", "Математика", "История", "Информатика", "Иностранный язык"], tuition: "720 000 ₽", desc: "Госполитика, управление госсектором." } },
+            { id: "biz-inf", en: { name: "Business Informatics", subjects: ["Math", "Informatics", "Social Studies", "History", "Foreign Lang"], tuition: "1,100,000 ₽", desc: "IT solutions for business processes." }, ru: { name: "Бизнес-информатика", subjects: ["Математика", "Информатика", "Обществознание", "История", "Иностранный язык"], tuition: "1 100 000 ₽", desc: "IT-решения для бизнес-процессов." } },
+            { id: "dig-prod", en: { name: "Digital Product Management", subjects: ["Math", "Informatics", "Social Studies", "History", "Foreign Lang"], tuition: "1,100,000 ₽", desc: "Product lifecycle, agile methodologies." }, ru: { name: "Управление цифровым продуктом", subjects: ["Математика", "Информатика", "Обществознание", "История", "Иностранный язык"], tuition: "1 100 000 ₽", desc: "Жизненный цикл продукта, agile." } },
+            { id: "biz-data", en: { name: "Data Analysis in Business", subjects: ["Math", "Informatics", "Social Studies", "History", "Foreign Lang"], tuition: "1,100,000 ₽", desc: "Business intelligence, predictive analytics." }, ru: { name: "Технологии анализа данных в бизнесе", subjects: ["Математика", "Информатика", "Обществознание", "История", "Иностранный язык"], tuition: "1 100 000 ₽", desc: "Бизнес-аналитика, предиктивная аналитика." } },
+
+            // 4. Psychology, Society & Law
+            { id: "psych", en: { name: "Psychology", subjects: ["Biology", "Math", "Social Studies"], tuition: "750,000 ₽", desc: "Clinical, cognitive, social psychology." }, ru: { name: "Психология", subjects: ["Биология", "Математика", "Обществознание"], tuition: "750 000 ₽", desc: "Клиническая, когнитивная, социальная психология." } },
+            { id: "soc", en: { name: "Sociology", subjects: ["Social Studies", "Math", "History", "Foreign Lang"], tuition: "590,000 ₽", desc: "Social research, quantitative methods." }, ru: { name: "Социология", subjects: ["Обществознание", "Математика", "История", "Иностранный язык"], tuition: "590 000 ₽", desc: "Социальные исследования, количественные методы." } },
+            { id: "law", en: { name: "Jurisprudence", subjects: ["Social Studies", "History", "Informatics", "Foreign Lang", "Math"], tuition: "700,000 ₽", desc: "Civil, criminal, constitutional law." }, ru: { name: "Юриспруденция", subjects: ["Обществознание", "История", "Информатика", "Иностранный язык", "Математика"], tuition: "700 000 ₽", desc: "Гражданское, уголовное, конституционное право." } },
+            { id: "dig-law", en: { name: "Jurisprudence: Digital Lawyer", subjects: ["Social Studies", "History", "Informatics", "Foreign Lang", "Math"], tuition: "700,000 ₽", desc: "Law in the digital age, IT regulation." }, ru: { name: "Юриспруденция: цифровой юрист", subjects: ["Обществознание", "История", "Информатика", "Иностранный язык", "Математика"], tuition: "700 000 ₽", desc: "Право в цифровую эпоху, регулирование IT." } },
+            { id: "biz-law-pt", en: { name: "Legal Regulation of Business (Part-time)", subjects: ["Social Studies", "History", "Informatics", "Foreign Lang", "Math"], tuition: "450,000 ₽", desc: "Corporate law, compliance (evening format)." }, ru: { name: "Правовое регулирование бизнеса (очно-заочно)", subjects: ["Обществознание", "История", "Информатика", "Иностранный язык", "Математика"], tuition: "450 000 ₽", desc: "Корпоративное право, комплаенс (вечерний формат)." } },
+            { id: "polsci", en: { name: "Political Science", subjects: ["History", "Social Studies", "Geography", "Foreign Lang", "Math", "Informatics"], tuition: "640,000 ₽", desc: "Comparative politics, IR theory." }, ru: { name: "Политология", subjects: ["История", "Обществознание", "География", "Иностранный язык", "Математика", "Информатика"], tuition: "640 000 ₽", desc: "Сравнительная политология, теория МО." } },
+
+            // 5. International Relations & Oriental Studies
+            { id: "ir", en: { name: "International Relations", subjects: ["History", "Foreign Lang", "Social Studies", "Geography"], tuition: "740,000 ₽", desc: "Diplomacy, global governance." }, ru: { name: "Международные отношения", subjects: ["История", "Иностранный язык", "Обществознание", "География"], tuition: "740 000 ₽", desc: "Дипломатия, глобальное управление." } },
+            { id: "ir-global", en: { name: "IR & Global Studies (English)", subjects: ["History", "Foreign Lang", "Social Studies", "Geography"], tuition: "870,000 ₽", desc: "Taught in English, global perspective." }, ru: { name: "Международные отношения и глобальные исследования", subjects: ["История", "Иностранный язык", "Обществознание", "География"], tuition: "870 000 ₽", desc: "Обучение на английском, глобальный подход." } },
+            { id: "asia-pol", en: { name: "Economics & Politics in Asia (Double Degree)", subjects: ["History", "Foreign Lang", "Social Studies", "Geography"], tuition: "910,000 ₽", desc: "Joint program with Kyung Hee University." }, ru: { name: "Экономика и политика в Азии (два диплома)", subjects: ["История", "Иностранный язык", "Обществознание", "География"], tuition: "910 000 ₽", desc: "Совместная программа с Университетом Кёнхи." } },
+            { id: "orient", en: { name: "Oriental Studies & African Studies", subjects: ["History", "Foreign Lang", "Social Studies", "Geography"], tuition: "510,000 ₽", desc: "Languages and cultures of Asia/Africa." }, ru: { name: "Востоковедение и африканистика", subjects: ["История", "Иностранный язык", "Обществознание", "География"], tuition: "510 000 ₽", desc: "Языки и культуры Азии/Африки." } },
+            { id: "arab-christ", en: { name: "Arab World & Christian East", subjects: ["History", "Foreign Lang", "Social Studies", "Geography"], tuition: "510,000 ₽", desc: "Middle Eastern studies, Arabic language." }, ru: { name: "Арабский мир и Христианский Восток", subjects: ["История", "Иностранный язык", "Обществознание", "География"], tuition: "510 000 ₽", desc: "Ближневосточные исследования, арабский язык." } },
+            { id: "iran-ca", en: { name: "Iran & Central Asia", subjects: ["History", "Foreign Lang", "Social Studies", "Geography"], tuition: "510,000 ₽", desc: "Persian/Turkic languages, regional history." }, ru: { name: "Иран и Центральная Азия", subjects: ["История", "Иностранный язык", "Обществознание", "География"], tuition: "510 000 ₽", desc: "Персидские/тюркские языки, история региона." } },
+            { id: "china", en: { name: "China: Language, Culture, Society", subjects: ["History", "Foreign Lang", "Social Studies", "Geography"], tuition: "510,000 ₽", desc: "Chinese language, sinology." }, ru: { name: "Китай: язык, культура, общество", subjects: ["История", "Иностранный язык", "Обществознание", "География"], tuition: "510 000 ₽", desc: "Китайский язык, синология." } },
+
+            // 6. Journalism, Advertising & Media
+            { id: "pr", en: { name: "Advertising & Public Relations", subjects: ["Social Studies", "Russian", "Informatics", "Foreign Lang", "History"], tuition: "1,030,000 ₽", desc: "Brand management, strategic comms." }, ru: { name: "Реклама и связи с общественностью", subjects: ["Обществознание", "Русский язык", "Информатика", "Иностранный язык", "История"], tuition: "1 030 000 ₽", desc: "Управление брендом, стратегические коммуникации." } },
+            { id: "strat-comm", en: { name: "Strategy & Producing in Communications", subjects: ["Social Studies", "Russian", "Informatics", "Foreign Lang", "History"], tuition: "1,030,000 ₽", desc: "Media production, campaign strategy." }, ru: { name: "Стратегия и продюсирование в коммуникациях", subjects: ["Обществознание", "Русский язык", "Информатика", "Иностранный язык", "История"], tuition: "1 030 000 ₽", desc: "Медиапродакшн, стратегия кампаний." } },
+            { id: "glob-dig-comm-online", en: { name: "Global Digital Communications (Online)", subjects: ["Social Studies", "Russian", "Informatics", "Foreign Lang", "History"], tuition: "580,000 ₽", desc: "Digital PR, social media management." }, ru: { name: "Глобальные цифровые коммуникации (онлайн)", subjects: ["Обществознание", "Русский язык", "Информатика", "Иностранный язык", "История"], tuition: "580 000 ₽", desc: "Цифровой PR, SMM." } },
+            { id: "journalism", en: { name: "Journalism", subjects: ["Literature", "Russian", "Foreign Lang", "History", "Geography", "Social Studies"], tuition: "890,000 ₽", desc: "Investigative journalism, multimedia storytelling." }, ru: { name: "Журналистика", subjects: ["Литература", "Русский язык", "Иностранный язык", "История", "География", "Обществознание"], tuition: "890 000 ₽", desc: "Расследовательская журналистика, мультимедиа." } },
+            { id: "media-comm", en: { name: "Media Communications", subjects: ["Literature", "Russian", "Foreign Lang", "History", "Geography", "Social Studies"], tuition: "990,000 ₽", desc: "Media theory, content creation." }, ru: { name: "Медиакоммуникации", subjects: ["Литература", "Русский язык", "Иностранный язык", "История", "География", "Обществознание"], tuition: "990 000 ₽", desc: "Теория медиа, создание контента." } },
+            { id: "creative-ind", en: { name: "Management in Creative Industries", subjects: ["Literature", "Russian", "Foreign Lang", "History", "Geography", "Social Studies"], tuition: "880,000 ₽", desc: "Arts administration, cultural projects." }, ru: { name: "Управление в креативных индустриях", subjects: ["Литература", "Русский язык", "Иностранный язык", "История", "География", "Обществознание"], tuition: "880 000 ₽", desc: "Арт-менеджмент, культурные проекты." } },
+            { id: "film", en: { name: "Film Production", subjects: ["Literature", "Russian", "Foreign Lang", "History", "Geography", "Social Studies"], tuition: "1,100,000 ₽", desc: "Directing, screenwriting, film theory." }, ru: { name: "Кинопроизводство", subjects: ["Литература", "Русский язык", "Иностранный язык", "История", "География", "Обществознание"], tuition: "1 100 000 ₽", desc: "Режиссура, сценарное мастерство." } },
+
+            // 7. Languages & Philology
+            { id: "mod-phil", en: { name: "Modern Philology", subjects: ["Literature", "Russian", "Foreign Lang", "History", "Social Studies"], tuition: "640,000 ₽", desc: "Contemporary literature, linguistics." }, ru: { name: "Современная филология", subjects: ["Литература", "Русский язык", "Иностранный язык", "История", "Обществознание"], tuition: "640 000 ₽", desc: "Современная литература, лингвистика." } },
+            { id: "class-phil", en: { name: "Classical Philology", subjects: ["Literature", "Russian", "Foreign Lang", "History", "Social Studies"], tuition: "640,000 ₽", desc: "Ancient Greek/Latin, classical texts." }, ru: { name: "Классическая филология", subjects: ["Литература", "Русский язык", "Иностранный язык", "История", "Обществознание"], tuition: "640 000 ₽", desc: "Древнегреческий/латынь, классические тексты." } },
+            { id: "intercult-comm", en: { name: "Foreign Languages & Intercultural Comm.", subjects: ["Foreign Lang", "Russian", "History", "Social Studies"], tuition: "790,000 ₽", desc: "Translation, cross-cultural studies." }, ru: { name: "Иностранные языки и межкультурная коммуникация", subjects: ["Иностранный язык", "Русский язык", "История", "Обществознание"], tuition: "790 000 ₽", desc: "Перевод, кросс-культурные исследования." } },
+            { id: "fund-comp-ling", en: { name: "Fundamental & Computational Linguistics", subjects: ["Math", "Informatics", "Foreign Lang", "Russian"], tuition: "640,000 ₽", desc: "NLP, corpus linguistics, language tech." }, ru: { name: "Фундаментальная и компьютерная лингвистика", subjects: ["Математика", "Информатика", "Иностранный язык", "Русский язык"], tuition: "640 000 ₽", desc: "NLP, корпусная лингвистика, языковые технологии." } },
+
+            // 8. Humanities
+            { id: "history", en: { name: "History", subjects: ["History", "Foreign Lang", "Social Studies", "Literature", "Informatics"], tuition: "640,000 ₽", desc: "Russian/world history, archival studies." }, ru: { name: "История", subjects: ["История", "Иностранный язык", "Обществознание", "Литература", "Информатика"], tuition: "640 000 ₽", desc: "Отечественная/всемирная история, архивоведение." } },
+            { id: "pract-phil", en: { name: "Practical Philosophy", subjects: ["Social Studies", "History", "Foreign Lang", "Literature"], tuition: "640,000 ₽", desc: "Ethics, logic, applied philosophy." }, ru: { name: "Практическая философия", subjects: ["Обществознание", "История", "Иностранный язык", "Литература"], tuition: "640 000 ₽", desc: "Этика, логика, прикладная философия." } },
+            { id: "art-hist", en: { name: "Art History", subjects: ["History", "Foreign Lang", "Literature", "Social Studies"], tuition: "640,000 ₽", desc: "Visual arts, museum studies." }, ru: { name: "История искусств", subjects: ["История", "Иностранный язык", "Литература", "Обществознание"], tuition: "640 000 ₽", desc: "Изобразительное искусство, музееведение." } },
+            { id: "culturology", en: { name: "Culturology", subjects: ["Social Studies", "History", "Foreign Lang", "Literature"], tuition: "640,000 ₽", desc: "Cultural theory, heritage studies." }, ru: { name: "Культурология", subjects: ["Обществознание", "История", "Иностранный язык", "Литература"], tuition: "640 000 ₽", desc: "Теория культуры, наследие." } },
+
+            // 9. Art & Design
+            { id: "cont-art", en: { name: "Contemporary Art", subjects: ["Literature", "History", "Social Studies", "Foreign Lang"], tuition: "750,000 ₽", desc: "Curating, art criticism, practice." }, ru: { name: "Современное искусство", subjects: ["Литература", "История", "Обществознание", "Иностранный язык"], tuition: "750 000 ₽", desc: "Кураторство, арт-критика, практика." } },
+            { id: "acting", en: { name: "Acting", subjects: ["Literature", "Russian", "Creative Exam"], tuition: "830,000 ₽", desc: "Theater acting, stage performance." }, ru: { name: "Актёр", subjects: ["Литература", "Русский язык", "Творческое испытание"], tuition: "830 000 ₽", desc: "Театральное актёрское мастерство." } },
+            { id: "design", en: { name: "Design", subjects: ["Literature", "Russian", "Creative Exam"], tuition: "1,080,000 ₽", desc: "Graphic, industrial, interaction design." }, ru: { name: "Дизайн", subjects: ["Литература", "Русский язык", "Творческое испытание"], tuition: "1 080 000 ₽", desc: "Графический, промышленный, интерактивный дизайн." } },
+            { id: "fashion", en: { name: "Fashion", subjects: ["Literature", "Russian", "Creative Exam"], tuition: "1,060,000 ₽", desc: "Fashion design, styling, industry mgmt." }, ru: { name: "Мода", subjects: ["Литература", "Русский язык", "Творческое испытание"], tuition: "1 060 000 ₽", desc: "Дизайн одежды, стилистика, менеджмент." } }
+        ];
+
+        // --- LANGUAGE SWITCHER LOGIC ---
+        const langToggle = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('site_lang') || 'en';
+
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            
+            // Update static texts
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-placeholder-key]').forEach(el => {
+                const key = el.getAttribute('data-placeholder-key');
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+
+            // Re-render program cards in new language
+            renderPrograms(document.getElementById('program-search').value, lang);
+            localStorage.setItem('site_lang', lang);
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            applyLanguage(currentLang);
+            langToggle.style.transform = 'rotate(360deg)';
+            setTimeout(() => langToggle.style.transform = 'rotate(0deg)', 300);
+        });
+
+        // --- SEARCH & RENDER LOGIC ---
+        function renderPrograms(query, lang) {
+            const container = document.getElementById('programs-container');
+            const noResults = document.getElementById('no-results');
+            container.innerHTML = '';
+            
+            const lowerQuery = query.toLowerCase().trim();
+            const filtered = programsData.filter(f => {
+                if (!lowerQuery) return true;
+                const nameMatch = f[lang].name.toLowerCase().includes(lowerQuery);
+                const subjectMatch = f[lang].subjects.some(s => s.toLowerCase().includes(lowerQuery));
+                return nameMatch || subjectMatch;
+            });
+
+            if (filtered.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                filtered.forEach(f => {
+                    // Link to the specific HSE program page
+                    const card = document.createElement('a');
+                    card.href = `hse-program.html?id=${f.id}`;
+                    card.className = 'program-card';
+                    
+                    card.innerHTML = `
+                        <h3>${f[lang].name}</h3>
+                        <p class="program-desc">${f[lang].desc}</p>
+                        <div class="subjects-tags">
+                            ${f[lang].subjects.map(s => `<span class="subject-tag">${s}</span>`).join('')}
+                        </div>
+                        <div class="tuition-info">
+                            <i class="fa-solid fa-ruble-sign"></i> 
+                            <span>${translations[lang].hse_tuition_label}:</span> 
+                            <strong>${f[lang].tuition} / year</strong>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        document.getElementById('program-search').addEventListener('input', (e) => {
+            renderPrograms(e.target.value, currentLang);
+        });
+
+        // Initial render
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>
